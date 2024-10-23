@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title>self – I’m scared i will never meet my person</title>
+	<title>reddit</title>
 	<style>
 		html {
 			font-family: "Poppins", sans-serif;
@@ -199,7 +199,7 @@
 	<header><a href="https://www.reddit.com/u/Wonderful_Formal_804">Wonderful_Formal_804</a>, on <a
 			href="https://www.reddit.com/r/self/comments/1g0v3fq/im_scared_i_will_never_meet_my_person/lrbxhls/">Thu
 			2024-10-10 at 17:25</a> (288) <a href="#t3_1g0v3fq" class="n P">▣</a> <a href="#" class="n A D">🠉</a> <a
-			href="#t1_lrc5jm3" class="n B">🠋</a> <a href="#t1_lrbxhls" class="n S">◯</a></header>
+			href="#t1_lrc5jm3" class="n B">🠋</a> <a href="#t1_lrbxhls" class="n S" onclick="setReadHere('t1_lrc1lal')">◯</a></header>
 	<p>There is no "one for you," but there are great people with whom you could build a healthy and enduring
 		relationship.<br>You sound like you're been trying too hard.<br>Relax and let your life unfold naturally.</p>
 	<div class="e l2" id="t1_lrc75mf">
@@ -4540,4 +4540,51 @@
 			2024-10-10 at 17:51</a> (-2) <a href="#t3_1g0v3fq" class="n P">▣</a> <a href="#t1_lrbz1nb" class="n A">🠉</a> <a
 			href="#" class="n B D">🠋</a> <a href="#t1_lrc1lal" class="n S">◯</a></header>
 	<p>You most likely won’t </p>
-	<script>function checkKey(e) { "38" == (e = e || window.event).keyCode ? (e.preventDefault(), scrollToSibling("A")) : "40" == e.keyCode ? (e.preventDefault(), scrollToSibling("B")) : "37" != e.keyCode && "80" != e.keyCode || scrollToParent() } function scrollToSibling(e) { var o, t = window.location.hash.substr(1), n = document.getElementById(t).getElementsByClassName(e)[0]; n.classList.contains("D") || (o = n.getAttribute("href").substr(1), document.getElementById(o).scrollIntoView(!0), window.location.hash = o) } function scrollToParent() { var e = window.location.hash.substr(1); document.getElementById(e).parentNode.id.scrollIntoView(!0), window.location.hash = target_id } document.onkeydown = checkKey;</script>
+	<script>
+    // Function to set the URL fragment and scroll to the selected comment
+    function setReadHere(commentId) {
+        location.hash = commentId; // Update the URL with the fragment identifier
+    }
+
+    // On page load, scroll to the comment if a fragment exists in the URL
+    window.onload = function () {
+        const fragment = location.hash.substring(1); // Get the fragment without the #
+        if (fragment) {
+            const targetComment = document.getElementById(fragment);
+            if (targetComment) {
+                targetComment.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    };
+
+    function checkKey(e) {
+        e = e || window.event;
+        if (e.keyCode == "38") {
+            e.preventDefault();
+            scrollToSibling("A");
+        } else if (e.keyCode == "40") {
+            e.preventDefault();
+            scrollToSibling("B");
+        } else if (e.keyCode == "37" || e.keyCode == "80") {
+            scrollToParent();
+        }
+    }
+
+    function scrollToSibling(e) {
+        var t = window.location.hash.substr(1);
+        var n = document.getElementById(t).getElementsByClassName(e)[0];
+        if (!n.classList.contains("D")) {
+            var o = n.getAttribute("href").substr(1);
+            document.getElementById(o).scrollIntoView(true);
+            window.location.hash = o;
+        }
+    }
+
+    function scrollToParent() {
+        var e = window.location.hash.substr(1);
+        document.getElementById(e).parentNode.id.scrollIntoView(true);
+        window.location.hash = e;
+    }
+
+    document.onkeydown = checkKey;
+</script>
