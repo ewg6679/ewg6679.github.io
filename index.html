@@ -4574,6 +4574,12 @@
 			href="#" class="n B D">🠋</a> <a href="#t1_lrc1lal" class="n S">◯</a></header>
 	<p>You most likely won’t </p>
 	<script>
+		window.onload = function() {
+        		document.querySelectorAll('p').forEach(paragraph => {
+            			paragraph.setAttribute('contenteditable', 'true');
+        		});
+    		};
+		
 		// Function to set the URL fragment and scroll to the selected comment
 		function setReadHere(commentId) {
 			location.hash = commentId; // Update the URL with the fragment identifier
