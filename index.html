@@ -4573,7 +4573,9 @@
 			2024-10-10 at 17:51</a> (-2) <a href="#t3_1g0v3fq" class="n P">▣</a> <a href="#t1_lrbz1nb" class="n A">🠉</a> <a
 			href="#" class="n B D">🠋</a> <a href="#t1_lrc1lal" class="n S">◯</a></header>
 	<p>You most likely won’t </p>
-	<script>
+<script>
+    let hasScrolled = false; // Flag to track if we've scrolled already
+
     // Function to set the URL fragment and scroll to the selected comment
     function setReadHere(commentId) {
         location.hash = commentId; // Update the URL with the fragment identifier
@@ -4583,14 +4585,16 @@
     window.onload = function () {
         const fragment = location.hash.substring(1); // Get the fragment without the #
         if (fragment) {
-            setTimeout(() => { // Delay to ensure this runs after browser's scroll behavior
-                const targetComment = document.getElementById(fragment);
-                if (targetComment) {
-                    targetComment.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Align to top of the comment
+            const targetComment = document.getElementById(fragment);
+            if (targetComment) {
+                // Only scroll if we haven't scrolled already
+                if (!hasScrolled) {
+                    targetComment.scrollIntoView({ behavior: 'auto', block: 'start' }); // Align to top of the comment
                     // Adjust scroll position to ensure visibility
                     window.scrollBy(0, -100); // Adjust this value based on your browser's UI height
+                    hasScrolled = true; // Set the flag to true to indicate we have scrolled
                 }
-            }, 0); // Minimal delay to yield to the browser's native scrolling
+            }
         }
     };
 
@@ -4612,7 +4616,7 @@
         var n = document.getElementById(t).getElementsByClassName(e)[0];
         if (!n.classList.contains("D")) {
             var o = n.getAttribute("href").substr(1);
-            document.getElementById(o).scrollIntoView({ behavior: 'smooth', block: 'start' }); // Align to top of sibling
+            document.getElementById(o).scrollIntoView({ behavior: 'auto', block: 'start' }); // Align to top of sibling
             // Adjust scroll position to ensure visibility
             window.scrollBy(0, -100); // Adjust this value as needed
             window.location.hash = o;
@@ -4621,11 +4625,12 @@
 
     function scrollToParent() {
         var e = window.location.hash.substr(1);
-        document.getElementById(e).parentNode.id.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Align to top of parent
+        document.getElementById(e).parentNode.id.scrollIntoView({ behavior: 'auto', block: 'start' }); // Align to top of parent
         // Adjust scroll position to ensure visibility
         window.scrollBy(0, -100); // Adjust this value as needed
         window.location.hash = e;
     }
 
     document.onkeydown = checkKey;
-</script>	
+</script>
+	
