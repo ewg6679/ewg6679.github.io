@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title>AskReddit – What's the coolest thing I could reasonably put on my desk at work?</title>
+	<title>ewg6679.github.io</title>
 	<style>
 		html {
 			font-family: "Poppins", sans-serif;
@@ -21824,4 +21824,53 @@
 	<p>A Vault Tec bobble head. Any of the 8+ they have would be cool. But one that would apply to you would be good. Like
 		if you are decently smart put an intelligence bobble head there. Or if you do heavy lifting around the office, have
 		a strength bobble head. So many choices!</p>
-	<script> function setReadHere(commentId) { location.hash = commentId; } window.onload = function () { const fragment = location.hash.substring(1); if (fragment) { setTimeout(() => { const targetComment = document.getElementById(fragment); if (targetComment) { targetComment.scrollIntoView({ behavior: "smooth" }); } }, 0); } }; function checkKey(e) { e = e || window.event; if (e.keyCode == "38") { e.preventDefault(); scrollToSibling("A"); } else if (e.keyCode == "40") { e.preventDefault(); scrollToSibling("B"); } else if (e.keyCode == "37" || e.keyCode == "80") { scrollToParent(); } } function scrollToSibling(e) { var t = window.location.hash.substr(1); var n = document.getElementById(t).getElementsByClassName(e)[0]; if (!n.classList.contains("D")) { var o = n.getAttribute("href").substr(1); document.getElementById(o).scrollIntoView(true); window.location.hash = o; } } function scrollToParent() { var e = window.location.hash.substr(1); document.getElementById(e).parentNode.id.scrollIntoView(true); window.location.hash = e; } document.onkeydown = checkKey; </script>
+	<script>
+	    // Function to set the URL fragment and scroll to the selected comment
+	    function setReadHere(commentId) {
+	        location.hash = commentId; // Update the URL with the fragment identifier
+	    }
+	
+	    // On page load, scroll to the comment if a fragment exists in the URL
+	    window.onload = function () {
+	        const fragment = location.hash.substring(1); // Get the fragment without the #
+	        if (fragment) {
+	            setTimeout(() => { // Delay to ensure this runs after browser's scroll behavior
+	                const targetComment = document.getElementById(fragment);
+	                if (targetComment) {
+	                    targetComment.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Align to top of the comment
+	                }
+	            }, 0); // Minimal delay to yield to the browser's native scrolling
+	        }
+	    };
+	
+	    function checkKey(e) {
+	        e = e || window.event;
+	        if (e.keyCode == "38") {
+	            e.preventDefault();
+	            scrollToSibling("A");
+	        } else if (e.keyCode == "40") {
+	            e.preventDefault();
+	            scrollToSibling("B");
+	        } else if (e.keyCode == "37" || e.keyCode == "80") {
+	            scrollToParent();
+	        }
+	    }
+	
+	    function scrollToSibling(e) {
+	        var t = window.location.hash.substr(1);
+	        var n = document.getElementById(t).getElementsByClassName(e)[0];
+	        if (!n.classList.contains("D")) {
+	            var o = n.getAttribute("href").substr(1);
+	            document.getElementById(o).scrollIntoView({ behavior: 'smooth', block: 'start' }); // Align to top of sibling
+	            window.location.hash = o;
+	        }
+	    }
+	
+	    function scrollToParent() {
+	        var e = window.location.hash.substr(1);
+	        document.getElementById(e).parentNode.id.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Align to top of parent
+	        window.location.hash = e;
+	    }
+	
+	    document.onkeydown = checkKey;
+	</script>
