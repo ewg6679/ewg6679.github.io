@@ -21825,21 +21825,19 @@
 		if you are decently smart put an intelligence bobble head there. Or if you do heavy lifting around the office, have
 		a strength bobble head. So many choices!</p>
 	<script>
-	    // Function to set the URL fragment and scroll to the selected comment
 	    function setReadHere(commentId) {
-	        location.hash = commentId; // Update the URL with the fragment identifier
+	        location.hash = commentId;
 	    }
 	
-	    // On page load, scroll to the comment if a fragment exists in the URL
 	    window.onload = function () {
-	        const fragment = location.hash.substring(1); // Get the fragment without the #
+	        const fragment = location.hash.substring(1);
 	        if (fragment) {
-	            setTimeout(() => { // Delay to ensure this runs after browser's scroll behavior
+	            setTimeout(() => {
 	                const targetComment = document.getElementById(fragment);
 	                if (targetComment) {
-	                    targetComment.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Align to top of the comment
+	                    targetComment.scrollIntoView({ behavior: 'smooth', block: 'start' });
 	                }
-	            }, 0); // Minimal delay to yield to the browser's native scrolling
+	            }, 0);
 	        }
 	    };
 	
@@ -21861,14 +21859,14 @@
 	        var n = document.getElementById(t).getElementsByClassName(e)[0];
 	        if (!n.classList.contains("D")) {
 	            var o = n.getAttribute("href").substr(1);
-	            document.getElementById(o).scrollIntoView({ behavior: 'smooth', block: 'start' }); // Align to top of sibling
+	            document.getElementById(o).scrollIntoView({ behavior: 'smooth', block: 'start' });
 	            window.location.hash = o;
 	        }
 	    }
 	
 	    function scrollToParent() {
 	        var e = window.location.hash.substr(1);
-	        document.getElementById(e).parentNode.id.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Align to top of parent
+	        document.getElementById(e).parentNode.id.scrollIntoView({ behavior: 'smooth', block: 'start' });
 	        window.location.hash = e;
 	    }
 	
