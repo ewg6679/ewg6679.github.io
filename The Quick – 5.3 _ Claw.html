@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)https://clawwebserial.blog/2024/07/06/the-quick-5-3/ -->
+<html lang="en"><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width">
+<title>
+The Quick – 5.3 | Claw	</title>
+<link rel="profile" href="https://gmpg.org/xfn/11">
+<link rel="stylesheet" type="text/css" media="all" href="./The Quick – 5.3 _ Claw_files/style.css">
+<link rel="pingback" href="https://clawwebserial.blog/xmlrpc.php">
+<!--[if lt IE 9]>
+<script src="https://s0.wp.com/wp-content/themes/pub/twentyeleven/js/html5.js?ver=3.7.0" type="text/javascript"></script>
+<![endif]-->
+<meta name="robots" content="max-image-preview:large">
+
+<!-- Async WordPress.com Remote Login -->
+<script id="wpcom_remote_login_js">
+var wpcom_remote_login_extra_auth = '';
+function wpcom_remote_login_remove_dom_node_id( element_id ) {
+	var dom_node = document.getElementById( element_id );
+	if ( dom_node ) { dom_node.parentNode.removeChild( dom_node ); }
+}
+function wpcom_remote_login_remove_dom_node_classes( class_name ) {
+	var dom_nodes = document.querySelectorAll( '.' + class_name );
+	for ( var i = 0; i < dom_nodes.length; i++ ) {
+		dom_nodes[ i ].parentNode.removeChild( dom_nodes[ i ] );
+	}
+}
+function wpcom_remote_login_final_cleanup() {
+	wpcom_remote_login_remove_dom_node_classes( "wpcom_remote_login_msg" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_key" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_validate" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_js" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_request_access_iframe" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_request_access_styles" );
+}
+
+// Watch for messages back from the remote login
+window.addEventListener( "message", function( e ) {
+	if ( e.origin === "https://r-login.wordpress.com" ) {
+		var data = {};
+		try {
+			data = JSON.parse( e.data );
+		} catch( e ) {
+			wpcom_remote_login_final_cleanup();
+			return;
+		}
+
+		if ( data.msg === 'LOGIN' ) {
+			// Clean up the login check iframe
+			wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_key" );
+
+			var id_regex = new RegExp( /^[0-9]+$/ );
+			var token_regex = new RegExp( /^.*|.*|.*$/ );
+			if (
+				token_regex.test( data.token )
+				&& id_regex.test( data.wpcomid )
+			) {
+				// We have everything we need to ask for a login
+				var script = document.createElement( "script" );
+				script.setAttribute( "id", "wpcom_remote_login_validate" );
+				script.src = '/remote-login.php?wpcom_remote_login=validate'
+					+ '&wpcomid=' + data.wpcomid
+					+ '&token=' + encodeURIComponent( data.token )
+					+ '&host=' + window.location.protocol
+					+ '//' + window.location.hostname
+					+ '&postid=1739'
+					+ '&is_singular=1';
+				document.body.appendChild( script );
+			}
+
+			return;
+		}
+
+		// Safari ITP, not logged in, so redirect
+		if ( data.msg === 'LOGIN-REDIRECT' ) {
+			window.location = 'https://wordpress.com/log-in?redirect_to=' + window.location.href;
+			return;
+		}
+
+		// Safari ITP, storage access failed, remove the request
+		if ( data.msg === 'LOGIN-REMOVE' ) {
+			var css_zap = 'html { -webkit-transition: margin-top 1s; transition: margin-top 1s; } /* 9001 */ html { margin-top: 0 !important; } * html body { margin-top: 0 !important; } @media screen and ( max-width: 782px ) { html { margin-top: 0 !important; } * html body { margin-top: 0 !important; } }';
+			var style_zap = document.createElement( 'style' );
+			style_zap.type = 'text/css';
+			style_zap.appendChild( document.createTextNode( css_zap ) );
+			document.body.appendChild( style_zap );
+
+			var e = document.getElementById( 'wpcom_request_access_iframe' );
+			e.parentNode.removeChild( e );
+
+			document.cookie = 'wordpress_com_login_access=denied; path=/; max-age=31536000';
+
+			return;
+		}
+
+		// Safari ITP
+		if ( data.msg === 'REQUEST_ACCESS' ) {
+			console.log( 'request access: safari' );
+
+			// Check ITP iframe enable/disable knob
+			if ( wpcom_remote_login_extra_auth !== 'safari_itp_iframe' ) {
+				return;
+			}
+
+			// If we are in a "private window" there is no ITP.
+			var private_window = false;
+			try {
+				var opendb = window.openDatabase( null, null, null, null );
+			} catch( e ) {
+				private_window = true;
+			}
+
+			if ( private_window ) {
+				console.log( 'private window' );
+				return;
+			}
+
+			var iframe = document.createElement( 'iframe' );
+			iframe.id = 'wpcom_request_access_iframe';
+			iframe.setAttribute( 'scrolling', 'no' );
+			iframe.setAttribute( 'sandbox', 'allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-top-navigation-by-user-activation' );
+			iframe.src = 'https://r-login.wordpress.com/remote-login.php?wpcom_remote_login=request_access&origin=' + encodeURIComponent( data.origin ) + '&wpcomid=' + encodeURIComponent( data.wpcomid );
+
+			var css = 'html { -webkit-transition: margin-top 1s; transition: margin-top 1s; } /* 9001 */ html { margin-top: 46px !important; } * html body { margin-top: 46px !important; } @media screen and ( max-width: 660px ) { html { margin-top: 71px !important; } * html body { margin-top: 71px !important; } #wpcom_request_access_iframe { display: block; height: 71px !important; } } #wpcom_request_access_iframe { border: 0px; height: 46px; position: fixed; top: 0; left: 0; width: 100%; min-width: 100%; z-index: 99999; background: #23282d; } ';
+
+			var style = document.createElement( 'style' );
+			style.type = 'text/css';
+			style.id = 'wpcom_request_access_styles';
+			style.appendChild( document.createTextNode( css ) );
+			document.body.appendChild( style );
+
+			document.body.appendChild( iframe );
+		}
+
+		if ( data.msg === 'DONE' ) {
+			wpcom_remote_login_final_cleanup();
+		}
+	}
+}, false );
+
+// Inject the remote login iframe after the page has had a chance to load
+// more critical resources
+window.addEventListener( "DOMContentLoaded", function( e ) {
+	var iframe = document.createElement( "iframe" );
+	iframe.style.display = "none";
+	iframe.setAttribute( "scrolling", "no" );
+	iframe.setAttribute( "id", "wpcom_remote_login_key" );
+	iframe.src = "https://r-login.wordpress.com/remote-login.php"
+		+ "?wpcom_remote_login=key"
+		+ "&origin=aHR0cHM6Ly9jbGF3d2Vic2VyaWFsLmJsb2c%3D"
+		+ "&wpcomid=230145850"
+		+ "&time=1731142317";
+	document.body.appendChild( iframe );
+}, false );
+</script>
+<link rel="dns-prefetch" href="https://s0.wp.com/">
+<link rel="dns-prefetch" href="https://widgets.wp.com/">
+<link rel="dns-prefetch" href="https://wordpress.com/">
+<link rel="alternate" type="application/rss+xml" title="Claw » Feed" href="https://clawwebserial.blog/feed/">
+<link rel="alternate" type="application/rss+xml" title="Claw » Comments Feed" href="https://clawwebserial.blog/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="Claw » The Quick – 5.3 Comments Feed" href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/feed/">
+	<script type="text/javascript">
+		/* <![CDATA[ */
+		function addLoadEvent(func) {
+			var oldonload = window.onload;
+			if (typeof window.onload != 'function') {
+				window.onload = func;
+			} else {
+				window.onload = function () {
+					oldonload();
+					func();
+				}
+			}
+		}
+		/* ]]> */
+	</script>
+	<script type="text/javascript">
+/* <![CDATA[ */
+window._wpemojiSettings = {"baseUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/72x72\/","ext":".png","svgUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/s0.wp.com\/wp-includes\/js\/wp-emoji-release.min.js?m=1719498190i&ver=6.7-RC3-59369"}};
+/*! This file is auto-generated */
+!function(i,n){var o,s,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),r=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===r[t]})}function u(e,t,n){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!n(e,"\ud83d\udc26\u200d\u2b1b","\ud83d\udc26\u200b\u2b1b")}return!1}function f(e,t,n){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):i.createElement("canvas"),a=r.getContext("2d",{willReadFrequently:!0}),o=(a.textBaseline="top",a.font="600 32px Arial",{});return e.forEach(function(e){o[e]=t(a,e,n)}),o}function t(e){var t=i.createElement("script");t.src=e,t.defer=!0,i.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",s=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){i.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"}),a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=function(e){c(n=e.data),a.terminate(),t(n)})}catch(e){}c(n=f(s,u,p))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+/* ]]> */
+</script>
+<link crossorigin="anonymous" rel="stylesheet" id="all-css-0-1" href="./The Quick – 5.3 _ Claw_files/saved_resource(1)" type="text/css" media="all">
+<style id="wp-emoji-styles-inline-css">
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+</style>
+<link crossorigin="anonymous" rel="stylesheet" id="all-css-2-1" href="./The Quick – 5.3 _ Claw_files/saved_resource(2)" type="text/css" media="all">
+<style id="wp-block-library-inline-css">
+.has-text-align-justify {
+	text-align:justify;
+}
+.has-text-align-justify{text-align:justify;}
+</style>
+<link crossorigin="anonymous" rel="stylesheet" id="all-css-4-1" href="./The Quick – 5.3 _ Claw_files/saved_resource(3)" type="text/css" media="all">
+<style id="jetpack-sharing-buttons-style-inline-css">
+.jetpack-sharing-buttons__services-list{display:flex;flex-direction:row;flex-wrap:wrap;gap:0;list-style-type:none;margin:5px;padding:0}.jetpack-sharing-buttons__services-list.has-small-icon-size{font-size:12px}.jetpack-sharing-buttons__services-list.has-normal-icon-size{font-size:16px}.jetpack-sharing-buttons__services-list.has-large-icon-size{font-size:24px}.jetpack-sharing-buttons__services-list.has-huge-icon-size{font-size:36px}@media print{.jetpack-sharing-buttons__services-list{display:none!important}}.editor-styles-wrapper .wp-block-jetpack-sharing-buttons{gap:0;padding-inline-start:0}ul.jetpack-sharing-buttons__services-list.has-background{padding:1.25em 2.375em}
+</style>
+<style id="classic-theme-styles-inline-css">
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+</style>
+<link crossorigin="anonymous" rel="stylesheet" id="all-css-8-1" href="./The Quick – 5.3 _ Claw_files/saved_resource(4)" type="text/css" media="all">
+<style id="global-styles-inline-css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #fff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--color--blue: #1982d1;--wp--preset--color--dark-gray: #373737;--wp--preset--color--medium-gray: #666;--wp--preset--color--light-gray: #e2e2e2;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--font-family--albert-sans: 'Albert Sans', sans-serif;--wp--preset--font-family--alegreya: Alegreya, serif;--wp--preset--font-family--arvo: Arvo, serif;--wp--preset--font-family--bodoni-moda: 'Bodoni Moda', serif;--wp--preset--font-family--bricolage-grotesque: 'Bricolage Grotesque', sans-serif;--wp--preset--font-family--cabin: Cabin, sans-serif;--wp--preset--font-family--chivo: Chivo, sans-serif;--wp--preset--font-family--commissioner: Commissioner, sans-serif;--wp--preset--font-family--cormorant: Cormorant, serif;--wp--preset--font-family--courier-prime: 'Courier Prime', monospace;--wp--preset--font-family--crimson-pro: 'Crimson Pro', serif;--wp--preset--font-family--dm-mono: 'DM Mono', monospace;--wp--preset--font-family--dm-sans: 'DM Sans', sans-serif;--wp--preset--font-family--dm-serif-display: 'DM Serif Display', serif;--wp--preset--font-family--domine: Domine, serif;--wp--preset--font-family--eb-garamond: 'EB Garamond', serif;--wp--preset--font-family--epilogue: Epilogue, sans-serif;--wp--preset--font-family--fahkwang: Fahkwang, sans-serif;--wp--preset--font-family--figtree: Figtree, sans-serif;--wp--preset--font-family--fira-sans: 'Fira Sans', sans-serif;--wp--preset--font-family--fjalla-one: 'Fjalla One', sans-serif;--wp--preset--font-family--fraunces: Fraunces, serif;--wp--preset--font-family--gabarito: Gabarito, system-ui;--wp--preset--font-family--ibm-plex-mono: 'IBM Plex Mono', monospace;--wp--preset--font-family--ibm-plex-sans: 'IBM Plex Sans', sans-serif;--wp--preset--font-family--ibarra-real-nova: 'Ibarra Real Nova', serif;--wp--preset--font-family--instrument-serif: 'Instrument Serif', serif;--wp--preset--font-family--inter: Inter, sans-serif;--wp--preset--font-family--josefin-sans: 'Josefin Sans', sans-serif;--wp--preset--font-family--jost: Jost, sans-serif;--wp--preset--font-family--libre-baskerville: 'Libre Baskerville', serif;--wp--preset--font-family--libre-franklin: 'Libre Franklin', sans-serif;--wp--preset--font-family--literata: Literata, serif;--wp--preset--font-family--lora: Lora, serif;--wp--preset--font-family--merriweather: Merriweather, serif;--wp--preset--font-family--montserrat: Montserrat, sans-serif;--wp--preset--font-family--newsreader: Newsreader, serif;--wp--preset--font-family--noto-sans-mono: 'Noto Sans Mono', sans-serif;--wp--preset--font-family--nunito: Nunito, sans-serif;--wp--preset--font-family--open-sans: 'Open Sans', sans-serif;--wp--preset--font-family--overpass: Overpass, sans-serif;--wp--preset--font-family--pt-serif: 'PT Serif', serif;--wp--preset--font-family--petrona: Petrona, serif;--wp--preset--font-family--piazzolla: Piazzolla, serif;--wp--preset--font-family--playfair-display: 'Playfair Display', serif;--wp--preset--font-family--plus-jakarta-sans: 'Plus Jakarta Sans', sans-serif;--wp--preset--font-family--poppins: Poppins, sans-serif;--wp--preset--font-family--raleway: Raleway, sans-serif;--wp--preset--font-family--roboto: Roboto, sans-serif;--wp--preset--font-family--roboto-slab: 'Roboto Slab', serif;--wp--preset--font-family--rubik: Rubik, sans-serif;--wp--preset--font-family--rufina: Rufina, serif;--wp--preset--font-family--sora: Sora, sans-serif;--wp--preset--font-family--source-sans-3: 'Source Sans 3', sans-serif;--wp--preset--font-family--source-serif-4: 'Source Serif 4', serif;--wp--preset--font-family--space-mono: 'Space Mono', monospace;--wp--preset--font-family--syne: Syne, sans-serif;--wp--preset--font-family--texturina: Texturina, serif;--wp--preset--font-family--urbanist: Urbanist, sans-serif;--wp--preset--font-family--work-sans: 'Work Sans', sans-serif;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}.has-albert-sans-font-family{font-family: var(--wp--preset--font-family--albert-sans) !important;}.has-alegreya-font-family{font-family: var(--wp--preset--font-family--alegreya) !important;}.has-arvo-font-family{font-family: var(--wp--preset--font-family--arvo) !important;}.has-bodoni-moda-font-family{font-family: var(--wp--preset--font-family--bodoni-moda) !important;}.has-bricolage-grotesque-font-family{font-family: var(--wp--preset--font-family--bricolage-grotesque) !important;}.has-cabin-font-family{font-family: var(--wp--preset--font-family--cabin) !important;}.has-chivo-font-family{font-family: var(--wp--preset--font-family--chivo) !important;}.has-commissioner-font-family{font-family: var(--wp--preset--font-family--commissioner) !important;}.has-cormorant-font-family{font-family: var(--wp--preset--font-family--cormorant) !important;}.has-courier-prime-font-family{font-family: var(--wp--preset--font-family--courier-prime) !important;}.has-crimson-pro-font-family{font-family: var(--wp--preset--font-family--crimson-pro) !important;}.has-dm-mono-font-family{font-family: var(--wp--preset--font-family--dm-mono) !important;}.has-dm-sans-font-family{font-family: var(--wp--preset--font-family--dm-sans) !important;}.has-dm-serif-display-font-family{font-family: var(--wp--preset--font-family--dm-serif-display) !important;}.has-domine-font-family{font-family: var(--wp--preset--font-family--domine) !important;}.has-eb-garamond-font-family{font-family: var(--wp--preset--font-family--eb-garamond) !important;}.has-epilogue-font-family{font-family: var(--wp--preset--font-family--epilogue) !important;}.has-fahkwang-font-family{font-family: var(--wp--preset--font-family--fahkwang) !important;}.has-figtree-font-family{font-family: var(--wp--preset--font-family--figtree) !important;}.has-fira-sans-font-family{font-family: var(--wp--preset--font-family--fira-sans) !important;}.has-fjalla-one-font-family{font-family: var(--wp--preset--font-family--fjalla-one) !important;}.has-fraunces-font-family{font-family: var(--wp--preset--font-family--fraunces) !important;}.has-gabarito-font-family{font-family: var(--wp--preset--font-family--gabarito) !important;}.has-ibm-plex-mono-font-family{font-family: var(--wp--preset--font-family--ibm-plex-mono) !important;}.has-ibm-plex-sans-font-family{font-family: var(--wp--preset--font-family--ibm-plex-sans) !important;}.has-ibarra-real-nova-font-family{font-family: var(--wp--preset--font-family--ibarra-real-nova) !important;}.has-instrument-serif-font-family{font-family: var(--wp--preset--font-family--instrument-serif) !important;}.has-inter-font-family{font-family: var(--wp--preset--font-family--inter) !important;}.has-josefin-sans-font-family{font-family: var(--wp--preset--font-family--josefin-sans) !important;}.has-jost-font-family{font-family: var(--wp--preset--font-family--jost) !important;}.has-libre-baskerville-font-family{font-family: var(--wp--preset--font-family--libre-baskerville) !important;}.has-libre-franklin-font-family{font-family: var(--wp--preset--font-family--libre-franklin) !important;}.has-literata-font-family{font-family: var(--wp--preset--font-family--literata) !important;}.has-lora-font-family{font-family: var(--wp--preset--font-family--lora) !important;}.has-merriweather-font-family{font-family: var(--wp--preset--font-family--merriweather) !important;}.has-montserrat-font-family{font-family: var(--wp--preset--font-family--montserrat) !important;}.has-newsreader-font-family{font-family: var(--wp--preset--font-family--newsreader) !important;}.has-noto-sans-mono-font-family{font-family: var(--wp--preset--font-family--noto-sans-mono) !important;}.has-nunito-font-family{font-family: var(--wp--preset--font-family--nunito) !important;}.has-open-sans-font-family{font-family: var(--wp--preset--font-family--open-sans) !important;}.has-overpass-font-family{font-family: var(--wp--preset--font-family--overpass) !important;}.has-pt-serif-font-family{font-family: var(--wp--preset--font-family--pt-serif) !important;}.has-petrona-font-family{font-family: var(--wp--preset--font-family--petrona) !important;}.has-piazzolla-font-family{font-family: var(--wp--preset--font-family--piazzolla) !important;}.has-playfair-display-font-family{font-family: var(--wp--preset--font-family--playfair-display) !important;}.has-plus-jakarta-sans-font-family{font-family: var(--wp--preset--font-family--plus-jakarta-sans) !important;}.has-poppins-font-family{font-family: var(--wp--preset--font-family--poppins) !important;}.has-raleway-font-family{font-family: var(--wp--preset--font-family--raleway) !important;}.has-roboto-font-family{font-family: var(--wp--preset--font-family--roboto) !important;}.has-roboto-slab-font-family{font-family: var(--wp--preset--font-family--roboto-slab) !important;}.has-rubik-font-family{font-family: var(--wp--preset--font-family--rubik) !important;}.has-rufina-font-family{font-family: var(--wp--preset--font-family--rufina) !important;}.has-sora-font-family{font-family: var(--wp--preset--font-family--sora) !important;}.has-source-sans-3-font-family{font-family: var(--wp--preset--font-family--source-sans-3) !important;}.has-source-serif-4-font-family{font-family: var(--wp--preset--font-family--source-serif-4) !important;}.has-space-mono-font-family{font-family: var(--wp--preset--font-family--space-mono) !important;}.has-syne-font-family{font-family: var(--wp--preset--font-family--syne) !important;}.has-texturina-font-family{font-family: var(--wp--preset--font-family--texturina) !important;}.has-urbanist-font-family{font-family: var(--wp--preset--font-family--urbanist) !important;}.has-work-sans-font-family{font-family: var(--wp--preset--font-family--work-sans) !important;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+:root :where(.wp-block-pullquote){font-size: 1.5em;line-height: 1.6;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+</style>
+<link crossorigin="anonymous" rel="stylesheet" id="all-css-10-1" href="./The Quick – 5.3 _ Claw_files/verbum-comments.css" type="text/css" media="all">
+<link rel="stylesheet" id="verbum-gutenberg-css-css" href="./The Quick – 5.3 _ Claw_files/block-editor.css" media="all">
+<link crossorigin="anonymous" rel="stylesheet" id="all-css-12-1" href="./The Quick – 5.3 _ Claw_files/saved_resource(5)" type="text/css" media="all">
+<style id="jetpack-global-styles-frontend-style-inline-css">
+:root { --font-headings: unset; --font-base: unset; --font-headings-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; --font-base-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;}
+</style>
+<link crossorigin="anonymous" rel="stylesheet" id="all-css-14-1" href="./The Quick – 5.3 _ Claw_files/saved_resource(6)" type="text/css" media="all">
+<script type="text/javascript" id="jetpack_related-posts-js-extra">
+/* <![CDATA[ */
+var related_posts_js_options = {"post_heading":"h4"};
+/* ]]> */
+</script>
+<script type="text/javascript" id="wpcom-actionbar-placeholder-js-extra">
+/* <![CDATA[ */
+var actionbardata = {"siteID":"230145850","postID":"1739","siteURL":"https:\/\/clawwebserial.blog","xhrURL":"https:\/\/clawwebserial.blog\/wp-admin\/admin-ajax.php","nonce":"2a06075dd4","isLoggedIn":"","statusMessage":"","subsEmailDefault":"instantly","proxyScriptUrl":"https:\/\/s0.wp.com\/wp-content\/js\/wpcom-proxy-request.js?ver=20211021","shortlink":"https:\/\/wp.me\/pfzFrQ-s3","i18n":{"followedText":"New posts from this site will now appear in your <a href=\"https:\/\/wordpress.com\/read\">Reader<\/a>","foldBar":"Collapse this bar","unfoldBar":"Expand this bar"}};
+/* ]]> */
+</script>
+<script type="text/javascript" id="jetpack-mu-wpcom-settings-js-before">
+/* <![CDATA[ */
+var JETPACK_MU_WPCOM_SETTINGS = {"assetsUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/jetpack-mu-wpcom-plugin\/sun\/vendor\/automattic\/jetpack-mu-wpcom\/src\/build\/"};
+/* ]]> */
+</script>
+<script crossorigin="anonymous" type="text/javascript" src="./The Quick – 5.3 _ Claw_files/saved_resource(7)"></script>
+<script type="text/javascript" id="rlt-proxy-js-after">
+/* <![CDATA[ */
+	rltInitialize( {"token":null,"iframeOrigins":["https:\/\/widgets.wp.com"]} );
+/* ]]> */
+</script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://clawwebserial.wordpress.com/xmlrpc.php?rsd">
+<meta name="generator" content="WordPress.com">
+<link rel="canonical" href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/">
+<link rel="shortlink" href="https://wp.me/pfzFrQ-s3">
+<link rel="alternate" type="application/json+oembed" href="https://public-api.wordpress.com/oembed/?format=json&amp;url=https%3A%2F%2Fclawwebserial.blog%2F2024%2F07%2F06%2Fthe-quick-5-3%2F&amp;for=wpcom-auto-discovery"><link rel="alternate" type="application/xml+oembed" href="https://public-api.wordpress.com/oembed/?format=xml&amp;url=https%3A%2F%2Fclawwebserial.blog%2F2024%2F07%2F06%2Fthe-quick-5-3%2F&amp;for=wpcom-auto-discovery">
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Quick – 5.3">
+<meta property="og:url" content="https://clawwebserial.blog/2024/07/06/the-quick-5-3/">
+<meta property="og:description" content="Previous Chapter Next Chapter People couldn’t relax.  No TV, no internet, no phones, no lights, with enough going on outside that people wanted to investigate.  Apartments were lit by candles…">
+<meta property="article:published_time" content="2024-07-06T16:31:20+00:00">
+<meta property="article:modified_time" content="2024-07-14T19:41:21+00:00">
+<meta property="og:site_name" content="Claw">
+<meta property="og:image" content="https://s0.wp.com/i/blank.jpg">
+<meta property="og:image:alt" content="">
+<meta property="og:locale" content="en_US">
+<meta property="article:publisher" content="https://www.facebook.com/WordPresscom">
+<meta name="twitter:text:title" content="The Quick – 5.3">
+<meta name="twitter:card" content="summary">
+
+<!-- End Jetpack Open Graph Tags -->
+<link rel="shortcut icon" type="image/x-icon" href="https://s0.wp.com/i/favicon.ico" sizes="16x16 24x24 32x32 48x48">
+<link rel="icon" type="image/x-icon" href="https://s0.wp.com/i/favicon.ico" sizes="16x16 24x24 32x32 48x48">
+<link rel="apple-touch-icon" href="https://s0.wp.com/i/webclip.png">
+<link rel="search" type="application/opensearchdescription+xml" href="https://clawwebserial.blog/osd.xml" title="Claw">
+<link rel="search" type="application/opensearchdescription+xml" href="https://s1.wp.com/opensearch.xml" title="WordPress.com">
+	<style>
+		/* Link color */
+		a,
+		#site-title a:focus,
+		#site-title a:hover,
+		#site-title a:active,
+		.entry-title a:hover,
+		.entry-title a:focus,
+		.entry-title a:active,
+		.widget_twentyeleven_ephemera .comments-link a:hover,
+		section.recent-posts .other-recent-posts a[rel="bookmark"]:hover,
+		section.recent-posts .other-recent-posts .comments-link a:hover,
+		.format-image footer.entry-meta a:hover,
+		#site-generator a:hover {
+			color: #1f7ae4;
+		}
+		section.recent-posts .other-recent-posts .comments-link a:hover {
+			border-color: #1f7ae4;
+		}
+		article.feature-image.small .entry-summary p a:hover,
+		.entry-header .comments-link a:hover,
+		.entry-header .comments-link a:focus,
+		.entry-header .comments-link a:active,
+		.feature-slider a.active {
+			background-color: #1f7ae4;
+		}
+	</style>
+	<meta name="application-name" content="Claw"><meta name="msapplication-window" content="width=device-width;height=device-height"><meta name="description" content="Previous Chapter Next Chapter People couldn&#39;t relax.  No TV, no internet, no phones, no lights, with enough going on outside that people wanted to investigate.  Apartments were lit by candles and flashlights, at best, which helped to highlight the silhouettes of people who had moved out to balconies, fire escapes, front porches, and front steps. …">
+		<style type="text/css" id="twentyeleven-header-css">
+				#site-title,
+		#site-description {
+			position: absolute;
+			clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+			clip: rect(1px, 1px, 1px, 1px);
+		}
+				</style>
+	<script src="./The Quick – 5.3 _ Claw_files/wp-emoji-release.min.js.download" defer=""></script><link rel="stylesheet" id="gravatar-card-css" href="./The Quick – 5.3 _ Claw_files/hovercards.min.css"><link href="./The Quick – 5.3 _ Claw_files/actionbar.css" type="text/css" rel="stylesheet"></head>
+
+<body class="post-template-default single single-post postid-1739 single-format-standard wp-custom-logo wp-embed-responsive customizer-styles-applied single-author singular two-column right-sidebar jetpack-reblog-enabled vsc-initialized">
+<div class="skip-link"><a class="assistive-text" href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/#content">Skip to primary content</a></div><div id="page" class="hfeed">
+	<header id="branding">
+			<hgroup>
+				<h1 id="site-title"><span><a href="https://clawwebserial.blog/" rel="home">Claw</a></span></h1>
+				<h2 id="site-description"></h2>
+			</hgroup>
+
+						<a href="https://clawwebserial.blog/">
+									<img src="./The Quick – 5.3 _ Claw_files/claw-banner2.png" width="1000" height="288" alt="Claw">
+								</a>
+			
+						<div class="only-search with-image">
+					<form method="get" id="searchform" action="https://clawwebserial.blog/">
+		<label for="s" class="assistive-text">Search</label>
+		<input type="text" class="field" name="s" id="s" placeholder="Search">
+		<input type="submit" class="submit" name="submit" id="searchsubmit" value="Search">
+	</form>
+			</div>
+				
+			<nav id="access">
+				<h3 class="assistive-text">Main menu</h3>
+				<div class="menu"><ul>
+<li><a href="https://clawwebserial.blog/">Home</a></li><li class="page_item page-item-13"><a href="https://clawwebserial.blog/about/">About</a></li>
+<li class="page_item page-item-40"><a href="https://clawwebserial.blog/support-wildbow/">Support Wildbow</a></li>
+<li class="page_item page-item-45"><a href="https://clawwebserial.blog/table-of-contents/">Table of Contents</a></li>
+</ul></div>
+			</nav><!-- #access -->
+	</header><!-- #branding -->
+
+
+	<div id="main">
+
+		<div id="primary">
+			<div id="content" role="main">
+
+				
+					<nav id="nav-single">
+						<h3 class="assistive-text">Post navigation</h3>
+						<span class="nav-previous"><a href="https://clawwebserial.blog/2024/06/27/the-quick-5-2/" rel="prev"><span class="meta-nav">←</span> Previous</a></span>
+						<span class="nav-next"><a href="https://clawwebserial.blog/2024/07/12/the-quick-5-4/" rel="next">Next <span class="meta-nav">→</span></a></span>
+					</nav><!-- #nav-single -->
+
+					
+<article id="post-1739" class="post-1739 post type-post status-publish format-standard hentry category-uncategorized">
+	<header class="entry-header">
+		<h1 class="entry-title">The Quick –&nbsp;5.3</h1>
+
+				<div class="entry-meta">
+						<span class="sep">Posted on </span><a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/" title="10:31 am" rel="bookmark"><time class="entry-date" datetime="2024-07-06T10:31:20-06:00">July 6, 2024</time></a><span class="by-author"> <span class="sep"> by </span> <span class="author vcard"><a class="url fn n" href="https://clawwebserial.blog/author/wildbow/" title="View all posts by wildbow" rel="author">wildbow</a></span></span>		</div><!-- .entry-meta -->
+			</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p><a href="https://clawwebserial.blog/2024/06/27/the-quick-5-2/"><strong>Previous Chapter</strong></a></p>
+<p style="text-align: right"><a href="https://clawwebserial.blog/2024/07/12/the-quick-5-4/"><strong>Next Chapter</strong></a></p>
+<hr>
+<p>People couldn’t relax.&nbsp; No TV, no internet, no phones, no lights, with enough going on outside that people wanted to investigate.&nbsp; Apartments were lit by candles and flashlights, at best, which helped to highlight the silhouettes of people who had moved out to balconies, fire escapes, front porches, and front steps.&nbsp; It was dark enough out that the occasional fire was a mercy, because of the light it shed.&nbsp; A trash can here, a car there.&nbsp; Double-sided, though.&nbsp; The smoke stung the eyes and it had a way of lingering, or things would seem fine and then the wind would turn.</p>
+<p>A few people had high powered flashlights, likely bought after past blackouts.&nbsp; Lights strong enough that the subject of the beam was almost standing in daylight.&nbsp; They were like narrow searchlights.&nbsp; Carson could read a sort of personality into each, and their focuses.</p>
+<p>People who wanted to know what was going on, touching on everything that moved, returning to points of interest.</p>
+<p>Nervous people, looking for danger.</p>
+<p>People focused on community and neighbors, who had to shield their eyes as they responded with shouts from the other side of the street or a few balconies over.</p>
+<p>They drove down two blocks, navigating around things in the street, and there were barely any lights at all for those two blocks, indoors or outdoors.&nbsp; No moon, one other car.&nbsp; As they approached an intersection with no lights or signage where two cars had collided and been abandoned by the owners, Carson reminded himself of where his gun was, adjusting its placement on his belt.</p>
+<p>Mia noticed and looked up from the laptop she’d turned on.&nbsp; She was conserving battery, and had backup batteries just in case, but she had no connection, so she had to rely on information she had already gathered.</p>
+<p>“Problem?”&nbsp; Her voice was soft.&nbsp; She’d noticed him adjusting his gun.</p>
+<p>Valentina, lying in the back seat, sat up a bit.</p>
+<p>“Not sure,” Carson replied.&nbsp; There was room to get a car between the stopped car and the pole with the traffic lights, but it was awkward, meant going slow.</p>
+<p>Some people came running their way in the darkness.</p>
+<p>“Watch them!” he barked, hitting the gas, with the car lurching.&nbsp; His focus was on other angles.&nbsp; People who might actually be doing more than chasing.&nbsp; There was trash in the road, a black trash bag that had been left outside with its contents strewn out to the dotted yellow line.</p>
+<p>He took the long way around that trash, turning late and letting the back of the car swing out.&nbsp; It meant the car clipped the <em>other</em> traffic light pole, on the far side of the street, but it meant they didn’t drive through it.</p>
+<p>It would be too easy for a board studded with nails to be hidden in there, as a follow-up.</p>
+<p>Maybe there was.&nbsp; But there was <em>another</em> follow-up in the form of something heavy dropped onto the car from above.&nbsp; It bounced off, but left the windshield covered in spiderwebbing cracks, roof dented.</p>
+<p>Carson grabbed one of the smaller bags that sat on the middle console, and used it to punch out the broken part of the windshield.</p>
+<p>“I’m not sure if I was sheltered, before, but this feels worse than the other times,” Valentina remarked.</p>
+<p>“There was a bad patch a while back, like this,” Carson said.&nbsp; “High school was canceled for so long they were saying we hadn’t gotten enough hours and we might need to all redo the year.”</p>
+<p>No further signs of ambush.&nbsp; He wasn’t sure what they’d planned with the dropped object, which might have been an in-window air conditioner, but it hadn’t worked.&nbsp; His eyes stung with smoke and hot wind.</p>
+<p>“It feels like things will always be this way,” Valentina said.</p>
+<p>Carson looked in the rear view mirror.&nbsp; Valentina was watching out the window.</p>
+<p>“After times like this?&nbsp; It ends,” Mia said.&nbsp; “But things will be worse for a while after.&nbsp; It’s why I wanted the money from the work Carson and I have been doing.&nbsp; Why I want you kids prepared, and I’m praying that what I’ve taught Ripley helps her make it through.”</p>
+<p>“Let’s hope,” Carson said.</p>
+<p>“I hate this,” Mia muttered.&nbsp; “We should have done a better job of organizing just-in-case measures, meeting places with the people we’re working with, if we got cut off.”</p>
+<p>“I don’t think we could have anticipated a complete loss of communication.”</p>
+<p>“We should have.&nbsp; That’s on me,” Mia answered. “We should have communicated better with Bolden and Highland.”</p>
+<p>“Really, it’s on me, isn’t it?” Carson asked.&nbsp; “That’s more of what I handle?&nbsp; <em>People?&nbsp; </em>While you plan?”</p>
+<p>Mia seemed to pull out of that line of thought, as he said that.&nbsp; “I’m not blaming you.”</p>
+<p>“I know.”</p>
+<p>“I wasn’t trying to accuse you.”</p>
+<p>“I know.&nbsp; But I also know we’ve been distracted.&nbsp; Ripley’s been taken, twice now.&nbsp; Now hopefully the people we called for help are out this way,” Carson said.&nbsp; “Keep an eye out.”</p>
+<p>The people who were outdoors became a visual noise, making it hard to pick out any friends out on the street or sidewalk.&nbsp; Carson could remember how people they’d met walked, moved, and held themselves, and found himself looking more for that than anything else.</p>
+<p>It would be easier if he could poke his head out the window and let them see him, instead, but that would be problematic if there was an opportunistic Cavalcanti soldier out there.</p>
+<p>Especially when the mercenaries they’d hired were close to Cavalcanti operations and assets.&nbsp; It upped the chances.</p>
+<p>There were other chances of trouble, too.&nbsp; There had been more than a few cars left in the middle of the street.&nbsp; Was that because the gas stations had been mobbed and closed, shutting off the pumps?&nbsp; Cars out of gas?</p>
+<p>Was it malice?&nbsp; More traps?&nbsp; Carjackings?</p>
+<p>He remembered being a teenager, last year of high school, and seeing it reported about how people trying to leave the areas where riots were worst were prime targets.&nbsp; Because they brought all their valuables.&nbsp; People would run up to windows, put guns to heads, and then jack the car and all its contents.&nbsp; Everything that wasn’t valuable would be dumped out by the side of the road a few miles out of town, sorted through.</p>
+<p>He didn’t want to fall victim to something like that.&nbsp; Ripley being in the hands of the Cavalcanti family raised the stakes.</p>
+<p>The thing that had struck him the most about it, back then, was that, in the end, none of the culprits were caught.&nbsp; People had been killed, wounded, or left by the side of the road.&nbsp; Cars and possessions looted and discarded.&nbsp; And the culprits had gone back to being part of society.&nbsp; Never caught.&nbsp; He’d brought it up to Mia once and she’d looked it up.</p>
+<p>It had changed how he saw the world.&nbsp; He thought back to it a lot.&nbsp; That so many people could wear that mask.</p>
+<p>Further down the street, one of the flashlight beams shone down like a searchlight, again, wide beam, startling in its brightness.&nbsp; It didn’t move from where it was pointed.&nbsp; Some cars were double parked, making navigation a zig-zag to begin with.&nbsp; His view of the beam’s subject came and went as he weaved the car through.&nbsp; A slice of a view, then a glimpse, then a clearer picture.</p>
+<p>The beam was focused on a body.</p>
+<p>He stopped.&nbsp; Valentina leaned forward for a better view.</p>
+<p>A young woman lay on the street.&nbsp; One of her legs had a slash of crimson down the front of it, mid thigh to knee to foot.&nbsp; It was hard to tell if her foot was hurt or if it was her shoes with blood on them.</p>
+<p>Probably a bystander.&nbsp; Blonde, a little overweight, not dressed like a protestor or civil warrior.</p>
+<p>Nobody else was around.&nbsp; In so many other places, there had been people on the sidewalk.</p>
+<p>He started to turn.</p>
+<p>“Where are you going?” Valentina asked.</p>
+<p>“This feels like a trap,” he said, voice low.&nbsp; He wanted to be able to hear any ambient sounds.&nbsp; Smoke stung his eyes as wind blew through the break in the windshield.</p>
+<p>“You think she’s faking?” Valentina asked.</p>
+<p>He studied the woman.&nbsp; She was breathing slowly.&nbsp; Her expression and the way she moved when she moved her leg…</p>
+<p>“No,” he replied.&nbsp; “But I remember stories of snipers leaving people wounded, then shooting the people who go to help.”</p>
+<p>“That’s not a sniper wound,” Mia observed.</p>
+<p>“No it’s not.&nbsp; It’s a knife wound,” Carson said.&nbsp; He started to turn.</p>
+<p>“We should help her,” Valentina told them.</p>
+<p>“Even knowing it’s a trap?” he asked.&nbsp; “It’s safer to go around, take another street.”</p>
+<p>The flashlight beam shone down.&nbsp; There was… not body language, but something like it, in how people used the lights, and where they turned their focus.</p>
+<p>This felt like a <em>plea</em>.&nbsp; Carson bent his head down to get a better view of the balcony above.&nbsp; A man who wasn’t brave enough to step outside was shining that light in hope someone else would step forward.</p>
+<p>“We should,” Valentina said, quiet.&nbsp; “It’s like Highland said.&nbsp; You need to be that person, for your taking Ripley to even have a chance of being okay.&nbsp; Or what you said, Carson.&nbsp; About needing to be able to justify it all to her.”</p>
+<p>“Even knowing the time we take here might mean we can’t get to her in time?”</p>
+<p>“I don’t think that’s all that much a thing,” Valentina said.&nbsp; “He’s had her for long enough to do something, if he’s going to do it.&nbsp; I know you’re anxious, but-”</p>
+<p>“Let’s-” Mia interrupted, with more force than necessary.</p>
+<p>She was tense.&nbsp; Maybe getting a headache.&nbsp; She’d stopped of her own accord.&nbsp; Her hand went to the back of her neck.</p>
+<p>“You going to be okay?” he asked.</p>
+<p>“Let’s hurry this up,” Mia said.</p>
+<p>“Yeah.”</p>
+<p>He pulled around, going forward.</p>
+<p><em>We’re helping.&nbsp; Now turn that flashlight to the surrounding area.&nbsp; Light up the areas between parked cars, and in doorways and alleys.</em></p>
+<p>The flashlight remained.</p>
+<p><em>Is he part of it?</em>&nbsp; Carson wondered.&nbsp; <em>Drawing attention to the bait in the trap?</em></p>
+<p>From what Carson could see, past the glare, the man’s expression was <em>terrible</em>.&nbsp; Like he was the one in the street, bleeding out.&nbsp; Carson guessed he didn’t know the woman, simply from the fact he hadn’t dared to come out, and wasn’t signaling or doing more to indicate a particular reason <em>why </em>he didn’t dare to come out.</p>
+<p>Keys out of the ignition.&nbsp; He didn’t want someone climbing in after him, especially if Valentina and Mia got out too.</p>
+<p>“Ma’am?” he asked, as he climbed out of the car.&nbsp; “Before I approach, what injured you?”</p>
+<p>“Looters,” was the response.</p>
+<p>“Are they still here?”</p>
+<p>“I don’t know.&nbsp; I don’t think.&nbsp; They took my car.”</p>
+<p>He approached, eyes on the surroundings.&nbsp; “What’s injured?&nbsp; Stab wound?”</p>
+<p>“They jammed a knife into my thigh.”</p>
+<p>“And pulled it out, got it.”<em> &nbsp;</em><em>She’s bleeding a lot</em>.</p>
+<p>She made noises of pain, as if talking about the injury reminded her of the pain.&nbsp; But it <em>was</em> real.&nbsp; It wasn’t a bluff.&nbsp; It was the wiring of the human brain.</p>
+<p>“Hey,” he said, to get her focus.&nbsp; “Hey, look at me.”</p>
+<p>She did, and then she shied away.</p>
+<p>“Please don’t hurt me,” the young woman whispered.</p>
+<p>She was hurt, maybe suffering from blood loss, and feeling vulnerable and scared.&nbsp; Carson had been projecting confidence, in hopes that someone waiting to ambush him from the sidelines might think twice.&nbsp; His hand was close to his gun, in a holster at his waist, only partially hidden by his shirt.</p>
+<p>But to her, he cut a scary figure.</p>
+<p>“Honey?” he called out, changing his tone, to be a little less intimidating, but still confident.</p>
+<p>“What?”&nbsp; Mia had gotten out of the car.</p>
+<p>“Tourniquet is in the kit in the back seat.”</p>
+<p>“That one,” she said, to Valentina.&nbsp; “Yes.”</p>
+<p>“We’ll get you sorted,” he told the woman.&nbsp; “My daughter wanted to make sure you were okay.”</p>
+<p>“Oh.”</p>
+<p>The flashlight shone in his eyes as he looked around, making it harder to see.&nbsp; He raised a hand to shield his eyes, and motioned with the other.&nbsp; <em>Please work with me.</em></p>
+<p>Motion in the corner of his vision made him move.&nbsp; Carson pivoted, dropping his hand.&nbsp; The wound at his side, where the bullet had taken a chunk out of him a few days ago, made his entire chest seize in pain.</p>
+<p>He still dropped to his knee, drawing.</p>
+<p>A man with a gun.</p>
+<p><em>“Ahem.”</em></p>
+<p>Three, Carson realized.&nbsp; One woman, two men.&nbsp; All wearing face masks.</p>
+<p>He had the one gunman in his sights.&nbsp; He’d managed that much.&nbsp; He rose to his feet, moving slowly, until he could make out the others in the corner of his vision, without looking away.</p>
+<p>But the other man was pointing a gun at Mia, who stood on the sidewalk, halfway between the car and the injured woman.&nbsp; The woman was pointing a gun at Carson’s back.</p>
+<p>His heartbeats were steady.&nbsp; He kept his gaze unflinching.</p>
+<p>“That’s them.&nbsp; I’m sorry.&nbsp; I didn’t know they stayed,” the woman on the ground mumbled.&nbsp; “I’m sorry.”</p>
+<p>“It’s okay,” he said.</p>
+<p><em>Guy with the flashlight, I don’t suppose I could count on you to blind some of these losers?</em> Carson wondered.</p>
+<p>He didn’t.&nbsp; Fucking useless.</p>
+<p>“Drop the gun, put it on the roof of the car to your right,” a gunman ordered Carson.</p>
+<p><em>Or throw an air conditioner onto one of their heads?&nbsp; Someone was willing to damage our car.</em></p>
+<p>No such luck.</p>
+<p><em>Anyone willing to take aim?</em></p>
+<p>Nobody.&nbsp; Annoying.</p>
+<p>He looked at the car, where Valentina still sat at the back.&nbsp; She wasn’t armed.</p>
+<p>Moses was following but he’d be a minute.&nbsp; He was supposed to try to round up some other people and then meet them.</p>
+<p>Highland was gone, and Carson wasn’t sure that even in some strange scenario where he’d gotten a car ride to get partway here, then stumbled onto this scene, that he’d help.&nbsp; Same for the Angel of Death.</p>
+<p>They had no friends here.&nbsp; In fact, they were short on friends in general.</p>
+<p>Valentina was mouthing something.</p>
+<p>Carson shook his head slightly, before turning his full focus to the people with guns.</p>
+<p>The fear he felt was smaller than the pain in his side.</p>
+<p>He wanted to save Mia.&nbsp; He wanted to rescue Ripley.&nbsp; He wanted to go back to Tyr, who was being watched by one of the people Mia had helped in the past.&nbsp; It was someone that had done something white collar, nothing that helped them in this bigger situation, but they were willing to look after Tyr and Mia trusted them.</p>
+<p>Going by past babysitters, they’d regret that.&nbsp; Tyr was full of life in the same way there was a lot of life in a charging rhino.</p>
+<p>“You’re smiling?” the man who was holding Mia at gunpoint asked.</p>
+<p>He was smiling?</p>
+<p>He was tired.&nbsp; That was a mistake on his part.&nbsp; He decided to seize on it, instead of trying to fix it.&nbsp; “You’re lucky.&nbsp; You know my face is worth at least five figures?&nbsp; Fifty thousand dollars plus.”</p>
+<p>“What are you talking about?” the other gunman asked.&nbsp; “Put your gun away.”</p>
+<p>“Over a hundred thousand dollars, this mug.&nbsp; Do you know why?”</p>
+<p>He wondered if there would be a psychological effect on their aim, on the off chance he was telling the truth and a bullet to the face might take away that value- or erase it.</p>
+<p>“Don’t care.&nbsp; Gun.&nbsp; Roof of the car, now.”</p>
+<p>“You could look it up online, if things were working, I’m a prize,” Carson said.&nbsp; The man with a gun pointed at him was shorter than him, so Carson stepped right over to the car that had been left double-parked and put it down on the car roof.&nbsp; “Do you know why?”</p>
+<p>Putting the gun down at nearly arm’s length for him put it just barely in the reach of the gunman.</p>
+<p>“I don’t care,” the man said.&nbsp; “Wallet too.&nbsp; And step back.”</p>
+<p>“Look at my face.&nbsp; You don’t recognize me?” Carson asked.&nbsp; The man glanced at him, hand groping blindly for the gun.&nbsp; Carson turned to the other gunman, pointing.&nbsp; “<em>You</em> recognize me.”</p>
+<p>“Is he on drugs?” the woman asked, at the same moment the other guy said, “What the fuck-?”</p>
+<p>It was a moment.&nbsp; The gunman confronting Carson felt like he had control over the situation, but his attention was split three ways, between the gun, Carson, and the focus on the others.&nbsp; Carson had hoped for a glance over at the guy, when he’d suggested the man recognized him.&nbsp; Get this guy looking at his friend, and his friend looking away from Mia.&nbsp; Confuse, then suggest there’s an answer coming.&nbsp; The fact they were talking over one another worked too.</p>
+<p>More than anything, though, past the attempt to create distractions and find an opening, and that limited strategy, Carson didn’t care that much if he died.&nbsp; Not if Mia could get out and if he could get them closer to saving Ripley.</p>
+<p>The lack of caring made for a fake sort of bravery and was most of why he was willing and able to do this.&nbsp; He took one long step inside the man’s reach, almost kissing him, catching the gun arm in between his hooked elbow and his body.</p>
+<p>Very close to the bandaged wound in his ribs, as it happened.&nbsp; Not ideal.&nbsp; Even the closeness hurt.</p>
+<p>But it trapped the gun hand, a big threat, and he could push his chest into the smaller man to help reorient him to where he was in the way of incoming gunshots from the other two.&nbsp; It made him a body shield.&nbsp; Less to stop a bullet, since there were no guarantees there, more to make the others pause before shooting their friend.</p>
+<p>And, in the process, Carson still had one arm free.</p>
+<p>Mia grabbed the other distracted gunman and lifted him off his feet.&nbsp; Not by much, but enough that she could thrust him backward, almost stumbling, almost thrown, over the hood of the nearby car.&nbsp; He slid over the hood and into the woman with the other gun, and the two fell.</p>
+<p>There was a window where the woman could have shot Carson, before the body collided with her, and before her friend’s body was in the way.&nbsp; She didn’t.&nbsp; Carson’s free hand caught the gun from the roof, and he hammered the man’s ear with it, reasserting the lock of elbow around gun arm as the man fell.&nbsp; The arm bent backwards with the weight of the man</p>
+<p>He felt the bandage at his side tear off as the arm dragged against his ribs, and even seemed to catch on the notch- not really possible, given the size of it.&nbsp; But it felt like it, and made pain thrum and jolt all through Carson’s upper body and down his arm.</p>
+<p>Still, there were bigger issues.&nbsp; The other two, they still had guns, or had guns in arm’s reach.&nbsp; He took aim, then stopped.</p>
+<p>Mia descended on them.</p>
+<p>Her hand grabbed the other man’s lower face, fingers going into his mouth, fingertips in the floor of his mouth and gums, thumb digging into the soft underside of the jaw.&nbsp; She lifted his head up, then punched down with it still in her grip, the back of his head catching the side of the woman’s.</p>
+<p>When she pulled her hand away, his teeth had cut the back of her fingers, and there was a tooth embedded in the skin there.</p>
+<p>Then she hit them again.</p>
+<p style="text-align: center">⯁</p>
+<p>“Don’t move,” Mia whispered, panting for breath.</p>
+<p>Carson stopped.&nbsp; “Sensitive?”</p>
+<p>“No.&nbsp; But stay there.”</p>
+<p>He smiled.&nbsp; “Weirdo.”</p>
+<p>But he remained where he was, propped up by his arms, a trickle of sweat running down his back, looking at her, her head on the pillow, hair strewn around her.&nbsp; His arms and shoulders were tired, but that image below him was worth it.</p>
+<p>“Hi,” he said, when she met his eyes.</p>
+<p>She smiled for a moment, then looked aside.</p>
+<p>She looked sad.</p>
+<p>“You okay?”</p>
+<p>“After my head injury,” she said, while staring at the wall, “I went crazy.&nbsp; Brain swelling.&nbsp; I was fighting, screaming, shouting random things.&nbsp; My parents, the doctors, the surgeon, the nurses.”</p>
+<p>“Brain swelling.&nbsp; Makes sense.”</p>
+<p>“My mom said it took five people to hold me down.&nbsp; I was tall for my age, but I wasn’t strong, except in the… the way you’ve talked about.”</p>
+<p>That she didn’t hold back.&nbsp; That a few of the safeguards or the defenses that said ‘don’t punch that with all your strength or you’ll destroy your hand’, or ‘don’t lift like that, you’ll tear something’ weren’t there.</p>
+<p>“Yeah,” he answered.</p>
+<p>“My mom talked about that a lot.&nbsp; As the swelling went down, I made more sense, I couldn’t put everything together, about who was who or what was going on.&nbsp; But it wasn’t total amnesia.&nbsp; I knew who my mom was.&nbsp; I knew the hospital, my usual pediatrician was downstairs.”</p>
+<p>She’d talked about the accident and amnesia before.&nbsp; He wasn’t sure why she was talking about it now.</p>
+<p>“Yeah.”</p>
+<p>“But I was… I was still fighting, still- I wanted control.&nbsp; It took me a while to get back to full speech, but I knew English.&nbsp; A lot of the first words I said were vulgar.&nbsp; I got frustrated, because long words or sentences were hard, and I’d swear, I’d- I’m not explaining it well.”</p>
+<p>“It’s fine.&nbsp; You’re fine.”</p>
+<p>“I’d go straight to ten.&nbsp; I’d get mid-sentence, stumble, and rage.&nbsp; Like Ripley throwing a tantrum or Tyr screaming at the top of his lungs just because he can, but… worse.&nbsp; And I was older, and bigger.”</p>
+<p>“Yeah.”</p>
+<p>“I remember still being in the hospital and looking at my mom and saying ‘ugly, ugly, ugly’ over and over again, staring her down.&nbsp; She left the room crying.&nbsp; She mentioned that a lot, too.”</p>
+<p>“What’s up, Mi?” he asked.&nbsp; “What’s got you thinking about this?&nbsp; Was I that bad, that I brought up old, awful stories?”</p>
+<p>She shook her head.</p>
+<p>He wasn’t sure what to say, which was rare.</p>
+<p>“That’s not a signal to stop.&nbsp; Keep talking,” he told her.</p>
+<p>“A year and a half later, we were on a beach by the lake.&nbsp; Really narrow slice of beach, with basic construction material holding the dirt and grass and trees separate from the sand.&nbsp; To give you a picture.”</p>
+<p>“Sure.”</p>
+<p>“A snake slithered out of this gap in the wall of concrete blocks.&nbsp; Scared me.&nbsp; It wasn’t even close- thirty, forty feet.&nbsp; There was a broken concrete block that someone had put on the grass, eye level.&nbsp; I grabbed it and threw it, one handed.&nbsp; I was scared, I wanted to scare the snake away.&nbsp; I didn’t know what to do.&nbsp; I hit the snake, it thrashed, head up in the air, weird movements.”</p>
+<p>“You were scared,” he told her.</p>
+<p>“My mom was there, and she told me it worried her.&nbsp; Serial killers hurt animals when they’re young, she told me.&nbsp; She said that a lot.”</p>
+<p>Carson tilted his head, studying her.&nbsp; “Is she okay?&nbsp; Your mom?”</p>
+<p>“She’s dead,” Mia said, voice soft.&nbsp; “I got the call the day before yesterday.&nbsp; Then we were so busy expanding the bunker there wasn’t a good time to bring it up.”</p>
+<p>“Ah.”</p>
+<p>There had been a lot of quiet moments where she could’ve, but he understood.</p>
+<p>“For her, The Fall was the moment her daughter died.&nbsp; And she never forgave me,” Mia said.&nbsp; “For her, I was the one who replaced her daughter and didn’t let her come back.&nbsp; She kept alluding to me being a serial killer, or she’d talk about how I was like someone possessed, in the hospital, like a demon that only wanted to hurt people.&nbsp; I was just trying to deal.&nbsp; Using tools I had.”</p>
+<p>“Yeah.”</p>
+<p>“I don’t know why-” Mia stopped, emotion getting in the way of speaking.&nbsp; “-why she kept having to remind me, and tell me.&nbsp; That I was different, or broken, or that I was a demon, or that I hurt an animal.&nbsp; Because it’s not like I don’t remember.&nbsp; I remember being born.&nbsp; I remember those days in the hospital, and saying those things.&nbsp; I remember everything she refused to forgive me for, and now she’s dead.&nbsp; That’s all I have of her.&nbsp; That’s all I was to her.&nbsp; A monster.”</p>
+<p>“Do you want to go back?&nbsp; See her?&nbsp; Do something, for closure?” he asked.</p>
+<p>Mia shook her head.&nbsp; “I don’t want to connect those dots for anyone.”</p>
+<p>“Okay.&nbsp; Can I do anything?”</p>
+<p>“Are you still inside me?”</p>
+<p>He resisted the urge to make a joke.&nbsp; “Yeah.&nbsp; I’m small right now, though.&nbsp; Condom’s precariously placed.&nbsp; Needs replacing.”</p>
+<p>“I don’t care.&nbsp; Stay.&nbsp; Get big inside me.&nbsp; Do what you did a few minutes ago.&nbsp; Distract me.&nbsp; But don’t- don’t disconnect from me.&nbsp; <em>Please.</em>”</p>
+<p>“I’m not sure I have the stamina in my arms.&nbsp; Change of position?” he asked.</p>
+<p>She nodded, and opened her mouth.</p>
+<p>Before she could say anything, Tyr’s calls could be heard from down the hall.</p>
+<p>They remained where they were.&nbsp; Both of them, he figured, hoping he’d settle.</p>
+<p>He didn’t.</p>
+<p>“Your choice,” he said.&nbsp; “We could ignore it or-”</p>
+<p>“No.&nbsp; Of course no,” she said.&nbsp; “He might be sick, or hurt.&nbsp; He doesn’t do this unless it’s something.”</p>
+<p>“I’ll get him, then.”</p>
+<p>“No,” she said, shifting position.&nbsp; Sitting up more.&nbsp; “I need to, tonight.”</p>
+<p>Disconnecting.</p>
+<p>She was a <em>stunning</em> figure in the slice of streetlight that leaked past the curtains, pulling on pyjamas quickly.</p>
+<p>Melancholy.</p>
+<p><em>A demon</em>, he thought.</p>
+<p style="text-align: center">⯁</p>
+<p>“Mia,” he said.</p>
+<p>She was smashing the woman’s face in with the head of the guy.</p>
+<p>“My love.&nbsp; Dear wife,” Carson called out.</p>
+<p>She stopped.</p>
+<p>Using the guy’s jaw as a handhold for that level of violence had clearly dislocated it, at least on the one side.</p>
+<p>“Ripley,” she said.</p>
+<p>He wasn’t sure if she was saying it as an explanation for the violence, or if she was using it as a reason to pull away and stop.</p>
+<p>“Yeah.&nbsp; Rip.”</p>
+<p>Mia paused, then collected the fallen guns.</p>
+<p>“It’s a valuable face because there’s a bounty on it, see,” Carson told the gunman who was kneeling awkwardly at his side, one arm still trapped, other hand at his bleeding ear.&nbsp; Stunned and wide-eyed.&nbsp; Horrified by the scene, which was <em>very</em> crimson, illuminated by that damned flashlight.&nbsp; “I’m pretty sure the bounty on her head’s a lot bigger, though.</p>
+<p>“I didn’t hear that gun in your hand clatter to the ground,” Carson noted.&nbsp; He still had the guy’s arm pinned between his side and the crook of his elbow.</p>
+<p>He brought the handle down to the guy’s nose, and missed, hitting eye socket instead.</p>
+<p>“Huh.&nbsp; I’m still not hearing that-” Carson started.&nbsp; The gun dropped.&nbsp; “Thank you.”</p>
+<p>He pushed the guy down, and let him half-crawl a bit away.&nbsp; The man looked dizzy, hands working both to crawl and try to staunch open bleeding.</p>
+<p>“That was reckless,” Mia said.</p>
+<p>He considered justifying it.&nbsp; Mentioning that he didn’t mind dying.&nbsp; “Sorry.”</p>
+<p>“I need you.&nbsp; Rip needs you.&nbsp; Don’t get hurt.”</p>
+<p>“Okay.&nbsp; I might’ve screwed up there.&nbsp; I did get myself…”</p>
+<p>He moved his arm, checking.&nbsp; The wound at his side was bleeding freely again.&nbsp; Stitches torn, bandage gone.&nbsp; A streak of crimson at his side and hip.&nbsp; “A problem for when we’re back in the car.&nbsp; Did you get that tourniquet?”</p>
+<p>“Yes.”</p>
+<p>“Here,” he said, meeting her halfway.&nbsp; He handed her zip ties, and took the tourniquet.</p>
+<p>The woman didn’t look all there, as if she barely registered what had happened and what had been said.&nbsp; That was a problematic amount of blood loss.</p>
+<p>“Don’t worry, an acquaintance showed me this, and I’m a quick study,” he told her.</p>
+<p>Mia had finished zip tying the gunman’s ankle to his wrist, other hand to a car handle, and was collecting the gun.</p>
+<p>“We don’t have the blood bags in the cooler that the-”</p>
+<p>Mia was already shaking her head.&nbsp; “The angel took them.”</p>
+<p>“Damn.&nbsp; Those were expensive.”</p>
+<p>“It evens out.&nbsp; We owed her a bit more money.”</p>
+<p>Moses had pulled up behind the car, and was outside, watching, and maybe saying something to Valentina.</p>
+<p>“Hospital?” Carson called out.</p>
+<p>“Aren’t we trying to get everyone together?&nbsp; I brought The Kids.”</p>
+<p>Carson looked around, and squinted into the flashlight.&nbsp; He called up, “you going to help?”</p>
+<p>He wasn’t sure the man heard, so he drew in a breath to raise his voice-</p>
+<p>And the pain made his side cramp.&nbsp; He coughed, which hurt more, and made him double over.</p>
+<p>“Tell me what to say,” Mia told him.</p>
+<p>He couldn’t get his words together.</p>
+<p>“My daughter needs help and we don’t have time for this!” Mia raised her voice to an impressive volume.&nbsp; “Someone needs to speak up and say they’ll take this woman to a hospital <em>fast</em>!”</p>
+<p>“Or we’ll come back and-” Carson started.</p>
+<p>But someone called down, “Yeah!”</p>
+<p>“-make them wish they had,” Carson mumbled.&nbsp; He winced as he straightened, and took a gun from Mia so her hands were more free.</p>
+<p>They left the woman behind, emergency tourniquet applied, ambushers dealt with.</p>
+<p>“I’m sorry I didn’t do more,” Valentina said, as they reached the car.&nbsp; “I thought about getting a gun, but I don’t know where they’re stashed.</p>
+<p>“It’s alright,” he said.&nbsp; He paused, then handed her one of the ones the ambushers had brought.&nbsp; “No guarantees they work.&nbsp; I’d recommend a test fire if we find ourselves somewhere safe for that.”</p>
+<p>He grunted as he got halfway into the passenger seat, glancing back toward Moses.</p>
+<p>‘The Kids’ were out of the car, four out of the five smoking.&nbsp; They were watching Carson and Mia.&nbsp; Moses was talking to them.</p>
+<p>Carson tried not to look as hurt as he felt, focusing on focusing, making sure to study details.</p>
+<p>Their backup.&nbsp; Despite the name Valentina had coined for them, they were in their early through late twenties.&nbsp; Carson didn’t know them, barely knew more than Mia had mentioned, and then even after getting free of Davie’s clutches, his focus had been elsewhere.</p>
+<p>Now, as their allies peeled away or got distracted, they didn’t have a lot.&nbsp; He really would have rather had the horse piss ranchers.&nbsp; Or Bolden.&nbsp; Or Highland.&nbsp; He would have preferred known quantities.&nbsp; Or stable ones.&nbsp; He didn’t get the impression these guys were either.</p>
+<p>Mia had put them down as ‘only if necessary’, mostly because of where they’d come from and what they’d been through, but Valentina had thought it necessary enough to pull out all the stops… and now they were here.&nbsp; Everyone else gone, The Kids remained.</p>
+<p>Carson settled into the car, then reclined his seat, so he was lying down.&nbsp; Mia drove, while Carson guided Valentina through the cleaning of the wound site and redoing stitches.</p>
+<p>Smoke stung at his eyes.&nbsp; He put the crook of his elbow over his eyes while she focused on that, trying to turn his attention away from the pain.&nbsp; A momentary rest.</p>
+<p>He was tired.&nbsp; He’d been sloppy.</p>
+<p>Mia said, “I might need your eyes on the sidewalks and streets.&nbsp; In case one of our people is out there.&nbsp; Or the journalist.”</p>
+<p>“Right.&nbsp; As soon as I’m stitched up.”</p>
+<p>“I’m sorry.&nbsp; I didn’t think it would be that bad.&nbsp; I thought there was a really low chance there’d be an attack,” Valentina said.</p>
+<p>“Hundred percent chance,” Carson replied.</p>
+<p>“What?&nbsp; You saw them before?”</p>
+<p>“No, but there was a hundred percent chance, because they were lying in wait,” he said, arm still over eyes.&nbsp; “Nevermind, I’m being silly.”</p>
+<p>“I don’t get it.”</p>
+<p>“It’s okay,” he replied.&nbsp; He paused.&nbsp; “That’s a shitty response, I know.&nbsp; I don’t like to give it, but I’m not sure I can string together the idea.”</p>
+<p>“The chance doesn’t matter,” Mia said.&nbsp; “They were lying in wait.&nbsp; Focus on the clues we could have or should have noticed, or what we could have or should have done, instead.”</p>
+<p>“Works,” Carson said.&nbsp; “The journalist set the Civil Warriors on the Cavalcantis.&nbsp; I’d be willing to bet he’s near the fringes, looking for an opportunity.”</p>
+<p>“You said that earlier,” Mia told him.</p>
+<p>“Did I?”</p>
+<p>“You’re tired,” she said.&nbsp; “Rest.&nbsp; Valentina?&nbsp; Be my eyes, as soon as you’re done.”</p>
+<p>“Okay.”</p>
+<p>He didn’t rest.&nbsp; Couldn’t.&nbsp; The skirmish had left him too amped up, playing events back through his head, while Ripley was in danger.</p>
+<p>Mia reached the rendezvous point, and stopped.&nbsp; She took a couple minutes to tend to the bite marks on her hands.</p>
+<p>Valentina finished stitching Carson’s side back up, bandaging him, and then shifted to sitting askew in the back seat, the headrest of his reclined seat almost in her lap, one of her arms lying across his shoulders, her eyes on the streets outside.</p>
+<p>There was more smoke, more fire.&nbsp; It was brighter here than it had been before, despite it being later at night.</p>
+<p>He touched her arm, and she started to move it.&nbsp; He caught it beneath his own before she could extricate it from the space between the seat and the door, and kept it there, his hand over hers.</p>
+<p>“I was making sure you were breathing,” she said.&nbsp; “I thought you were nodding off.&nbsp; Sorry.”</p>
+<p>“It’s fine.”</p>
+<p>What she’d said was true, but not the whole truth.</p>
+<p>She was tired too, and scared.&nbsp; Humans liked physical contact.&nbsp; A scared kid reaching out for a dad-figure made sense.</p>
+<p>They’d reached the edge of one branch of the Civil Warrior protest.&nbsp; People were out there with their war paint on.&nbsp; Three blue streaks straight down across their faces, or red ones, that looked like blood.&nbsp; Homemade shields and spears.&nbsp; Torches bought in the store and hoarded, now lit.&nbsp; Some were wicker, decorative torches, of the sort bought at a furniture store, reeking of lemon scents.</p>
+<p>Here and there, other iconography.&nbsp; Celtic knots, norse runes.&nbsp; The ‘boo’ and ‘boo hoo’ terminology and opaque eye-less hoods over heads, sprayed white.&nbsp; The smiley faces of the Civil Warriors.</p>
+<p>There was a group with beards and beer bellies.&nbsp; Another with a fair few shaved heads or slicked-back haircuts.&nbsp; A dad was out there, marching, his six or seven year old daughter sitting on his shoulders, and as she roared, the crowd roared with her, which she responded to with her best roars.&nbsp; Back and forth.</p>
+<p>Cars were driving alongside the protest, some honking.&nbsp; Mia had blended in with them.</p>
+<p>Moses was further back.</p>
+<p>He sat up straighter, cognizant of Valentina’s hand.&nbsp; She still needed that reassurance.</p>
+<p>There was a lot that could be said about a man or a woman by how they held themselves.&nbsp; How he wore a bag, or carried a weapon.&nbsp; People gave away their degree of experience whether they were in school, in a gym, or picking up a new job by clothing choices, posture, and their focus.&nbsp; Carson had focused on looking for that and emulating it from a very young age.&nbsp; He credited his ability to get odd jobs and be accepted wherever he went to that awareness.</p>
+<p>Maybe he wasn’t even a genius at picking things up or having a wealth of different experiences to draw on.&nbsp; Maybe it was down to figuring out <em>other</em> things that freed his brain up to focus on learning or applying what he knew.&nbsp; Maybe it was something practiced.</p>
+<p>Mia was capable of looking at a lot of data and putting together a complete picture.&nbsp; Carson studied the individuals, then fit himself to them where necessary.</p>
+<p><em>Those</em> guys were amateurs.&nbsp; Out of them, the one others kept looking to had the veneer of someone who knew what he was all about, but his gear wasn’t sized to fit him, and he kept having to pull his shirt back, because the bag straps were too short and the fabric kept riding up, bag rubbing his back visibly red.&nbsp; He was dehydrated and sunburned, combining with the outfit situation to suggest it was his first time doing a serious protest.&nbsp; And he was the one that subgroup looked to?&nbsp; He looked like he was ready to be done with the pressure.&nbsp; Or the walking.</p>
+<p>Another group looked related.&nbsp; Niche, norse runes.&nbsp; They were brothers or cousins, for the most part, not part of the main group of Civil Warriors, but not turned away either.&nbsp; Dangerous, but not the ones giving any real direction.</p>
+<p>It was a shuffling crowd- some groups lost steam or stopped to share out water or huddle, or to spray paint, break store windows, and cause other mayhem while they caught their breath, because smoke, and because most of this riot was happening by walking from neighborhood to neighborhood.&nbsp; He had to read a group, then keep that in mind as he moved on to studying others, remembering where they’d been and what they’d been doing.&nbsp; Groups like the one led by the out of breath guy with the shirt riding up were good, because Carson could mentally discount them, focusing energies elsewhere.&nbsp; Who was going where?&nbsp; Who was on a mission?</p>
+<p>While he studied them, he kept other things in mind.&nbsp; The enemy.&nbsp; The Cavalcanti family had assets here.&nbsp; And the journalist.&nbsp; Benito Jaime.</p>
+<p>“What are we thinking, as far as the journalist?” Carson asked.</p>
+<p>“He might be near here.&nbsp; It’s the biggest protest, it’s not as far from where we were as other ones- they’re another thirty minutes of driving across the city,” Mia said.</p>
+<p>“Right.”</p>
+<p>“I thought he might be staking out Cavalcanti assets.&nbsp; I remember two locations near here,” Mia told him.&nbsp; “Valentina?&nbsp; What were the last reports we got from other groups?”</p>
+<p>“They were pulling back, consolidating in other places.&nbsp; Relying more on the police.”</p>
+<p>“I remember two areas they were pulling back to.&nbsp; Right here.&nbsp; There might have been more.&nbsp; I’m second guessing myself,” Mia said.</p>
+<p>“Should I get the laptop?” Carson offered.</p>
+<p>“Yeah.”</p>
+<p>He got the laptop, and broke contact with Valentina.&nbsp; Booting it up, he got into the files.</p>
+<p>“Maps are in a sub-folder.”</p>
+<p>He pulled up the maps.&nbsp; He hadn’t studied them, but they were faintly familiar.&nbsp; He’d seen them over Mia’s shoulder.</p>
+<p>“Stash house, and processing,” he reported.&nbsp; “You were right.”</p>
+<p>“Cavalcanti soldiers might be staying at the stash house,” Mia said.&nbsp; “Along with anything they weren’t able to move to a more central location.”</p>
+<p>“Processing?”</p>
+<p>“Cutting drugs and bagging them.” Mia answered.&nbsp; “They have a hard time keeping employees they can keep control over.&nbsp; If a girl working the streets doesn’t earn, or a dancer won’t dance, or someone talks back, they either get a beating or they have to work overtime at a processing place like this one.”</p>
+<p>“I’ve heard of and seen a few that weren’t Cavalcanti,” Carson said, still studying the crowd.&nbsp; <em>Where are they getting their marching orders?&nbsp; </em>“Scary work.&nbsp; Needs quick hands, they’ll strip you down to make sure you aren’t taking anything with.&nbsp; Often hot, no air conditioning.&nbsp; Men standing guard, barking at you, just as miserable in that situation, and they take advantage.”</p>
+<p>“And if they can’t manage that job, I guess they get shown the basement,” Valentina said.&nbsp; “Is that something we could use?&nbsp; Maybe a lieutenant can make a phone call, and we could sneak someone in?&nbsp; Sneak Ripley out?”</p>
+<p>“I very much doubt that’s possible,” Carson said.&nbsp; “He’ll be watching for something like that.&nbsp; But it’s a good starting point.&nbsp; Mia?&nbsp; I think Ben will focus on the drug processing.”</p>
+<p>“Not the stash house?&nbsp; It’s more connected to the money, hierarchy, leadership.”</p>
+<p>“He’s a creative, he doesn’t care about money.&nbsp; There’s a romance to the processing place.”</p>
+<p>Mia took a right turn, leaving the convoy and marching Civil Warriors behind.</p>
+<p>“Where are they headed?” Carson asked.</p>
+<p>“Both buildings are further down this street,” Mia replied.&nbsp; “I want to get ahead of this group, if we can.”</p>
+<p>Carson nodded.&nbsp; “Give a wide berth to the processing building.&nbsp; They’ll be on the alert.”</p>
+<p>“Good idea.”</p>
+<p>“We think he’s here?” Valentina asked.</p>
+<p>“I’d say so,” Carson said.</p>
+<p>“They’ll have parked a bit away, right?”</p>
+<p>“Probably.&nbsp; While we’re giving that wide berth, we can keep an eye out.”</p>
+<p>That helped narrow their choices.&nbsp; Because there were cars parked around here, and there were buildings that might be good vantage points for seeing what unfolded.</p>
+<p>They got out of the car, and instead of slamming the doors and giving that sound cue, Carson left his door open.</p>
+<p>Even if he wasn’t here, they could learn stuff by being here.&nbsp; The place was a corporate space from years ago, with dated wood panels on the walls and elevators, and brown carpet on floors, that might harken back to the seventies and eighties. With no cubicles or dividers, furniture or much of anything else, it was very brown and dingy, with that thickness to the air that old cigarette smoke gave things.</p>
+<p>The journalist and Rider were at the window, watching.</p>
+<p>Rider noticed them, and turned, hand going to gun.&nbsp; He stopped when he saw Carson aiming at him already.</p>
+<p>“There’s no power.&nbsp; How did you track us?” Rider asked.</p>
+<p>“Are you that good, or were we that sloppy?”</p>
+<p>He’d done so much damage, tipping off the Cavalcantis.</p>
+<p>A part of Carson wished they could destroy him the same way Mia had taken apart the two looters.</p>
+<p>“You were predictable,” Mia replied.&nbsp; “A big piece of me wants to put you through that window for the danger you put Ripley in.&nbsp; Your <em>stupidity</em>.”</p>
+<p>“We were between a rock and a hard place.”</p>
+<p>“That’s not a good analogy,” Mia said.&nbsp; “Because you’re not between a rock and a hard place.&nbsp; You got free of that situation because you chose to throw my daughter down onto the rocks.”</p>
+<p>Ben looked at each of them, with those distinctive eyes that weren’t the sort of green hispanic people tended to have.&nbsp; He dressed with awareness of the jades that would help it to pop.&nbsp; Which wasn’t a very good choice for a mission like this.</p>
+<p>Ben’s eyes settled on the gun Carson held.&nbsp; He looked past Carson to Moses and The Kids, who had followed.</p>
+<p>“Conceded,” Ben said, choosing to be diplomatic.</p>
+<p>“Your camera,” Mia said.</p>
+<p>Ben raised an eyebrow, glancing for a second at Rider.</p>
+<p>“Show me the footage.&nbsp; You record constantly.&nbsp; Show me what you have of <em>this.”</em></p>
+<p>“People arriving.”</p>
+<p>Mia nodded.</p>
+<p>The three of them approached.&nbsp; Carson relieved Rider and Ben of their guns, then used the back of his hand to pat for other weapons.&nbsp; Rider had a knife.</p>
+<p>It made it easier for, say, Mia to stand by Ben, while he held the camera, showing her, periodically zooming in.</p>
+<p>“That’s a doctor,” Mia said.&nbsp; “The one who tends to the higher-ups in the family.&nbsp; You told me about him, Valentina.”</p>
+<p>“He’s very good, apparently, very efficient, but he never listened to me.&nbsp; I remember one time a bodyguard accompanied me to the appointment.&nbsp; He didn’t say anything all appointment, and then at the end, he gave the rundown to the bodyguard.”</p>
+<p>“Is Addi here?” Mia asked.</p>
+<p>“We tailed her to get here.&nbsp; Her and her dad,” Ben said.&nbsp; Still very matter-of-fact, and cooperative.&nbsp; That was good.</p>
+<p>Because Mia really did seem like she wanted to put him through the window.</p>
+<p>“We did make a point of getting her out of your grip,” Ben added.</p>
+<p>That didn’t help.</p>
+<p>“The doctor, Addi’s father, they’re peripheral members of the family,” Carson said.&nbsp; “Key ones, but not <em>family</em>, exactly.”</p>
+<p>“Only the youngest, Andre, is inside,” Mia said.</p>
+<p>“He’s left and come back twice.&nbsp; A lot of people with him each time,” Rider said.</p>
+<p>“Between the stash house and here?”</p>
+<p>From the looks on their faces… Carson asked, “You didn’t know about the stash house?”</p>
+<p>“It’s hard to tail them without giving ourselves away.&nbsp; We’re doing what we can from a safe distance.”</p>
+<p>“Okay.&nbsp; With that in mind, will you help us?” Carson asked Ben.</p>
+<p>“For Natalie, for Ripley.&nbsp; Yeah,” Ben said.&nbsp; Wary, looking for details and clues about what they might actually be doing.&nbsp; Carson made sure not to give him any.</p>
+<p>“Civil Warriors are a few minutes of marching away.&nbsp; I want to assume this is a trap,” Carson said.</p>
+<p>Mia was nodding at that.</p>
+<p>“So let’s fall for it, and get what we need to leverage getting Ripley back.”</p>
+<hr>
+<p><a href="https://clawwebserial.blog/2024/06/27/the-quick-5-2/"><strong>Previous Chapter</strong></a></p>
+<p style="text-align: right"><a href="https://clawwebserial.blog/2024/07/12/the-quick-5-4/"><strong>Next Chapter</strong></a></p>
+<div id="jp-post-flair" class="sharedaddy sd-like-enabled sd-sharing-enabled"><div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul data-sharing-events-added="true"><li class="share-twitter"><a rel="nofollow noopener noreferrer" data-shared="sharing-twitter-1739" class="share-twitter sd-button share-icon" href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/?share=twitter&amp;nb=1" target="_blank" title="Click to share on Twitter"><span>Twitter</span></a></li><li class="share-facebook"><a rel="nofollow noopener noreferrer" data-shared="sharing-facebook-1739" class="share-facebook sd-button share-icon" href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/?share=facebook&amp;nb=1" target="_blank" title="Click to share on Facebook"><span>Facebook</span></a></li><li class="share-end"></li></ul></div></div></div><div class="sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-unloaded" id="like-post-wrapper-230145850-1739-672f22ad4157c" data-src="//widgets.wp.com/likes/index.html?ver=20241109#blog_id=230145850&amp;post_id=1739&amp;origin=clawwebserial.wordpress.com&amp;obj_id=230145850-1739-672f22ad4157c&amp;domain=clawwebserial.blog" data-name="like-post-frame-230145850-1739-672f22ad4157c" data-title="Like or Reblog"><div class="likes-widget-placeholder post-likes-widget-placeholder" style="height: 55px;"><span class="button"><span>Like</span></span> <span class="loading">Loading...</span></div><span class="sd-text-color"></span><a class="sd-link-color"></a></div>
+<div id="jp-relatedposts" class="jp-relatedposts" style="display: block;">
+	<h3 class="jp-relatedposts-headline"><em>Related</em></h3>
+<div class="jp-relatedposts-items jp-relatedposts-items-minimal jp-relatedposts-grid "><p class="jp-relatedposts-post jp-relatedposts-post0" data-post-id="2650" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://clawwebserial.blog/2024/10/18/seek-has-launched/?relatedposts_hit=1&amp;relatedposts_origin=1739&amp;relatedposts_position=0" title="Seek has launched" data-origin="1739" data-position="0">Seek has launched</a></span><time class="jp-relatedposts-post-date" datetime="October 18, 2024" style="display: block;">October 18, 2024</time><span class="jp-relatedposts-post-context">Liked by 4 people</span></p><p class="jp-relatedposts-post jp-relatedposts-post1" data-post-id="2628" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://clawwebserial.blog/2024/10/04/declawed-ending-thoughts/?relatedposts_hit=1&amp;relatedposts_origin=1739&amp;relatedposts_position=1" title="Declawed &amp;#8211; Ending&amp;nbsp;Thoughts" data-origin="1739" data-position="1">Declawed – Ending&nbsp;Thoughts</a></span><time class="jp-relatedposts-post-date" datetime="October 4, 2024" style="display: block;">October 4, 2024</time><span class="jp-relatedposts-post-context">Liked by 19 people</span></p><p class="jp-relatedposts-post jp-relatedposts-post2" data-post-id="1805" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://clawwebserial.blog/2024/07/12/the-quick-5-4/?relatedposts_hit=1&amp;relatedposts_origin=1739&amp;relatedposts_position=2" title="The Quick &amp;#8211;&amp;nbsp;5.4" data-origin="1739" data-position="2">The Quick –&nbsp;5.4</a></span><time class="jp-relatedposts-post-date" datetime="July 12, 2024" style="display: block;">July 12, 2024</time><span class="jp-relatedposts-post-context">Liked by 14 people</span></p></div></div></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+		This entry was posted in <a href="https://clawwebserial.blog/category/uncategorized/" rel="category tag">Uncategorized</a> by <a href="https://clawwebserial.blog/author/wildbow/">wildbow</a>. Bookmark the <a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/" title="Permalink to The Quick – 5.3" rel="bookmark">permalink</a>.
+		
+			</footer><!-- .entry-meta -->
+</article><!-- #post-1739 -->
+
+						<div id="comments">
+	
+	
+			<h2 id="comments-title">
+			5 thoughts on “<span>The Quick –&nbsp;5.3</span>”		</h2>
+
+		
+		<ol class="commentlist">
+					<li class="comment even thread-even depth-1" id="li-comment-1141">
+		<article id="comment-1141" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.3 _ Claw_files/36eb3ba1adc4762968a4d17c1d172cabc8bd3fd083720135e884f7cfedcf4a86" srcset="https://0.gravatar.com/avatar/36eb3ba1adc4762968a4d17c1d172cabc8bd3fd083720135e884f7cfedcf4a86?s=68&amp;d=identicon&amp;r=G 1x, https://0.gravatar.com/avatar/36eb3ba1adc4762968a4d17c1d172cabc8bd3fd083720135e884f7cfedcf4a86?s=102&amp;d=identicon&amp;r=G 1.5x, https://0.gravatar.com/avatar/36eb3ba1adc4762968a4d17c1d172cabc8bd3fd083720135e884f7cfedcf4a86?s=136&amp;d=identicon&amp;r=G 2x, https://0.gravatar.com/avatar/36eb3ba1adc4762968a4d17c1d172cabc8bd3fd083720135e884f7cfedcf4a86?s=204&amp;d=identicon&amp;r=G 3x, https://0.gravatar.com/avatar/36eb3ba1adc4762968a4d17c1d172cabc8bd3fd083720135e884f7cfedcf4a86?s=272&amp;d=identicon&amp;r=G 4x" class="avatar avatar-68 wp-hovercard-attachment grav-hashed grav-hijack" height="68" width="68" loading="lazy" decoding="async"><span class="fn">dork knight</span> on <a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/#comment-1141"><time datetime="2024-07-06T13:26:09-06:00">July 6, 2024 at 1:26 pm</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>Huh, so disturbing to see a seven year old at a rally like this… which fit the vibe intended. That is such good detail focus</p>
+<p>Thank you for the chapter!!!!!!!!</p>
+<p id="comment-like-1141" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/?like_comment=1141&amp;_wpnonce=e3da936e14" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1141" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/#" class="view-likers" data-like-count="4">4 people</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/?replytocom=1141#respond" data-commentid="1141" data-postid="1739" data-belowelement="comment-1141" data-respondelement="respond" data-replyto="Reply to dork knight" aria-label="Reply to dork knight">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-1151">
+		<article id="comment-1151" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.3 _ Claw_files/238f91138b823376d4f506140871e0d657d85afd0f53288ff7522b9f3b941d56" srcset="https://2.gravatar.com/avatar/238f91138b823376d4f506140871e0d657d85afd0f53288ff7522b9f3b941d56?s=68&amp;d=identicon&amp;r=G 1x, https://2.gravatar.com/avatar/238f91138b823376d4f506140871e0d657d85afd0f53288ff7522b9f3b941d56?s=102&amp;d=identicon&amp;r=G 1.5x, https://2.gravatar.com/avatar/238f91138b823376d4f506140871e0d657d85afd0f53288ff7522b9f3b941d56?s=136&amp;d=identicon&amp;r=G 2x, https://2.gravatar.com/avatar/238f91138b823376d4f506140871e0d657d85afd0f53288ff7522b9f3b941d56?s=204&amp;d=identicon&amp;r=G 3x, https://2.gravatar.com/avatar/238f91138b823376d4f506140871e0d657d85afd0f53288ff7522b9f3b941d56?s=272&amp;d=identicon&amp;r=G 4x" class="avatar avatar-68 wp-hovercard-attachment grav-hashed grav-hijack" height="68" width="68" loading="lazy" decoding="async"><span class="fn">OrdinaryNonEldrtchSort</span> on <a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/#comment-1151"><time datetime="2024-07-06T21:00:54-06:00">July 6, 2024 at 9:00 pm</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>im loving getting back to the hursts :). While they are under mountains of pressure it’s nice being in a pov that is somewhat at home in the chaos rather than scrambling like Ben 🙂</p>
+<p id="comment-like-1151" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/?like_comment=1151&amp;_wpnonce=5f0b713978" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1151" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/#" class="view-likers" data-like-count="3">3 people</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/?replytocom=1151#respond" data-commentid="1151" data-postid="1739" data-belowelement="comment-1151" data-respondelement="respond" data-replyto="Reply to OrdinaryNonEldrtchSort" aria-label="Reply to OrdinaryNonEldrtchSort">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="li-comment-1236">
+		<article id="comment-1236" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.3 _ Claw_files/693722e83a2c272c35e9a28f2a1e95e61669f25fa1c9e6628191e61230a43f4a" srcset="https://0.gravatar.com/avatar/693722e83a2c272c35e9a28f2a1e95e61669f25fa1c9e6628191e61230a43f4a?s=68&amp;d=identicon&amp;r=G 1x, https://0.gravatar.com/avatar/693722e83a2c272c35e9a28f2a1e95e61669f25fa1c9e6628191e61230a43f4a?s=102&amp;d=identicon&amp;r=G 1.5x, https://0.gravatar.com/avatar/693722e83a2c272c35e9a28f2a1e95e61669f25fa1c9e6628191e61230a43f4a?s=136&amp;d=identicon&amp;r=G 2x, https://0.gravatar.com/avatar/693722e83a2c272c35e9a28f2a1e95e61669f25fa1c9e6628191e61230a43f4a?s=204&amp;d=identicon&amp;r=G 3x, https://0.gravatar.com/avatar/693722e83a2c272c35e9a28f2a1e95e61669f25fa1c9e6628191e61230a43f4a?s=272&amp;d=identicon&amp;r=G 4x" class="avatar avatar-68 wp-hovercard-attachment grav-hashed grav-hijack" height="68" width="68" loading="lazy" decoding="async"><span class="fn">amaya</span> on <a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/#comment-1236"><time datetime="2024-07-10T02:16:09-06:00">July 10, 2024 at 2:16 am</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>Turns out the collapse is much longer term then I assumed if Carson as a teen already had to  expect repeating school because the sheer number of domestic attacks didn’t leave enough days of it running.</p>
+<p>In other news Mia’s mom <strong>really</strong> did a number on her (and I am fairly certain is the tipster that called about her dangerous daughter having a child she shouldn’t have)</p>
+<p>and Mia continues to be low key physically terrifying.</p>
+<p> the combination of exercising when stressed with Mia’s constant stress and basic physicality leading to her just using people as improvised weapons .</p>
+<p id="comment-like-1236" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/?like_comment=1236&amp;_wpnonce=4e00dc5793" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1236" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/#" class="view-likers" data-like-count="2">2 people</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/?replytocom=1236#respond" data-commentid="1236" data-postid="1739" data-belowelement="comment-1236" data-respondelement="respond" data-replyto="Reply to amaya" aria-label="Reply to amaya">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				<ul class="children">
+		<li class="comment byuser comment-author-greycat70 odd alt depth-2" id="li-comment-1276">
+		<article id="comment-1276" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.3 _ Claw_files/9065458a519e34a3a7f96f9b00369d789221b1c6bdad3fb2c1d794cc23183d0f" srcset="https://0.gravatar.com/avatar/9065458a519e34a3a7f96f9b00369d789221b1c6bdad3fb2c1d794cc23183d0f?s=39&amp;d=identicon&amp;r=G 1x, https://0.gravatar.com/avatar/9065458a519e34a3a7f96f9b00369d789221b1c6bdad3fb2c1d794cc23183d0f?s=59&amp;d=identicon&amp;r=G 1.5x, https://0.gravatar.com/avatar/9065458a519e34a3a7f96f9b00369d789221b1c6bdad3fb2c1d794cc23183d0f?s=78&amp;d=identicon&amp;r=G 2x, https://0.gravatar.com/avatar/9065458a519e34a3a7f96f9b00369d789221b1c6bdad3fb2c1d794cc23183d0f?s=117&amp;d=identicon&amp;r=G 3x, https://0.gravatar.com/avatar/9065458a519e34a3a7f96f9b00369d789221b1c6bdad3fb2c1d794cc23183d0f?s=156&amp;d=identicon&amp;r=G 4x" class="avatar avatar-39 wp-hovercard-attachment grav-hashed grav-hijack" height="39" width="39" loading="lazy" decoding="async"><span class="fn">greycat70</span> on <a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/#comment-1276"><time datetime="2024-07-12T05:41:58-06:00">July 12, 2024 at 5:41 am</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>I’m surprised Carson is only 28.  (He was a high school senior a decade ago, so by extrapolation, he must be about 28.)  Given that Mia’s around 40, their age difference is larger than I expected.</p>
+<p>For the collapse to have been in progress for 10 years sounds about right to me.  It’s long enough that people have started to adapt to it and live their lives around it.</p>
+<p id="comment-like-1276" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/?like_comment=1276&amp;_wpnonce=6c4ea25bd9" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1276" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/#" class="view-likers" data-like-count="1">1 person</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/?replytocom=1276#respond" data-commentid="1276" data-postid="1739" data-belowelement="comment-1276" data-respondelement="respond" data-replyto="Reply to greycat70" aria-label="Reply to greycat70">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-carroll12345 even depth-2" id="li-comment-1307">
+		<article id="comment-1307" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.3 _ Claw_files/81d7aaff59c948225c3d512701b5bebb0a7aa68840b2b8758b65cef9790c8f0d.png" srcset="https://2.gravatar.com/avatar/81d7aaff59c948225c3d512701b5bebb0a7aa68840b2b8758b65cef9790c8f0d?s=39&amp;d=identicon&amp;r=G 1x, https://2.gravatar.com/avatar/81d7aaff59c948225c3d512701b5bebb0a7aa68840b2b8758b65cef9790c8f0d?s=59&amp;d=identicon&amp;r=G 1.5x, https://2.gravatar.com/avatar/81d7aaff59c948225c3d512701b5bebb0a7aa68840b2b8758b65cef9790c8f0d?s=78&amp;d=identicon&amp;r=G 2x, https://2.gravatar.com/avatar/81d7aaff59c948225c3d512701b5bebb0a7aa68840b2b8758b65cef9790c8f0d?s=117&amp;d=identicon&amp;r=G 3x, https://2.gravatar.com/avatar/81d7aaff59c948225c3d512701b5bebb0a7aa68840b2b8758b65cef9790c8f0d?s=156&amp;d=identicon&amp;r=G 4x" class="avatar avatar-39 wp-hovercard-attachment grav-hashed grav-hijack" height="39" width="39" loading="lazy" decoding="async"><span class="fn">carroll12345</span> on <a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/#comment-1307"><time datetime="2024-07-13T17:00:09-06:00">July 13, 2024 at 5:00 pm</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>My dangerous daughter who I couldn’t try to even understand for the life of me. Yeah. I had a feeling about Mia’s mother even before these additional details, but now it’s ever more confirmed. It’s even very parallel to Natalie’s case: she fixed an image she wanted, in no small part because of fear, and couldn’t think about doing something else and forcing herself to be more flexible. Which is both understandable and not.</p>
+<p id="comment-like-1307" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/?like_comment=1307&amp;_wpnonce=52ead8a13a" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1307" class="comment-like-feedback">Like</span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/?replytocom=1307#respond" data-commentid="1307" data-postid="1739" data-belowelement="comment-1307" data-respondelement="respond" data-replyto="Reply to carroll12345" aria-label="Reply to carroll12345">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+		</ol>
+
+		
+		
+	
+		<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Leave a comment <small><a rel="nofollow" id="cancel-comment-reply-link" href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/#respond" style="display:none;">Cancel reply</a></small></h3><form action="https://clawwebserial.blog/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+
+
+
+<div id="comment-form__verbum" class="transparent"></div><div class="verbum-form-meta"><input type="hidden" name="comment_post_ID" value="1739" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+
+			<input type="hidden" name="highlander_comment_nonce" id="highlander_comment_nonce" value="3699246cdf">
+			<input type="hidden" name="verbum_show_subscription_modal" value=""></div><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="7823188b06"></p><p style="display: none !important;" class="akismet-fields-container" data-prefix="ak_"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="1731377880384"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p></form>	</div><!-- #respond -->
+	
+</div><!-- #comments -->
+
+				
+			</div><!-- #content -->
+		</div><!-- #primary -->
+
+
+	</div><!-- #main -->
+
+	<footer id="colophon">
+
+			
+
+			<div id="site-generator">
+				 								
+			</div>
+	</footer><!-- #colophon -->
+</div><!-- #page -->
+
+<!--  -->
+<script type="text/javascript" src="./The Quick – 5.3 _ Claw_files/hovercards.min.js.download" id="grofiles-cards-js"></script>
+<script type="text/javascript" id="wpgroho-js-extra">
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script crossorigin="anonymous" type="text/javascript" src="./The Quick – 5.3 _ Claw_files/wpgroho.js.download"></script>
+
+	<script>
+		// Initialize and attach hovercards to all gravatars
+		( function() {
+			function init() {
+				if ( typeof Gravatar === 'undefined' ) {
+					return;
+				}
+
+				if ( typeof Gravatar.init !== 'function' ) {
+					return;
+				}
+
+				Gravatar.profile_cb = function ( hash, id ) {
+					WPGroHo.syncProfileData( hash, id );
+				};
+
+				Gravatar.my_hash = WPGroHo.my_hash;
+				Gravatar.init(
+					'body',
+					'#wp-admin-bar-my-account',
+					{
+						i18n: {
+							'Edit your profile': 'Edit your profile',
+							'View profile': 'View profile',
+							'Sorry, we are unable to load this Gravatar profile.': 'Sorry, we are unable to load this Gravatar profile.',
+							'Profile not found.': 'Profile not found.',
+							'Too Many Requests.': 'Too Many Requests.',
+							'Internal Server Error.': 'Internal Server Error.',
+						},
+					}
+				);
+			}
+
+			if ( document.readyState !== 'loading' ) {
+				init();
+			} else {
+				document.addEventListener( 'DOMContentLoaded', init );
+			}
+		} )();
+	</script>
+
+		<div style="display:none">
+	<div class="grofile-hash-map-e1f672e61199239cf001c92cb9a1a10f">
+	</div>
+	<div class="grofile-hash-map-fd52638a2b6cc73040025ab45962dfc2">
+	</div>
+	<div class="grofile-hash-map-c00e68587c159cc02cf7a55c468070ee">
+	</div>
+	<div class="grofile-hash-map-ba0fdff57204813552e9097c18fca16b">
+	</div>
+	<div class="grofile-hash-map-aea6410e6eb009a8656243336c2f1bc8">
+	</div>
+	</div>
+	<div id="actionbar" class="actnbr-pub-twentyeleven actnbr-has-follow">
+		<ul>
+								<li class="actnbr-btn actnbr-hidden">
+						<a class="actnbr-action actnbr-actn-comment" href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/#comments">
+							<svg class="gridicon gridicons-comment" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M12 16l-5 5v-5H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v9c0 1.1-.9 2-2 2h-7z"></path></g></svg>							<span>Comment						</span>
+						</a>
+					</li>
+									<li class="actnbr-btn actnbr-hidden">
+						<a class="actnbr-action actnbr-actn-reblog" href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/">
+							<svg class="gridicon gridicons-reblog" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M22.086 9.914L20 7.828V18c0 1.105-.895 2-2 2h-7v-2h7V7.828l-2.086 2.086L14.5 8.5 19 4l4.5 4.5-1.414 1.414zM6 16.172V6h7V4H6c-1.105 0-2 .895-2 2v10.172l-2.086-2.086L.5 15.5 5 20l4.5-4.5-1.414-1.414L6 16.172z"></path></g></svg><span>Reblog</span>
+						</a>
+					</li>
+									<li class="actnbr-btn actnbr-hidden">
+								<a class="actnbr-action actnbr-actn-follow " href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path clip-rule="evenodd" d="m4 4.5h12v6.5h1.5v-6.5-1.5h-1.5-12-1.5v1.5 10.5c0 1.1046.89543 2 2 2h7v-1.5h-7c-.27614 0-.5-.2239-.5-.5zm10.5 2h-9v1.5h9zm-5 3h-4v1.5h4zm3.5 1.5h-1v1h1zm-1-1.5h-1.5v1.5 1 1.5h1.5 1 1.5v-1.5-1-1.5h-1.5zm-2.5 2.5h-4v1.5h4zm6.5 1.25h1.5v2.25h2.25v1.5h-2.25v2.25h-1.5v-2.25h-2.25v-1.5h2.25z" fill-rule="evenodd"></path></svg>
+			<span>Subscribe</span>
+		</a>
+		<a class="actnbr-action actnbr-actn-following  no-display" href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 4.5H4V15C4 15.2761 4.22386 15.5 4.5 15.5H11.5V17H4.5C3.39543 17 2.5 16.1046 2.5 15V4.5V3H4H16H17.5V4.5V12.5H16V4.5ZM5.5 6.5H14.5V8H5.5V6.5ZM5.5 9.5H9.5V11H5.5V9.5ZM12 11H13V12H12V11ZM10.5 9.5H12H13H14.5V11V12V13.5H13H12H10.5V12V11V9.5ZM5.5 12H9.5V13.5H5.5V12Z" fill="#008A20"></path><path class="following-icon-tick" d="M13.5 16L15.5 18L19 14.5" stroke="#008A20" stroke-width="1.5"></path></svg>
+			<span>Subscribed</span>
+		</a>
+							<div class="actnbr-popover tip tip-top-left actnbr-notice" id="follow-bubble">
+							<div class="tip-arrow"></div>
+							<div class="tip-inner actnbr-follow-bubble">
+															<ul>
+											<li class="actnbr-sitename">
+			<a href="https://clawwebserial.blog/">
+				<img alt="" src="./The Quick – 5.3 _ Claw_files/wpcom-gray-white.png" srcset="https://s0.wp.com/i/logo/wpcom-gray-white.png 1x" class="avatar avatar-50" height="50" width="50">				Claw			</a>
+		</li>
+										<div class="actnbr-message no-display"></div>
+									<form method="post" action="https://subscribe.wordpress.com/" accept-charset="utf-8" style="display: none;">
+																						<div class="actnbr-follow-count">Join 207 other subscribers</div>
+																					<div>
+										<input type="email" name="email" placeholder="Enter your email address" class="actnbr-email-field" aria-label="Enter your email address">
+										</div>
+										<input type="hidden" name="action" value="subscribe">
+										<input type="hidden" name="blog_id" value="230145850">
+										<input type="hidden" name="source" value="https://clawwebserial.blog/2024/07/06/the-quick-5-3/">
+										<input type="hidden" name="sub-type" value="actionbar-follow">
+										<input type="hidden" id="_wpnonce" name="_wpnonce" value="48d3b1056a">										<div class="actnbr-button-wrap">
+											<button type="submit" value="Sign me up">
+												Sign me up											</button>
+										</div>
+									</form>
+									<li class="actnbr-login-nudge">
+										<div>
+											Already have a WordPress.com account? <a href="https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Fclawwebserial.blog%252F2024%252F07%252F06%252Fthe-quick-5-3%252F">Log in now.</a>										</div>
+									</li>
+								</ul>
+															</div>
+						</div>
+					</li>
+							<li class="actnbr-ellipsis actnbr-hidden">
+				<svg class="gridicon gridicons-ellipsis" height="24" width="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M7 12c0 1.104-.896 2-2 2s-2-.896-2-2 .896-2 2-2 2 .896 2 2zm12-2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm-7 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z"></path></g></svg>				<div class="actnbr-popover tip tip-top-left actnbr-more">
+					<div class="tip-arrow"></div>
+					<div class="tip-inner">
+						<ul>
+									<li class="actnbr-sitename">
+			<a href="https://clawwebserial.blog/">
+				<img alt="" src="./The Quick – 5.3 _ Claw_files/wpcom-gray-white.png" srcset="https://s0.wp.com/i/logo/wpcom-gray-white.png 1x" class="avatar avatar-50" height="50" width="50">				Claw			</a>
+		</li>
+								<li class="actnbr-folded-customize">
+								<a href="https://clawwebserial.wordpress.com/wp-admin/customize.php?url=https%3A%2F%2Fclawwebserial.wordpress.com%2F2024%2F07%2F06%2Fthe-quick-5-3%2F">
+									<svg class="gridicon gridicons-customize" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M2 6c0-1.505.78-3.08 2-4 0 .845.69 2 2 2 1.657 0 3 1.343 3 3 0 .386-.08.752-.212 1.09.74.594 1.476 1.19 2.19 1.81L8.9 11.98c-.62-.716-1.214-1.454-1.807-2.192C6.753 9.92 6.387 10 6 10c-2.21 0-4-1.79-4-4zm12.152 6.848l1.34-1.34c.607.304 1.283.492 2.008.492 2.485 0 4.5-2.015 4.5-4.5 0-.725-.188-1.4-.493-2.007L18 9l-2-2 3.507-3.507C18.9 3.188 18.225 3 17.5 3 15.015 3 13 5.015 13 7.5c0 .725.188 1.4.493 2.007L3 20l2 2 6.848-6.848c1.885 1.928 3.874 3.753 5.977 5.45l1.425 1.148 1.5-1.5-1.15-1.425c-1.695-2.103-3.52-4.092-5.448-5.977z"></path></g></svg>									<span>Customize</span>
+								</a>
+							</li>
+																<li class="actnbr-folded-follow">
+												<a class="actnbr-action actnbr-actn-follow " href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path clip-rule="evenodd" d="m4 4.5h12v6.5h1.5v-6.5-1.5h-1.5-12-1.5v1.5 10.5c0 1.1046.89543 2 2 2h7v-1.5h-7c-.27614 0-.5-.2239-.5-.5zm10.5 2h-9v1.5h9zm-5 3h-4v1.5h4zm3.5 1.5h-1v1h1zm-1-1.5h-1.5v1.5 1 1.5h1.5 1 1.5v-1.5-1-1.5h-1.5zm-2.5 2.5h-4v1.5h4zm6.5 1.25h1.5v2.25h2.25v1.5h-2.25v2.25h-1.5v-2.25h-2.25v-1.5h2.25z" fill-rule="evenodd"></path></svg>
+			<span>Subscribe</span>
+		</a>
+		<a class="actnbr-action actnbr-actn-following  no-display" href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 4.5H4V15C4 15.2761 4.22386 15.5 4.5 15.5H11.5V17H4.5C3.39543 17 2.5 16.1046 2.5 15V4.5V3H4H16H17.5V4.5V12.5H16V4.5ZM5.5 6.5H14.5V8H5.5V6.5ZM5.5 9.5H9.5V11H5.5V9.5ZM12 11H13V12H12V11ZM10.5 9.5H12H13H14.5V11V12V13.5H13H12H10.5V12V11V9.5ZM5.5 12H9.5V13.5H5.5V12Z" fill="#008A20"></path><path class="following-icon-tick" d="M13.5 16L15.5 18L19 14.5" stroke="#008A20" stroke-width="1.5"></path></svg>
+			<span>Subscribed</span>
+		</a>
+										</li>
+																	<li class="actnbr-signup"><a href="https://wordpress.com/start/">Sign up</a></li>
+									<li class="actnbr-login"><a href="https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Fclawwebserial.blog%252F2024%252F07%252F06%252Fthe-quick-5-3%252F">Log in</a></li>
+																	<li class="actnbr-shortlink"><a href="https://wp.me/pfzFrQ-s3">Copy shortlink</a></li>
+																	<li class="flb-report">
+										<a href="https://wordpress.com/abuse/?report_url=https://clawwebserial.blog/2024/07/06/the-quick-5-3/" target="_blank" rel="noopener noreferrer">
+											Report this content										</a>
+									</li>
+																	<li class="actnbr-reader">
+										<a href="https://wordpress.com/read/blogs/230145850/posts/1739">
+											View post in Reader										</a>
+									</li>
+																	<li class="actnbr-subs">
+										<a href="https://subscribe.wordpress.com/">Manage subscriptions</a>
+									</li>
+																		<li class="actnbr-fold"><a href="https://clawwebserial.blog/2024/07/06/the-quick-5-3/">Collapse this bar</a></li>
+															</ul>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+	
+<script>
+window.addEventListener( "load", function( event ) {
+	var link = document.createElement( "link" );
+	link.href = "https://s0.wp.com/wp-content/mu-plugins/actionbar/actionbar.css?v=20241015";
+	link.type = "text/css";
+	link.rel = "stylesheet";
+	document.head.appendChild( link );
+
+	var script = document.createElement( "script" );
+	script.src = "https://s0.wp.com/wp-content/mu-plugins/actionbar/actionbar.js?v=20231122";
+	script.defer = true;
+	document.body.appendChild( script );
+} );
+</script>
+
+	
+	<script type="text/javascript">
+		window.WPCOM_sharing_counts = {"https:\/\/clawwebserial.blog\/2024\/07\/06\/the-quick-5-3\/":1739};
+	</script>
+				<script type="text/javascript" id="comment-like-js-extra">
+/* <![CDATA[ */
+var comment_like_text = {"loading":"Loading...","swipeUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/comment-likes\/js\/lib\/swipe.js?ver=20131008"};
+/* ]]> */
+</script>
+<script type="text/javascript" id="sharing-js-js-extra">
+/* <![CDATA[ */
+var sharing_js_options = {"lang":"en","counts":"1","is_stats_active":"1"};
+/* ]]> */
+</script>
+<script type="text/javascript" id="verbum-settings-js-before">
+/* <![CDATA[ */
+window.VerbumComments = {"Log in or provide your name and email to leave a reply.":"Log in or provide your name and email to leave a reply.","Log in or provide your name and email to leave a comment.":"Log in or provide your name and email to leave a comment.","Receive web and mobile notifications for posts on this site.":"Receive web and mobile notifications for posts on this site.","Name":"Name","Email (address never made public)":"Email (address never made public)","Website (optional)":"Website (optional)","Leave a reply. (log in optional)":"Leave a reply. (log in optional)","Leave a comment. (log in optional)":"Leave a comment. (log in optional)","Log in to leave a reply.":"Log in to leave a reply.","Log in to leave a comment.":"Log in to leave a comment.","Logged in via %s":"Logged in via %s","Log out":"Log out","Email":"Email","(Address never made public)":"(Address never made public)","Instantly":"Instantly","Daily":"Daily","Reply":"Reply","Comment":"Comment","WordPress":"WordPress","Weekly":"Weekly","Notify me of new posts":"Notify me of new posts","Email me new posts":"Email me new posts","Email me new comments":"Email me new comments","Cancel":"Cancel","Write a comment...":"Write a comment...","Write a reply...":"Write a reply...","Website":"Website","Optional":"Optional","We'll keep you in the loop!":"We'll keep you in the loop!","Loading your comment...":"Loading your comment...","Discover more from":"Discover more from Claw","Subscribe now to keep reading and get access to the full archive.":"Subscribe now to keep reading and get access to the full archive.","Continue reading":"Continue reading","Never miss a beat!":"Never miss a beat!","Interested in getting blog post updates? Simply click the button below to stay in the loop!":"Interested in getting blog post updates? Simply click the button below to stay in the loop!","Enter your email address":"Enter your email address","Subscribe":"Subscribe","Comment sent successfully":"Comment sent successfully","Save my name, email, and website in this browser for the next time I comment.":"Save my name, email, and website in this browser for the next time I comment.","siteId":230145850,"postId":1739,"mustLogIn":false,"requireNameEmail":true,"commentRegistration":false,"connectURL":"https:\/\/clawwebserial.wordpress.com\/public.api\/connect\/?action=request&domain=clawwebserial.blog","logoutURL":"https:\/\/clawwebserial.wordpress.com\/wp-login.php?action=logout&_wpnonce=37b2241ce6","homeURL":"https:\/\/clawwebserial.blog\/","subscribeToBlog":true,"subscribeToComment":true,"isJetpackCommentsLoggedIn":false,"jetpackUsername":"","jetpackUserId":0,"jetpackSignature":"","jetpackAvatar":"https:\/\/0.gravatar.com\/avatar\/?s=96&amp;d=identicon&amp;r=G","enableBlocks":true,"enableSubscriptionModal":true,"currentLocale":"en","isJetpackComments":false,"allowedBlocks":["core\/paragraph","core\/list","core\/code","core\/list-item","core\/quote","core\/image","core\/embed","core\/quote","core\/code"],"embedNonce":"2d3b1ac451","verbumBundleUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/jetpack-mu-wpcom-plugin\/sun\/vendor\/automattic\/jetpack-mu-wpcom\/src\/features\/verbum-comments\/dist\/index.js","isRTL":false,"vbeCacheBuster":1721244820,"iframeUniqueId":0}
+/* ]]> */
+</script>
+<script crossorigin="anonymous" type="text/javascript" src="./The Quick – 5.3 _ Claw_files/saved_resource(8)"></script>
+<script type="text/javascript" id="sharing-js-js-after">
+/* <![CDATA[ */
+var windowOpen;
+			( function () {
+				function matches( el, sel ) {
+					return !! (
+						el.matches && el.matches( sel ) ||
+						el.msMatchesSelector && el.msMatchesSelector( sel )
+					);
+				}
+
+				document.body.addEventListener( 'click', function ( event ) {
+					if ( ! event.target ) {
+						return;
+					}
+
+					var el;
+					if ( matches( event.target, 'a.share-twitter' ) ) {
+						el = event.target;
+					} else if ( event.target.parentNode && matches( event.target.parentNode, 'a.share-twitter' ) ) {
+						el = event.target.parentNode;
+					}
+
+					if ( el ) {
+						event.preventDefault();
+
+						// If there's another sharing window open, close it.
+						if ( typeof windowOpen !== 'undefined' ) {
+							windowOpen.close();
+						}
+						windowOpen = window.open( el.getAttribute( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+						return false;
+					}
+				} );
+			} )();
+var windowOpen;
+			( function () {
+				function matches( el, sel ) {
+					return !! (
+						el.matches && el.matches( sel ) ||
+						el.msMatchesSelector && el.msMatchesSelector( sel )
+					);
+				}
+
+				document.body.addEventListener( 'click', function ( event ) {
+					if ( ! event.target ) {
+						return;
+					}
+
+					var el;
+					if ( matches( event.target, 'a.share-facebook' ) ) {
+						el = event.target;
+					} else if ( event.target.parentNode && matches( event.target.parentNode, 'a.share-facebook' ) ) {
+						el = event.target.parentNode;
+					}
+
+					if ( el ) {
+						event.preventDefault();
+
+						// If there's another sharing window open, close it.
+						if ( typeof windowOpen !== 'undefined' ) {
+							windowOpen.close();
+						}
+						windowOpen = window.open( el.getAttribute( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+						return false;
+					}
+				} );
+			} )();
+/* ]]> */
+</script>
+
+	<script type="text/javascript">
+		(function () {
+			var wpcom_reblog = {
+				source: 'toolbar',
+
+				toggle_reblog_box_flair: function (obj_id, post_id) {
+
+					// Go to site selector. This will redirect to their blog if they only have one.
+					const postEndpoint = `https://wordpress.com/post`;
+
+					// Ideally we would use the permalink here, but fortunately this will be replaced with the 
+					// post permalink in the editor.
+					const originalURL = `${ document.location.href }?page_id=${ post_id }`; 
+					
+					const url =
+						postEndpoint +
+						'?url=' +
+						encodeURIComponent( originalURL ) +
+						'&is_post_share=true' +
+						'&v=5';
+
+					const redirect = function () {
+						if (
+							! window.open( url, '_blank' )
+						) {
+							location.href = url;
+						}
+					};
+
+					if ( /Firefox/.test( navigator.userAgent ) ) {
+						setTimeout( redirect, 0 );
+					} else {
+						redirect();
+					}
+				},
+			};
+
+			window.wpcom_reblog = wpcom_reblog;
+		})();
+	</script>
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+try{
+  if ( window.external &&'msIsSiteMode' in window.external) {
+    if (window.external.msIsSiteMode()) {
+      var jl = document.createElement('script');
+      jl.type='text/javascript';
+      jl.async=true;
+      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(jl, s);
+    }
+  }
+}catch(e){}
+})();
+// ]]>
+</script>	<iframe src="./The Quick – 5.3 _ Claw_files/master.html" scrolling="no" id="likes-master" name="likes-master" style="display:none;"></iframe>
+	<div id="likes-other-gravatars" class="wpl-new-layout" role="dialog" aria-hidden="true" tabindex="-1" style="display: none;">
+		<div class="likes-text">
+			<span>%d</span>		</div>
+		<ul class="wpl-avatars sd-like-gravatars"></ul>
+	</div>
+
+		<script src="./The Quick – 5.3 _ Claw_files/w.js.download" defer=""></script> <script type="text/javascript">
+_tkq = window._tkq || [];
+_stq = window._stq || [];
+_tkq.push(['storeContext', {'blog_id':'230145850','blog_tz':'-6','user_lang':'en','blog_lang':'en','user_id':'0'}]);
+_stq.push(['view', {'blog':'230145850','v':'wpcom','tz':'-6','user_id':'0','post':'1739','subd':'clawwebserial'}]);
+_stq.push(['extra', {'crypt':'UE40eW5QN0p8M2Y/RE1hV3xrb2xUT3JBbjREZWgvK29XZW1dYVRPTVUvTiV4TEIuPThXTVVwT1A2Yz1IbnMlLTd1cmFvWUlEK0M2Yy1aV2Isfi1ZR24xNFBNRzldL2JRTkNhcWtLJTZaPW1yL0dQUndCTEdbazBIeF1GM2VYfG1ibzdxW0JRPVFWeGI1NzUzfmR5MkdbeUNBczRrbUl0bUdzTHU4ZH4yK000Y0NqVDVKfDlwV3FCaS5NMHwlWEYxWE42Uk1vOFozVzY1a0RFfldzUDRNTy11K3ZBb0VkeGo5UE16R0xxT003X0k4azcxK1pvYjUtQnJJbDRiOThPb2U/U09BLT8vN0NJWHlpRVpsbE1vNVVLLjBhJTNUSyY4MFd5VnlTXz8='}]);
+_stq.push([ 'clickTrackerInit', '230145850', '1739' ]);
+</script>
+<noscript><img src="https://pixel.wp.com/b.gif?v=noscript" style="height:1px;width:1px;overflow:hidden;position:absolute;bottom:1px;" alt="" /></noscript>
+<script>
+( function() {
+	function getMobileUserAgentInfo() {
+		if ( typeof wpcom_mobile_user_agent_info === 'object' ) {
+			wpcom_mobile_user_agent_info.init();
+			var mobileStatsQueryString = '';
+
+			if ( wpcom_mobile_user_agent_info.matchedPlatformName !== false ) {
+				mobileStatsQueryString += '&x_' + 'mobile_platforms' + '=' + wpcom_mobile_user_agent_info.matchedPlatformName;
+			}
+
+			if ( wpcom_mobile_user_agent_info.matchedUserAgentName !== false ) {
+				mobileStatsQueryString += '&x_' + 'mobile_devices' + '=' + wpcom_mobile_user_agent_info.matchedUserAgentName;
+			}
+
+			if ( wpcom_mobile_user_agent_info.isIPad() ) {
+				mobileStatsQueryString += '&x_' + 'ipad_views' + '=' + 'views';
+			}
+
+			if ( mobileStatsQueryString != '' ) {
+				new Image().src = document.location.protocol + '//pixel.wp.com/g.gif?v=wpcom-no-pv' + mobileStatsQueryString + '&baba=' + Math.random();
+			}
+		}
+	}
+
+	document.addEventListener( 'DOMContentLoaded', getMobileUserAgentInfo );
+} )();
+</script>
+<script type="disabled" id="wp-enqueue-dynamic-script:wp-i18n:after:1">
+wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+</script>
+
+<script>
+(function() {
+	'use strict';
+
+	const fetches = {};
+	const promises = {};
+	const urls = {
+		'wp-hooks': 'https://s0.wp.com/wp-content/plugins/gutenberg-core/v19.5.1/build/hooks/index.min.js?m=1730479639i&ver=84e753e2b66eb7028d38',
+		'wp-i18n': 'https://s0.wp.com/wp-content/plugins/gutenberg-core/v19.5.1/build/i18n/index.min.js?m=1730479639i&ver=bd5a2533e717a1043151',
+		'verbum': 'https://s0.wp.com/wp-content/mu-plugins/jetpack-mu-wpcom-plugin/sun/vendor/automattic/jetpack-mu-wpcom/src/build/verbum-comments/verbum-comments.js?m=1726614918i&minify=false&ver=f4b641988445c2b095f4'
+	};
+	const loaders = {
+		'verbum': () => {
+			fetchExternalScript('wp-hooks');
+			fetchExternalScript('wp-i18n');
+			fetchExternalScript('verbum');
+			promises['wp-hooks'] = promises['wp-hooks'] || loadWPScript('wp-hooks');
+			promises['wp-i18n'] = promises['wp-i18n'] || promises['wp-hooks'].then( () => loadWPScript('wp-i18n') );
+			promises['verbum'] = promises['verbum'] || promises['wp-i18n'].then( () => loadWPScript('verbum') );
+			return promises['verbum'];
+		},
+		
+	};
+	const scriptExtras = {
+		'wp-i18n': { translations: 0, before: 0, after: 1 },
+		
+	};
+
+	window.WP_Enqueue_Dynamic_Script = {
+		loadScript: (handle) => {
+			if (!loaders[handle]) {
+				console.error('WP_Enqueue_Dynamic_Script: unregistered script `' + handle + '`.');
+			}
+			return loaders[handle]();
+		}
+	};
+
+	function fetchExternalScript(handle) {
+		if (!urls[handle]) {
+			return Promise.resolve();
+		}
+
+		fetches[handle] = fetches[handle] || fetch(urls[handle], { mode: 'no-cors' });
+		return fetches[handle];
+	}
+
+	function runExtraScript(handle, type, index) {
+		const id = 'wp-enqueue-dynamic-script:' + handle + ':' + type + ':' + (index + 1);
+		const template = document.getElementById(id);
+		if (!template) {
+			return Promise.reject();
+		}
+
+		const script = document.createElement( 'script' );
+		script.innerHTML = template.innerHTML;
+		document.body.appendChild( script );
+		return Promise.resolve();
+	}
+
+	function loadExternalScript(handle) {
+		if (!urls[handle]) {
+			return Promise.resolve();
+		}
+
+		return fetches[handle].then(() => {
+			return new Promise((resolve, reject) => {
+				const script = document.createElement('script');
+				script.onload = () => resolve();
+				script.onerror = (e) => reject(e);
+				script.src = urls[handle];
+				document.body.appendChild(script);
+			});
+		});
+	}
+
+	function loadExtra(handle, pos) {
+		const count = (scriptExtras[handle] && scriptExtras[handle][pos]) || 0;
+		let promise = Promise.resolve();
+
+		for (let i = 0; i < count; i++) {
+			promise = promise.then(() => runExtraScript(handle, pos, i));
+		}
+
+		return promise;
+	}
+
+	function loadWPScript(handle) {
+		// Core loads scripts in this order. See: https://github.com/WordPress/WordPress/blob/a59eb9d39c4fcba834b70c9e8dfd64feeec10ba6/wp-includes/class-wp-scripts.php#L428.
+		return loadExtra(handle, 'translations')
+			.then(() => loadExtra(handle, 'before'))
+			.then(() => loadExternalScript(handle))
+			.then(() => loadExtra(handle, 'after'));
+	}
+} )();
+</script>
+
+
+<div class="comment-likes-overlay" style="display: none;"></div><iframe scrolling="no" id="wpcom_remote_login_key" src="./The Quick – 5.3 _ Claw_files/remote-login.html" style="display: none;"></iframe><div>
+  <div id="twoseven-ext-tab-media-modal" class="twoseven-ext-tab-media-modal" style="display: none;">
+    <!-- Modal content -->
+    <div class="twoseven-ext-tab-media-modal-content">
+      <div class="iframe-container">
+        <div class="close-container">
+          <span class="close">×</span>
+        </div>
+        <iframe id="twoseven-ext-tab-media-iframe" src="./The Quick – 5.3 _ Claw_files/index.html"></iframe>
+      </div>
+    </div>
+  </div><link rel="stylesheet" href="chrome-extension://cjdnfmjmdligcpfcekfmenlhiopehjkd/dist/contentScripts/views/modal/top-level.css"></div><script src="./The Quick – 5.3 _ Claw_files/actionbar.js.download" defer=""></script></body><div id="twoseven-scripts" data-info="Scripts added by TwoSeven extension" style="display: none !important; position: static !important; top: 0px !important; left: 0px !important; width: 0px !important; height: 0px !important;"></div></html>
