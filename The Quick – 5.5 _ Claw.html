@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)https://clawwebserial.blog/2024/07/20/the-quick-5-5/ -->
+<html lang="en"><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width">
+<title>
+The Quick – 5.5 | Claw	</title>
+<link rel="profile" href="https://gmpg.org/xfn/11">
+<link rel="stylesheet" type="text/css" media="all" href="./The Quick – 5.5 _ Claw_files/style.css">
+<link rel="pingback" href="https://clawwebserial.blog/xmlrpc.php">
+<!--[if lt IE 9]>
+<script src="https://s0.wp.com/wp-content/themes/pub/twentyeleven/js/html5.js?ver=3.7.0" type="text/javascript"></script>
+<![endif]-->
+<meta name="robots" content="max-image-preview:large">
+
+<!-- Async WordPress.com Remote Login -->
+<script id="wpcom_remote_login_js">
+var wpcom_remote_login_extra_auth = '';
+function wpcom_remote_login_remove_dom_node_id( element_id ) {
+	var dom_node = document.getElementById( element_id );
+	if ( dom_node ) { dom_node.parentNode.removeChild( dom_node ); }
+}
+function wpcom_remote_login_remove_dom_node_classes( class_name ) {
+	var dom_nodes = document.querySelectorAll( '.' + class_name );
+	for ( var i = 0; i < dom_nodes.length; i++ ) {
+		dom_nodes[ i ].parentNode.removeChild( dom_nodes[ i ] );
+	}
+}
+function wpcom_remote_login_final_cleanup() {
+	wpcom_remote_login_remove_dom_node_classes( "wpcom_remote_login_msg" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_key" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_validate" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_js" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_request_access_iframe" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_request_access_styles" );
+}
+
+// Watch for messages back from the remote login
+window.addEventListener( "message", function( e ) {
+	if ( e.origin === "https://r-login.wordpress.com" ) {
+		var data = {};
+		try {
+			data = JSON.parse( e.data );
+		} catch( e ) {
+			wpcom_remote_login_final_cleanup();
+			return;
+		}
+
+		if ( data.msg === 'LOGIN' ) {
+			// Clean up the login check iframe
+			wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_key" );
+
+			var id_regex = new RegExp( /^[0-9]+$/ );
+			var token_regex = new RegExp( /^.*|.*|.*$/ );
+			if (
+				token_regex.test( data.token )
+				&& id_regex.test( data.wpcomid )
+			) {
+				// We have everything we need to ask for a login
+				var script = document.createElement( "script" );
+				script.setAttribute( "id", "wpcom_remote_login_validate" );
+				script.src = '/remote-login.php?wpcom_remote_login=validate'
+					+ '&wpcomid=' + data.wpcomid
+					+ '&token=' + encodeURIComponent( data.token )
+					+ '&host=' + window.location.protocol
+					+ '//' + window.location.hostname
+					+ '&postid=1908'
+					+ '&is_singular=1';
+				document.body.appendChild( script );
+			}
+
+			return;
+		}
+
+		// Safari ITP, not logged in, so redirect
+		if ( data.msg === 'LOGIN-REDIRECT' ) {
+			window.location = 'https://wordpress.com/log-in?redirect_to=' + window.location.href;
+			return;
+		}
+
+		// Safari ITP, storage access failed, remove the request
+		if ( data.msg === 'LOGIN-REMOVE' ) {
+			var css_zap = 'html { -webkit-transition: margin-top 1s; transition: margin-top 1s; } /* 9001 */ html { margin-top: 0 !important; } * html body { margin-top: 0 !important; } @media screen and ( max-width: 782px ) { html { margin-top: 0 !important; } * html body { margin-top: 0 !important; } }';
+			var style_zap = document.createElement( 'style' );
+			style_zap.type = 'text/css';
+			style_zap.appendChild( document.createTextNode( css_zap ) );
+			document.body.appendChild( style_zap );
+
+			var e = document.getElementById( 'wpcom_request_access_iframe' );
+			e.parentNode.removeChild( e );
+
+			document.cookie = 'wordpress_com_login_access=denied; path=/; max-age=31536000';
+
+			return;
+		}
+
+		// Safari ITP
+		if ( data.msg === 'REQUEST_ACCESS' ) {
+			console.log( 'request access: safari' );
+
+			// Check ITP iframe enable/disable knob
+			if ( wpcom_remote_login_extra_auth !== 'safari_itp_iframe' ) {
+				return;
+			}
+
+			// If we are in a "private window" there is no ITP.
+			var private_window = false;
+			try {
+				var opendb = window.openDatabase( null, null, null, null );
+			} catch( e ) {
+				private_window = true;
+			}
+
+			if ( private_window ) {
+				console.log( 'private window' );
+				return;
+			}
+
+			var iframe = document.createElement( 'iframe' );
+			iframe.id = 'wpcom_request_access_iframe';
+			iframe.setAttribute( 'scrolling', 'no' );
+			iframe.setAttribute( 'sandbox', 'allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-top-navigation-by-user-activation' );
+			iframe.src = 'https://r-login.wordpress.com/remote-login.php?wpcom_remote_login=request_access&origin=' + encodeURIComponent( data.origin ) + '&wpcomid=' + encodeURIComponent( data.wpcomid );
+
+			var css = 'html { -webkit-transition: margin-top 1s; transition: margin-top 1s; } /* 9001 */ html { margin-top: 46px !important; } * html body { margin-top: 46px !important; } @media screen and ( max-width: 660px ) { html { margin-top: 71px !important; } * html body { margin-top: 71px !important; } #wpcom_request_access_iframe { display: block; height: 71px !important; } } #wpcom_request_access_iframe { border: 0px; height: 46px; position: fixed; top: 0; left: 0; width: 100%; min-width: 100%; z-index: 99999; background: #23282d; } ';
+
+			var style = document.createElement( 'style' );
+			style.type = 'text/css';
+			style.id = 'wpcom_request_access_styles';
+			style.appendChild( document.createTextNode( css ) );
+			document.body.appendChild( style );
+
+			document.body.appendChild( iframe );
+		}
+
+		if ( data.msg === 'DONE' ) {
+			wpcom_remote_login_final_cleanup();
+		}
+	}
+}, false );
+
+// Inject the remote login iframe after the page has had a chance to load
+// more critical resources
+window.addEventListener( "DOMContentLoaded", function( e ) {
+	var iframe = document.createElement( "iframe" );
+	iframe.style.display = "none";
+	iframe.setAttribute( "scrolling", "no" );
+	iframe.setAttribute( "id", "wpcom_remote_login_key" );
+	iframe.src = "https://r-login.wordpress.com/remote-login.php"
+		+ "?wpcom_remote_login=key"
+		+ "&origin=aHR0cHM6Ly9jbGF3d2Vic2VyaWFsLmJsb2c%3D"
+		+ "&wpcomid=230145850"
+		+ "&time=1731717905";
+	document.body.appendChild( iframe );
+}, false );
+</script>
+<link rel="dns-prefetch" href="https://s0.wp.com/">
+<link rel="dns-prefetch" href="https://widgets.wp.com/">
+<link rel="dns-prefetch" href="https://wordpress.com/">
+<link rel="alternate" type="application/rss+xml" title="Claw » Feed" href="https://clawwebserial.blog/feed/">
+<link rel="alternate" type="application/rss+xml" title="Claw » Comments Feed" href="https://clawwebserial.blog/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="Claw » The Quick – 5.5 Comments Feed" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/feed/">
+	<script type="text/javascript">
+		/* <![CDATA[ */
+		function addLoadEvent(func) {
+			var oldonload = window.onload;
+			if (typeof window.onload != 'function') {
+				window.onload = func;
+			} else {
+				window.onload = function () {
+					oldonload();
+					func();
+				}
+			}
+		}
+		/* ]]> */
+	</script>
+	<script type="text/javascript">
+/* <![CDATA[ */
+window._wpemojiSettings = {"baseUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/72x72\/","ext":".png","svgUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/s0.wp.com\/wp-includes\/js\/wp-emoji-release.min.js?m=1719498190i&ver=6.7-RC3-59369"}};
+/*! This file is auto-generated */
+!function(i,n){var o,s,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),r=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===r[t]})}function u(e,t,n){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!n(e,"\ud83d\udc26\u200d\u2b1b","\ud83d\udc26\u200b\u2b1b")}return!1}function f(e,t,n){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):i.createElement("canvas"),a=r.getContext("2d",{willReadFrequently:!0}),o=(a.textBaseline="top",a.font="600 32px Arial",{});return e.forEach(function(e){o[e]=t(a,e,n)}),o}function t(e){var t=i.createElement("script");t.src=e,t.defer=!0,i.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",s=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){i.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"}),a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=function(e){c(n=e.data),a.terminate(),t(n)})}catch(e){}c(n=f(s,u,p))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+/* ]]> */
+</script>
+<link crossorigin="anonymous" rel="stylesheet" id="all-css-0-1" href="./The Quick – 5.5 _ Claw_files/saved_resource(1)" type="text/css" media="all">
+<style id="wp-emoji-styles-inline-css">
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+</style>
+<link crossorigin="anonymous" rel="stylesheet" id="all-css-2-1" href="./The Quick – 5.5 _ Claw_files/saved_resource(2)" type="text/css" media="all">
+<style id="wp-block-library-inline-css">
+.has-text-align-justify {
+	text-align:justify;
+}
+.has-text-align-justify{text-align:justify;}
+</style>
+<link crossorigin="anonymous" rel="stylesheet" id="all-css-4-1" href="./The Quick – 5.5 _ Claw_files/saved_resource(3)" type="text/css" media="all">
+<style id="jetpack-sharing-buttons-style-inline-css">
+.jetpack-sharing-buttons__services-list{display:flex;flex-direction:row;flex-wrap:wrap;gap:0;list-style-type:none;margin:5px;padding:0}.jetpack-sharing-buttons__services-list.has-small-icon-size{font-size:12px}.jetpack-sharing-buttons__services-list.has-normal-icon-size{font-size:16px}.jetpack-sharing-buttons__services-list.has-large-icon-size{font-size:24px}.jetpack-sharing-buttons__services-list.has-huge-icon-size{font-size:36px}@media print{.jetpack-sharing-buttons__services-list{display:none!important}}.editor-styles-wrapper .wp-block-jetpack-sharing-buttons{gap:0;padding-inline-start:0}ul.jetpack-sharing-buttons__services-list.has-background{padding:1.25em 2.375em}
+</style>
+<style id="classic-theme-styles-inline-css">
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+</style>
+<link crossorigin="anonymous" rel="stylesheet" id="all-css-8-1" href="./The Quick – 5.5 _ Claw_files/saved_resource(4)" type="text/css" media="all">
+<style id="global-styles-inline-css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #fff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--color--blue: #1982d1;--wp--preset--color--dark-gray: #373737;--wp--preset--color--medium-gray: #666;--wp--preset--color--light-gray: #e2e2e2;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--font-family--albert-sans: 'Albert Sans', sans-serif;--wp--preset--font-family--alegreya: Alegreya, serif;--wp--preset--font-family--arvo: Arvo, serif;--wp--preset--font-family--bodoni-moda: 'Bodoni Moda', serif;--wp--preset--font-family--bricolage-grotesque: 'Bricolage Grotesque', sans-serif;--wp--preset--font-family--cabin: Cabin, sans-serif;--wp--preset--font-family--chivo: Chivo, sans-serif;--wp--preset--font-family--commissioner: Commissioner, sans-serif;--wp--preset--font-family--cormorant: Cormorant, serif;--wp--preset--font-family--courier-prime: 'Courier Prime', monospace;--wp--preset--font-family--crimson-pro: 'Crimson Pro', serif;--wp--preset--font-family--dm-mono: 'DM Mono', monospace;--wp--preset--font-family--dm-sans: 'DM Sans', sans-serif;--wp--preset--font-family--dm-serif-display: 'DM Serif Display', serif;--wp--preset--font-family--domine: Domine, serif;--wp--preset--font-family--eb-garamond: 'EB Garamond', serif;--wp--preset--font-family--epilogue: Epilogue, sans-serif;--wp--preset--font-family--fahkwang: Fahkwang, sans-serif;--wp--preset--font-family--figtree: Figtree, sans-serif;--wp--preset--font-family--fira-sans: 'Fira Sans', sans-serif;--wp--preset--font-family--fjalla-one: 'Fjalla One', sans-serif;--wp--preset--font-family--fraunces: Fraunces, serif;--wp--preset--font-family--gabarito: Gabarito, system-ui;--wp--preset--font-family--ibm-plex-mono: 'IBM Plex Mono', monospace;--wp--preset--font-family--ibm-plex-sans: 'IBM Plex Sans', sans-serif;--wp--preset--font-family--ibarra-real-nova: 'Ibarra Real Nova', serif;--wp--preset--font-family--instrument-serif: 'Instrument Serif', serif;--wp--preset--font-family--inter: Inter, sans-serif;--wp--preset--font-family--josefin-sans: 'Josefin Sans', sans-serif;--wp--preset--font-family--jost: Jost, sans-serif;--wp--preset--font-family--libre-baskerville: 'Libre Baskerville', serif;--wp--preset--font-family--libre-franklin: 'Libre Franklin', sans-serif;--wp--preset--font-family--literata: Literata, serif;--wp--preset--font-family--lora: Lora, serif;--wp--preset--font-family--merriweather: Merriweather, serif;--wp--preset--font-family--montserrat: Montserrat, sans-serif;--wp--preset--font-family--newsreader: Newsreader, serif;--wp--preset--font-family--noto-sans-mono: 'Noto Sans Mono', sans-serif;--wp--preset--font-family--nunito: Nunito, sans-serif;--wp--preset--font-family--open-sans: 'Open Sans', sans-serif;--wp--preset--font-family--overpass: Overpass, sans-serif;--wp--preset--font-family--pt-serif: 'PT Serif', serif;--wp--preset--font-family--petrona: Petrona, serif;--wp--preset--font-family--piazzolla: Piazzolla, serif;--wp--preset--font-family--playfair-display: 'Playfair Display', serif;--wp--preset--font-family--plus-jakarta-sans: 'Plus Jakarta Sans', sans-serif;--wp--preset--font-family--poppins: Poppins, sans-serif;--wp--preset--font-family--raleway: Raleway, sans-serif;--wp--preset--font-family--roboto: Roboto, sans-serif;--wp--preset--font-family--roboto-slab: 'Roboto Slab', serif;--wp--preset--font-family--rubik: Rubik, sans-serif;--wp--preset--font-family--rufina: Rufina, serif;--wp--preset--font-family--sora: Sora, sans-serif;--wp--preset--font-family--source-sans-3: 'Source Sans 3', sans-serif;--wp--preset--font-family--source-serif-4: 'Source Serif 4', serif;--wp--preset--font-family--space-mono: 'Space Mono', monospace;--wp--preset--font-family--syne: Syne, sans-serif;--wp--preset--font-family--texturina: Texturina, serif;--wp--preset--font-family--urbanist: Urbanist, sans-serif;--wp--preset--font-family--work-sans: 'Work Sans', sans-serif;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}.has-albert-sans-font-family{font-family: var(--wp--preset--font-family--albert-sans) !important;}.has-alegreya-font-family{font-family: var(--wp--preset--font-family--alegreya) !important;}.has-arvo-font-family{font-family: var(--wp--preset--font-family--arvo) !important;}.has-bodoni-moda-font-family{font-family: var(--wp--preset--font-family--bodoni-moda) !important;}.has-bricolage-grotesque-font-family{font-family: var(--wp--preset--font-family--bricolage-grotesque) !important;}.has-cabin-font-family{font-family: var(--wp--preset--font-family--cabin) !important;}.has-chivo-font-family{font-family: var(--wp--preset--font-family--chivo) !important;}.has-commissioner-font-family{font-family: var(--wp--preset--font-family--commissioner) !important;}.has-cormorant-font-family{font-family: var(--wp--preset--font-family--cormorant) !important;}.has-courier-prime-font-family{font-family: var(--wp--preset--font-family--courier-prime) !important;}.has-crimson-pro-font-family{font-family: var(--wp--preset--font-family--crimson-pro) !important;}.has-dm-mono-font-family{font-family: var(--wp--preset--font-family--dm-mono) !important;}.has-dm-sans-font-family{font-family: var(--wp--preset--font-family--dm-sans) !important;}.has-dm-serif-display-font-family{font-family: var(--wp--preset--font-family--dm-serif-display) !important;}.has-domine-font-family{font-family: var(--wp--preset--font-family--domine) !important;}.has-eb-garamond-font-family{font-family: var(--wp--preset--font-family--eb-garamond) !important;}.has-epilogue-font-family{font-family: var(--wp--preset--font-family--epilogue) !important;}.has-fahkwang-font-family{font-family: var(--wp--preset--font-family--fahkwang) !important;}.has-figtree-font-family{font-family: var(--wp--preset--font-family--figtree) !important;}.has-fira-sans-font-family{font-family: var(--wp--preset--font-family--fira-sans) !important;}.has-fjalla-one-font-family{font-family: var(--wp--preset--font-family--fjalla-one) !important;}.has-fraunces-font-family{font-family: var(--wp--preset--font-family--fraunces) !important;}.has-gabarito-font-family{font-family: var(--wp--preset--font-family--gabarito) !important;}.has-ibm-plex-mono-font-family{font-family: var(--wp--preset--font-family--ibm-plex-mono) !important;}.has-ibm-plex-sans-font-family{font-family: var(--wp--preset--font-family--ibm-plex-sans) !important;}.has-ibarra-real-nova-font-family{font-family: var(--wp--preset--font-family--ibarra-real-nova) !important;}.has-instrument-serif-font-family{font-family: var(--wp--preset--font-family--instrument-serif) !important;}.has-inter-font-family{font-family: var(--wp--preset--font-family--inter) !important;}.has-josefin-sans-font-family{font-family: var(--wp--preset--font-family--josefin-sans) !important;}.has-jost-font-family{font-family: var(--wp--preset--font-family--jost) !important;}.has-libre-baskerville-font-family{font-family: var(--wp--preset--font-family--libre-baskerville) !important;}.has-libre-franklin-font-family{font-family: var(--wp--preset--font-family--libre-franklin) !important;}.has-literata-font-family{font-family: var(--wp--preset--font-family--literata) !important;}.has-lora-font-family{font-family: var(--wp--preset--font-family--lora) !important;}.has-merriweather-font-family{font-family: var(--wp--preset--font-family--merriweather) !important;}.has-montserrat-font-family{font-family: var(--wp--preset--font-family--montserrat) !important;}.has-newsreader-font-family{font-family: var(--wp--preset--font-family--newsreader) !important;}.has-noto-sans-mono-font-family{font-family: var(--wp--preset--font-family--noto-sans-mono) !important;}.has-nunito-font-family{font-family: var(--wp--preset--font-family--nunito) !important;}.has-open-sans-font-family{font-family: var(--wp--preset--font-family--open-sans) !important;}.has-overpass-font-family{font-family: var(--wp--preset--font-family--overpass) !important;}.has-pt-serif-font-family{font-family: var(--wp--preset--font-family--pt-serif) !important;}.has-petrona-font-family{font-family: var(--wp--preset--font-family--petrona) !important;}.has-piazzolla-font-family{font-family: var(--wp--preset--font-family--piazzolla) !important;}.has-playfair-display-font-family{font-family: var(--wp--preset--font-family--playfair-display) !important;}.has-plus-jakarta-sans-font-family{font-family: var(--wp--preset--font-family--plus-jakarta-sans) !important;}.has-poppins-font-family{font-family: var(--wp--preset--font-family--poppins) !important;}.has-raleway-font-family{font-family: var(--wp--preset--font-family--raleway) !important;}.has-roboto-font-family{font-family: var(--wp--preset--font-family--roboto) !important;}.has-roboto-slab-font-family{font-family: var(--wp--preset--font-family--roboto-slab) !important;}.has-rubik-font-family{font-family: var(--wp--preset--font-family--rubik) !important;}.has-rufina-font-family{font-family: var(--wp--preset--font-family--rufina) !important;}.has-sora-font-family{font-family: var(--wp--preset--font-family--sora) !important;}.has-source-sans-3-font-family{font-family: var(--wp--preset--font-family--source-sans-3) !important;}.has-source-serif-4-font-family{font-family: var(--wp--preset--font-family--source-serif-4) !important;}.has-space-mono-font-family{font-family: var(--wp--preset--font-family--space-mono) !important;}.has-syne-font-family{font-family: var(--wp--preset--font-family--syne) !important;}.has-texturina-font-family{font-family: var(--wp--preset--font-family--texturina) !important;}.has-urbanist-font-family{font-family: var(--wp--preset--font-family--urbanist) !important;}.has-work-sans-font-family{font-family: var(--wp--preset--font-family--work-sans) !important;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+:root :where(.wp-block-pullquote){font-size: 1.5em;line-height: 1.6;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+</style>
+<link crossorigin="anonymous" rel="stylesheet" id="all-css-10-1" href="./The Quick – 5.5 _ Claw_files/verbum-comments.css" type="text/css" media="all">
+<link rel="stylesheet" id="verbum-gutenberg-css-css" href="./The Quick – 5.5 _ Claw_files/block-editor.css" media="all">
+<link crossorigin="anonymous" rel="stylesheet" id="all-css-12-1" href="./The Quick – 5.5 _ Claw_files/saved_resource(5)" type="text/css" media="all">
+<style id="jetpack-global-styles-frontend-style-inline-css">
+:root { --font-headings: unset; --font-base: unset; --font-headings-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; --font-base-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;}
+</style>
+<link crossorigin="anonymous" rel="stylesheet" id="all-css-14-1" href="./The Quick – 5.5 _ Claw_files/saved_resource(6)" type="text/css" media="all">
+<script type="text/javascript" id="jetpack_related-posts-js-extra">
+/* <![CDATA[ */
+var related_posts_js_options = {"post_heading":"h4"};
+/* ]]> */
+</script>
+<script type="text/javascript" id="wpcom-actionbar-placeholder-js-extra">
+/* <![CDATA[ */
+var actionbardata = {"siteID":"230145850","postID":"1908","siteURL":"https:\/\/clawwebserial.blog","xhrURL":"https:\/\/clawwebserial.blog\/wp-admin\/admin-ajax.php","nonce":"1b8eacd16e","isLoggedIn":"","statusMessage":"","subsEmailDefault":"instantly","proxyScriptUrl":"https:\/\/s0.wp.com\/wp-content\/js\/wpcom-proxy-request.js?ver=20211021","shortlink":"https:\/\/wp.me\/pfzFrQ-uM","i18n":{"followedText":"New posts from this site will now appear in your <a href=\"https:\/\/wordpress.com\/read\">Reader<\/a>","foldBar":"Collapse this bar","unfoldBar":"Expand this bar"}};
+/* ]]> */
+</script>
+<script type="text/javascript" id="jetpack-mu-wpcom-settings-js-before">
+/* <![CDATA[ */
+var JETPACK_MU_WPCOM_SETTINGS = {"assetsUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/jetpack-mu-wpcom-plugin\/moon\/vendor\/automattic\/jetpack-mu-wpcom\/src\/build\/"};
+/* ]]> */
+</script>
+<script crossorigin="anonymous" type="text/javascript" src="./The Quick – 5.5 _ Claw_files/saved_resource(7)"></script>
+<script type="text/javascript" id="rlt-proxy-js-after">
+/* <![CDATA[ */
+	rltInitialize( {"token":null,"iframeOrigins":["https:\/\/widgets.wp.com"]} );
+/* ]]> */
+</script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://clawwebserial.wordpress.com/xmlrpc.php?rsd">
+<meta name="generator" content="WordPress.com">
+<link rel="canonical" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/">
+<link rel="shortlink" href="https://wp.me/pfzFrQ-uM">
+<link rel="alternate" type="application/json+oembed" href="https://public-api.wordpress.com/oembed/?format=json&amp;url=https%3A%2F%2Fclawwebserial.blog%2F2024%2F07%2F20%2Fthe-quick-5-5%2F&amp;for=wpcom-auto-discovery"><link rel="alternate" type="application/xml+oembed" href="https://public-api.wordpress.com/oembed/?format=xml&amp;url=https%3A%2F%2Fclawwebserial.blog%2F2024%2F07%2F20%2Fthe-quick-5-5%2F&amp;for=wpcom-auto-discovery">
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Quick – 5.5">
+<meta property="og:url" content="https://clawwebserial.blog/2024/07/20/the-quick-5-5/">
+<meta property="og:description" content="Previous Chapter Next Chapter “It hurts,” Ripley said, quiet. “I know.” ‘Hurt’ was the wrong word for it.  But she didn’t want to give words to it because …">
+<meta property="article:published_time" content="2024-07-20T06:03:30+00:00">
+<meta property="article:modified_time" content="2024-08-13T10:56:02+00:00">
+<meta property="og:site_name" content="Claw">
+<meta property="og:image" content="https://s0.wp.com/i/blank.jpg">
+<meta property="og:image:alt" content="">
+<meta property="og:locale" content="en_US">
+<meta property="article:publisher" content="https://www.facebook.com/WordPresscom">
+<meta name="twitter:text:title" content="The Quick – 5.5">
+<meta name="twitter:card" content="summary">
+
+<!-- End Jetpack Open Graph Tags -->
+<link rel="shortcut icon" type="image/x-icon" href="https://s0.wp.com/i/favicon.ico" sizes="16x16 24x24 32x32 48x48">
+<link rel="icon" type="image/x-icon" href="https://s0.wp.com/i/favicon.ico" sizes="16x16 24x24 32x32 48x48">
+<link rel="apple-touch-icon" href="https://s0.wp.com/i/webclip.png">
+<link rel="search" type="application/opensearchdescription+xml" href="https://clawwebserial.blog/osd.xml" title="Claw">
+<link rel="search" type="application/opensearchdescription+xml" href="https://s1.wp.com/opensearch.xml" title="WordPress.com">
+	<style>
+		/* Link color */
+		a,
+		#site-title a:focus,
+		#site-title a:hover,
+		#site-title a:active,
+		.entry-title a:hover,
+		.entry-title a:focus,
+		.entry-title a:active,
+		.widget_twentyeleven_ephemera .comments-link a:hover,
+		section.recent-posts .other-recent-posts a[rel="bookmark"]:hover,
+		section.recent-posts .other-recent-posts .comments-link a:hover,
+		.format-image footer.entry-meta a:hover,
+		#site-generator a:hover {
+			color: #1f7ae4;
+		}
+		section.recent-posts .other-recent-posts .comments-link a:hover {
+			border-color: #1f7ae4;
+		}
+		article.feature-image.small .entry-summary p a:hover,
+		.entry-header .comments-link a:hover,
+		.entry-header .comments-link a:focus,
+		.entry-header .comments-link a:active,
+		.feature-slider a.active {
+			background-color: #1f7ae4;
+		}
+	</style>
+	<meta name="application-name" content="Claw"><meta name="msapplication-window" content="width=device-width;height=device-height"><meta name="description" content="Previous Chapter Next Chapter &quot;It hurts,&quot; Ripley said, quiet. &quot;I know.&quot; &#39;Hurt&#39; was the wrong word for it.  But she didn&#39;t want to give words to it because the more she thought about it, the worse it was.  Worse in every possible way. &quot;I know it sounds silly, but swearing helps.  They say it releases…">
+		<style type="text/css" id="twentyeleven-header-css">
+				#site-title,
+		#site-description {
+			position: absolute;
+			clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+			clip: rect(1px, 1px, 1px, 1px);
+		}
+				</style>
+	<script src="./The Quick – 5.5 _ Claw_files/wp-emoji-release.min.js.download" defer=""></script><link rel="stylesheet" id="gravatar-card-css" href="./The Quick – 5.5 _ Claw_files/hovercards.min.css"><link href="./The Quick – 5.5 _ Claw_files/actionbar.css" type="text/css" rel="stylesheet"></head>
+
+<body class="post-template-default single single-post postid-1908 single-format-standard wp-custom-logo wp-embed-responsive customizer-styles-applied single-author singular two-column right-sidebar jetpack-reblog-enabled vsc-initialized">
+<div class="skip-link"><a class="assistive-text" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#content">Skip to primary content</a></div><div id="page" class="hfeed">
+	<header id="branding">
+			<hgroup>
+				<h1 id="site-title"><span><a href="https://clawwebserial.blog/" rel="home">Claw</a></span></h1>
+				<h2 id="site-description"></h2>
+			</hgroup>
+
+						<a href="https://clawwebserial.blog/">
+									<img src="./The Quick – 5.5 _ Claw_files/claw-banner2.png" width="1000" height="288" alt="Claw">
+								</a>
+			
+						<div class="only-search with-image">
+					<form method="get" id="searchform" action="https://clawwebserial.blog/">
+		<label for="s" class="assistive-text">Search</label>
+		<input type="text" class="field" name="s" id="s" placeholder="Search">
+		<input type="submit" class="submit" name="submit" id="searchsubmit" value="Search">
+	</form>
+			</div>
+				
+			<nav id="access">
+				<h3 class="assistive-text">Main menu</h3>
+				<div class="menu"><ul>
+<li><a href="https://clawwebserial.blog/">Home</a></li><li class="page_item page-item-13"><a href="https://clawwebserial.blog/about/">About</a></li>
+<li class="page_item page-item-40"><a href="https://clawwebserial.blog/support-wildbow/">Support Wildbow</a></li>
+<li class="page_item page-item-45"><a href="https://clawwebserial.blog/table-of-contents/">Table of Contents</a></li>
+</ul></div>
+			</nav><!-- #access -->
+	</header><!-- #branding -->
+
+
+	<div id="main">
+
+		<div id="primary">
+			<div id="content" role="main">
+
+				
+					<nav id="nav-single">
+						<h3 class="assistive-text">Post navigation</h3>
+						<span class="nav-previous"><a href="https://clawwebserial.blog/2024/07/12/the-quick-5-4/" rel="prev"><span class="meta-nav">←</span> Previous</a></span>
+						<span class="nav-next"><a href="https://clawwebserial.blog/2024/07/26/the-quick-5-6/" rel="next">Next <span class="meta-nav">→</span></a></span>
+					</nav><!-- #nav-single -->
+
+					
+<article id="post-1908" class="post-1908 post type-post status-publish format-standard hentry category-uncategorized">
+	<header class="entry-header">
+		<h1 class="entry-title">The Quick –&nbsp;5.5</h1>
+
+				<div class="entry-meta">
+						<span class="sep">Posted on </span><a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/" title="12:03 am" rel="bookmark"><time class="entry-date" datetime="2024-07-20T00:03:30-06:00">July 20, 2024</time></a><span class="by-author"> <span class="sep"> by </span> <span class="author vcard"><a class="url fn n" href="https://clawwebserial.blog/author/wildbow/" title="View all posts by wildbow" rel="author">wildbow</a></span></span>		</div><!-- .entry-meta -->
+			</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p><a href="https://clawwebserial.blog/2024/07/12/the-quick-5-4/"><strong>Previous Chapter</strong></a></p>
+<p style="text-align: right"><a href="https://clawwebserial.blog/2024/07/26/the-quick-5-6/"><strong>Next Chapter</strong></a></p>
+<hr>
+<p>“It hurts,” Ripley said, quiet.</p>
+<p>“I know.”</p>
+<p>‘Hurt’ was the wrong word for it.&nbsp; But she didn’t want to give words to it because the more she thought about it, the worse it was.&nbsp; Worse in every possible way.</p>
+<p>“I know it sounds silly, but swearing helps.&nbsp; They say it releases endorphins.”</p>
+<p>“My mom once said that swearing has a power.&nbsp; She said it was okay if we swore, but different words were for different circumstances so we shouldn’t swear at school or outside.”</p>
+<p>“I don’t agree with that.”</p>
+<p>Ripley shut her eyes.&nbsp; For long, terrible seconds, she <em>endured</em>.&nbsp; She rocked a bit back and forth, trying to keep her mind from paying attention to the pain, trying to keep it together.&nbsp; Nausea welled up in her.&nbsp; She could taste the vomit from throwing up before.</p>
+<p>“…and it’s like, if you’re someone who swears a lot, it loses power.&nbsp; It becomes another word.&nbsp; One that can make you look bad.&nbsp; But if you save it, if you wait, and if everyone knows you as someone who doesn’t swear, and then you use it, it has power.&nbsp; She said she always remembered the day her dad swore at someone in a parking lot.”</p>
+<p>“You’ve mentioned that before.&nbsp; The saving up swears thing.&nbsp; After we told you about the DNA test.&nbsp; I think that was a good time.&nbsp; I’ll remember you telling me, and you swearing.&nbsp; It’s etched into my mind.”</p>
+<p>“I wasn’t telling <em>you</em>,” Ripley said.&nbsp; “I was telling everyone there.&nbsp; Who cares what’s etched into your mind?”</p>
+<p>Silence.</p>
+<p>The pain swelled and jumped through her body.&nbsp; It wasn’t just the scar, or the bandaged part.&nbsp; It felt like an entire piece of her was being pressed down against a giant hot iron by another hot iron.&nbsp; Eyes screwed shut, she focused on breathing.&nbsp; The deep breaths became ‘hah’ sounds.&nbsp; The last few got higher pitched.</p>
+<p>“Ripley, honey.&nbsp; Look, listen, do you need a distraction?”</p>
+<p>“I hate your voice.”</p>
+<p>“I’m sorry.”</p>
+<p>“Stop talking.”</p>
+<p>Getting angry made her heart beat harder, which made the throbbing at the part that <em>was</em> cut speed up.&nbsp; Which made her aware of the pain that… existed outside of her body.</p>
+<p>A tear rolled down from each eye as she opened her eyes.&nbsp; They were in a concrete basement, with parts sectioned off by sheet plastic.&nbsp; There were metal shelves, some exposed on every side, some with doors, some material like glass, but some had metal doors.</p>
+<p>One of the shelving units was the exact same brand they had in their basement.</p>
+<p>Her ankle was shackled, and the shackle ran to a loop of metal that was bolted to the floor.&nbsp; There was a bucket to one side, that Natalie had moved to be as far away from them as possible, and there were three folding metal chairs.&nbsp; Uncomfortable.</p>
+<p>One chair for Natalie.&nbsp; She sat there, looking miserable, when she wasn’t pacing.</p>
+<p>One for Ripley.&nbsp; She didn’t pace as much.&nbsp; She felt too tired.</p>
+<p>One for a cooler, that sat on a chair, with no lid.&nbsp; The ice had mostly melted, the water was pink, and Ripley’s right arm sat in the water, the shorn end floating, hand at the bottom, maybe because it was heavier, or it was wedged there by the length.</p>
+<p>She liked thinking about the mechanical aspect of it, why it partially floated like that, because it meant she wasn’t thinking about other things, except thinking about it too long made her feel like she was going to throw up again, which meant putting her face over the bucket they had already gone to the bathroom in, and thinking about <em>that</em> made it worse.</p>
+<p>She shut her eyes.</p>
+<p>She’d had her arm taken from her-</p>
+<p>Memories of that scene jumped through her mind, vivid.&nbsp; She flinched away from them.</p>
+<p>-and it felt like it was still connected.&nbsp; That every little bit that the water thawed, the arm warming, going <em>bad</em>, was transmitted to her in… in a horrible pain that went past the stump and the bandage and into the air around her.&nbsp; Being burned and being crushed.</p>
+<p>It was still soul-bound to her, like in Fare.&nbsp; Until that connection was severed, or she pulled her soul back to the part of her body her heart was in, it would hurt.&nbsp; She had to think, back to that story.&nbsp; What worked?&nbsp; What happened?</p>
+<p>Scouring her mind to remember the story, going through its paces, remembering the little things, like Bone getting transformed, to try and remember if they’d had anything to do with the soul.&nbsp; If she could think of a solution there, in cozy stories…</p>
+<p>The pain distracted her and kept her from finding her place again, in that mental sequence.</p>
+<p>She made a small sound.</p>
+<p>A hand touched hers and she flinched away.</p>
+<p>Natalie.&nbsp; Trying to put Ripley’s hand between hers.</p>
+<p>Shattering the last of the illusion, the story that wasn’t <em>here</em>.</p>
+<p>“Don’t touch me!” Ripley shrieked.&nbsp; “Don’t you dare touch me!”</p>
+<p>“I’m sorry.”</p>
+<p>“You <em>should</em> be sorry!&nbsp; This is because of you!&nbsp; <em>You</em> started this by coming to find me, and messing everything up!&nbsp; <em>You</em> got us caught!&nbsp; <em>You</em> didn’t stop them!&nbsp; <em>You!</em>”</p>
+<p>“No, Ripley-”</p>
+<p>“Stop talking!&nbsp; Why won’t you stop talking!?&nbsp; You keep talking and saying stupid things and being stupid, and being <em>wrong!</em>&nbsp; And when you’re right it’s-”</p>
+<p>“I’m sorry.”</p>
+<p>“-it’s the worst things ever.&nbsp; Like my family isn’t my family, or you’re apologizing.&nbsp; Stop apologizing!&nbsp; Stop having to apologize!”</p>
+<p>Being angry made her feel nauseous again.&nbsp; Being around <em>Natalie</em> made her feel that way.</p>
+<p>She moved away, until the shackle didn’t let her, and she pulled against it, straining until the metal edges cut into the back of her foot.&nbsp; Natalie watched, crying, hand reaching out like she wanted to help, but couldn’t.</p>
+<p>The door banged.&nbsp; Someone had come in.&nbsp; A guy wearing a black button-up shirt and black pants, bald, with a bit of beard, black.&nbsp; He looked strong.</p>
+<p>In the process of pulling, she turned and found herself face to face with the cooler, bright orange in a dull grey basement, filled with pink water.&nbsp; From a fresh angle, the contents of the cooler looked alien, and it took her a long second to process what she was looking at.</p>
+<p>Natalie moved, putting herself between Ripley and the cooler.</p>
+<p>Ripley paced, moving further from Natalie.&nbsp; Natalie moved again.</p>
+<p>“Stop following me!”</p>
+<p>“I’m not.&nbsp; I’m blocking your view.&nbsp; You don’t have to look.&nbsp; See?&nbsp; Here.”</p>
+<p>Natalie moved the cooler, putting it on the floor, then folded the chair, putting it on top.</p>
+<p>Ripley could see the man from by the door approaching before Natalie did.</p>
+<p>Natalie turned just in time to see him approach, hand raised.</p>
+<p>He backhanded her.&nbsp; Natalie bent over, and he grabbed the back of her shirt, holding her in that position, while he brought that knee up- into the side of her face, maybe, or her upper chest.</p>
+<p>Then he pushed her to the side.&nbsp; Over the cooler, and over the folding chair.&nbsp; She fell with a clatter.&nbsp; The cooler didn’t tip.</p>
+<p>“Why did I do that?” he asked Natalie.</p>
+<p>“I don’t-”</p>
+<p>“Don’t mess with the setup.&nbsp; If the boss wanted it set up this way, it’s for a reason.&nbsp; Pick up the chair.”</p>
+<p>Natalie got to her feet, ginger, slow.&nbsp; The man watched and waited without hurrying her along.</p>
+<p>She got the folding chair and set it up, facing the other two chairs.</p>
+<p>“Cooler.”</p>
+<p>She grunted as she lifted it up.&nbsp; The metal creaked, the cooler barely fitting on the seat.</p>
+<p>“Now stay put.”</p>
+<p>He turned to Ripley.</p>
+<p>Despite herself, she couldn’t help but draw shoulders together, lowering her head, to appear smaller.</p>
+<p>She raised a hand as he lifted his, to protect herself.</p>
+<p>“Lower that.”</p>
+<p>She didn’t.</p>
+<p>“Kid.&nbsp; Lower your hand, or I’m going to walk away.&nbsp; Then I’m going to come back with something to hit you with, that’s longer, harder, and more painful, and I’m going to hit you more.”</p>
+<p>She lowered her hand.</p>
+<p>He slapped her, and she blinked rapidly, reeling.&nbsp; It felt more like getting clubbed than a <em>slap.</em></p>
+<p>Then he hit her again.&nbsp; Not as bad.</p>
+<p>She decided to play along, falling into the chair.&nbsp; She put a hand out to catch her-</p>
+<p>Missing hand.</p>
+<p>And hit the seat, bouncing a bit off of it before hitting the floor.&nbsp; She wanted to catch herself with her hands, and bumped the bandaged stump against floor.</p>
+<p>The sound she made didn’t sound like it came from <em>her.</em></p>
+<p>“If I have to hit you, lady, I hit her too.&nbsp; You’re her mom, right?”</p>
+<p>“No,” Ripley said, before Natalie could say anything.</p>
+<p>She couldn’t see faces or raise her head up.&nbsp; But she heard him, amused.</p>
+<p>“Didn’t like that, did you?”</p>
+<p>“No.”</p>
+<p>“Be good, girls.”</p>
+<p>He started to walk away.&nbsp; Ripley picked herself up, awkwardly, surprised at how weak and shaky she felt.</p>
+<p>“Sir?” Natalie asked.</p>
+<p><em>Don’t bring him back.&nbsp; You’re so awful</em>.</p>
+<p>“What?” he replied.</p>
+<p>“I’m not going to ask to be freed, or any of that.&nbsp; I know it probably wouldn’t work.”</p>
+<p>“No, it wouldn’t.”</p>
+<p>“But can we get some painkillers for her?&nbsp; And fresh ice for the cooler?&nbsp; Maybe a book to read?&nbsp; Do you have a preference?”</p>
+<p>“I like fantasy and sci-fi.&nbsp; And nonfiction.”</p>
+<p>“Anything like that, but I think she’s the kind of person… any book would do.”</p>
+<p>“And do <em>you</em> want anything?”</p>
+<p>“I don’t want to be greedy.”</p>
+<p>“Are you sure?” he asked.</p>
+<p>“Nothing for me.&nbsp; I’m asking for minor things.&nbsp; Something from the cupboards, for the pain, and freezer, and everyone’s got books lying around.”</p>
+<p>“Okay.&nbsp; Painkillers, fresh ice, a book?&nbsp; And what will you give me?” he asked.</p>
+<p>“I don’t- I don’t have a lot.”</p>
+<p>“No.&nbsp; You don’t.&nbsp; Would you suck me off?” he asked.</p>
+<p>Natalie didn’t answer.</p>
+<p>“I walk away in five seconds.&nbsp; <em>Would you?”</em></p>
+<p>“If you want to talk about it, can we go-”</p>
+<p>“No.”</p>
+<p>“She’s my daughter.”</p>
+<p>“She doesn’t seem to think so.&nbsp; No, you’re not leaving.&nbsp; You’re staying here.&nbsp; Would you?&nbsp; Three… two…-”</p>
+<p>“Yes.”</p>
+<p>“Would you fuck me?” he asked, folding his arms.&nbsp; “Don’t hesitate, or-”</p>
+<p>“Yes.”</p>
+<p>“Uh huh,” he said.&nbsp; He smirked.&nbsp; “As if I’d want your tired-ass old body, or trust any piece of myself between your teeth.”</p>
+<p>Natalie’s eyes were on the ground.&nbsp; “Then-”</p>
+<p>“Now your kid knows,” he said.&nbsp; “Hey, look at me, lady.”</p>
+<p>Natalie looked up.</p>
+<p>“You’re a whore and a cheap one at that.&nbsp; You old enough to know what a whore is, kid?”</p>
+<p>He was looking at Ripley.</p>
+<p>She nodded a bit, then looked away.</p>
+<p>“Then can we have the painkiller, or-?”</p>
+<p>“Are you stupid?” he asked.&nbsp; “A stupid, cheap, whore.&nbsp; I guess we’re learning who and what you are, huh?”</p>
+<p>Natalie dropped her eyes.</p>
+<p>“Fuck off, and stop making a racket.&nbsp; You’re on camera, even if nobody’s in the room with you.&nbsp; You kick up a fuss, I have to stop what I’m doing and shut you up.&nbsp; Next time, I hit you harder, and I hit <em>her</em> harder.”</p>
+<p>“I understand.”</p>
+<p>He walked the twenty or so feet past the limits of their chains to the end of the room, and double checked before slamming the metal door with the window in it.</p>
+<p>Ripley’s face hurt.&nbsp; Her teeth hurt too, like she’d been clenching them.</p>
+<p>But Natalie was barely moving.&nbsp; She’d sat down, and then she slumped over, to lie on her side on the floor.</p>
+<p>“I know you hate my voice,” Natalie said.</p>
+<p>Ripley couldn’t bring herself to really make a fuss about it after all of that.</p>
+<p>She hated that man.&nbsp; He was the most evil person she’d ever known, except maybe for Ms. Garvey in second grade.</p>
+<p>“Whatever,” Ripley said.&nbsp; She put a hand to her face where she’d been slapped, and then wanted to do it to the other side too, but that made her aware her arm was missing, which made the pain come back as a massive wave.</p>
+<p>There was a delirious, <em>wrong</em> moment that followed, as she tried to get her head away from the pain and felt like she might pass out.</p>
+<p>“Can I try an experiment?” Natalie asked, still lying on the floor.&nbsp; “I won’t talk too much, or touch you too much.&nbsp; But maybe it will help.”</p>
+<p>Ripley didn’t feel like she was all the way inside her own head as she said yes.</p>
+<p>Natalie picked herself up, grunting, and rubbed at her shoulder.</p>
+<p>She sat beside the folding metal chair, and motioned for Ripley to move too.</p>
+<p>So they sat, with the chair seat like a table between them.</p>
+<p>Natalie stuck arms out, and indicated briefly she wasn’t reaching out to Ripley.&nbsp; Her focus was on the chair.</p>
+<p>“What are you doing?”</p>
+<p>“It’s supposed to help, if I remember right.&nbsp; Here.”</p>
+<p>Natalie pulled her shirt off.&nbsp; She was wearing a thinner shirt underneath, white and nearly translucent, enough Ripley could see Natalie’s bra.&nbsp; Ripley looked away.</p>
+<p>“I don’t think you’re a whore,” Ripley said,</p>
+<p>“I don’t think so either,” Natalie said.&nbsp; “I don’t care what someone like him thinks.&nbsp; I’ve been lame, and awful, and I really don’t know what to do.&nbsp; But I’ve had my critics, and enemies.&nbsp; I… can deal with it.&nbsp; Someone like him, who thinks he’s smart.”</p>
+<p>“Okay.”</p>
+<p>“Thank you, though.”</p>
+<p>Ripley wanted to say something about how she hadn’t said it for Natalie, and shouldn’t be thanked, and it was more about him, that man, and everything else.&nbsp; She didn’t.</p>
+<p>Natalie draped the shirt across the back of the chair.&nbsp; Then she scooted over.</p>
+<p>“I’d move the chair around if I could,” Natalie said.&nbsp; “But for now… can you see your reflection?”</p>
+<p>The metal of the stainless steel chair was tarnished, but butts had kept the middle portion shiny.&nbsp; It was steel or aluminum, brushed, going by the little details, so it wasn’t a <em>mirror</em>, but there was still a reflection.</p>
+<p>“Now, focusing on your reflection, take your left hand, above the chair, put it against mine.”</p>
+<p>Ripley hesitated, but did.</p>
+<p>Natalie had her hand a foot or so above the seat, palm up.&nbsp; Ripley’s hand laid across it.</p>
+<p>“Now- focus on the reflection.&nbsp; Under the seat, put your other hand in mine.&nbsp; Just the same.”</p>
+<p>Ripley felt a moment of offense.&nbsp; “But-”</p>
+<p>“Just- go with it.&nbsp; Focus on the reflection.”</p>
+<p>Ripley pretended.</p>
+<p>“And with both hands, I’m going to exert a bit of pressure.&nbsp; Push against them with both of your hands.”</p>
+<p>Ripley did, then shifted position a bit, sitting with her body at an angle, so things lined up better.&nbsp; Pretending that the reflection of her hand in the mirror was her missing hand.</p>
+<p>“Just like that.&nbsp; Deep breaths.&nbsp; Push as you breathe out, change as you breathe out.”</p>
+<p>For one moment, in the middle of that, the weird pains stopped.</p>
+<p>She was so startled that it made her jump, and made the pain kick in all over again, worse.</p>
+<p>“What happened?&nbsp; Are you okay?”</p>
+<p>“It worked.&nbsp; It kind of worked.”</p>
+<p>“That’s great,” Natalie said, and she looked like she was going to cry.&nbsp; “That’s good.&nbsp; So, um, that’s something you can do a little bit every day, and it might make the pain stop forever.&nbsp; And maybe you’ll need to do it once in a while, with a better mirror, and a better setup, a better therapist.”</p>
+<p>“It’s like magic.”</p>
+<p>“A little bit, yeah.&nbsp; Retraining the brain.&nbsp; Fixing the pathways.&nbsp; It might be easier since you’re younger.”</p>
+<p>“Where did you learn to do this?”</p>
+<p>“Ohh,” Natalie said.&nbsp; Ripley had stopped pushing against her hands, so Natalie sat, a bit slumped over, one arm on the seat of the chair, cheek against her hand, other cheek a bit red now, and getting worse.&nbsp; “When you were gone, all these years, I imagined the worst.&nbsp; And I thought about what I’d have to do if you were hurt, or scared, or traumatized.&nbsp; I watched videos and researched.&nbsp; I remembered a lot of the stuff about helping with different issues.&nbsp; I guess this was one.”</p>
+<p>“What else was there?”</p>
+<p>“Umm.&nbsp; Apparently if you go through something traumatic, it can help to play Tetris.&nbsp; Helps keep the trauma from becoming… loops, I guess.”</p>
+<p>“I have some friends who would love an excuse to play video games like that.&nbsp; Though they’d probably want to play Timecraft.”</p>
+<p>“I don’t know video games very well.”</p>
+<p>“Sterling says he plays Timecraft.&nbsp; You’ve probably seen it.&nbsp; The blocks?&nbsp; Building in four dimensions instead of three?”</p>
+<p>“I don’t know.&nbsp; Usually if he’s in front of the TV like that, I’m getting things done.&nbsp; Making dinner or cleaning up.”</p>
+<p>“Or talking to his grandmother.&nbsp; Or working on the search for <em>me</em>.”</p>
+<p>“Yeah.”</p>
+<p>“I feel bad for him.”</p>
+<p>“He’s a good kid.&nbsp; Does his chores, plays nicely, he gets good grades.”</p>
+<p>“He’s in kindergarten, it’s not like good grades are the biggest deal.&nbsp; My little brother, he’s a bundle of chaos, but he gets fours across the board.”</p>
+<p>“I haven’t gotten a report card from this new school, new system, so-”</p>
+<p>“It goes from one to four.&nbsp; Fours are good.”</p>
+<p>“Okay.&nbsp; Wow.”</p>
+<p>“I feel sorry for Sterling,” Ripley said.&nbsp; “Um, so-”</p>
+<p>“Can-”</p>
+<p>They talked over each other for a second, before Natalie relented.</p>
+<p>“Just…” Ripley started.&nbsp; She felt very tired, and sick, and the pain was back.&nbsp; “If I-”</p>
+<p>If she what?</p>
+<p>She hadn’t even fully formed the thought.&nbsp; She didn’t want to.</p>
+<p>“Whatever happens,” she said, changing directions, going around that unfinished thought.&nbsp; “You need to get back to Sterling.&nbsp; Because he’s a cool, cute little kid.&nbsp; He needs a mom.&nbsp; So you gotta… you gotta do better.&nbsp; Play with him.&nbsp; Meet him where he’s at.&nbsp; You gotta, um-”</p>
+<p>She was tearing up, and she realized she couldn’t dodge around that unfinished thought.</p>
+<p>“Ripley-”</p>
+<p>“Please… let me,” Ripley said.&nbsp; “Please.&nbsp; Because if I understand what’s going on right… there’s a chance they keep taking pieces of me until I’m dead.&nbsp; So as my last-”</p>
+<p>“Don’t talk like that.”</p>
+<p>“As my last wishes!” Ripley raised her voice.</p>
+<p>“Shhh, please.&nbsp; Okay.&nbsp; Just… quiet.”</p>
+<p>“As my last wishes.&nbsp; Don’t hunt my mom and dad down.&nbsp; Tyr needs parents.&nbsp; He deserves good things.&nbsp; Even if you’re mad at them… don’t hurt him, like this hurt me.&nbsp; And if you’re mad or sad or whatever, about me… channel it.&nbsp; My mom, she made a really big deal about taking all the bad, the anxiety, the stress, and channeling it into- into energy, into <em>go</em>.”</p>
+<p>“You don’t think I did that?” Natalie asked.&nbsp; “All these years, the pain and anxiety of you not being around.&nbsp; Trying to learn as much as I could about pain and trauma, wondering which parts would apply to you, if I ever got you back?”</p>
+<p>“I dunno,” Ripley answered.&nbsp; She felt uneasy, and talking like this was crushing the air out of her lungs.&nbsp; “What I do know is Sterling needs better.&nbsp; So… last wishes, maybe it helps you put those energies where they’re meant to go.&nbsp; To him.&nbsp; Love him as much as you say you loved me, with extra.&nbsp; Or I’ll be an angry ghost.”</p>
+<p>“We’re not going to reach that point.”</p>
+<p>Ripley stared the woman down, studying her expressions, wondering how much she believed that.</p>
+<p>Neither of them seemed to know what to say for a minute.</p>
+<p>Ripley kind of resented Natalie using the seat as a headrest to lean forward on.&nbsp; To do the same she’d have to move, and she didn’t feel like moving.</p>
+<p>Her missing arm hurt.</p>
+<p>She thought about asking for another session of that therapy.</p>
+<p>“One thing that came up, when I was researching,” Natalie said.&nbsp; “Was how relationships change after trauma.&nbsp; How… you can be supported by someone through the worst sorts of experiences.&nbsp; A friend helps you after a house fire, for example.&nbsp; But then, as you’re recovering… you stop wanting that friend around, because they remind you.”</p>
+<p>“Okay.”</p>
+<p>“Maybe after we’re past all this, you won’t want to be around me.”</p>
+<p><em>I don’t want to be around you now</em>, Ripley thought.</p>
+<p>“I don’t know what happens,” Natalie went on.&nbsp; “But I don’t want that to happen.&nbsp; If there’s any way out of this, anything we could do… I think you have to stop fighting me.”</p>
+<p>Ripley shook her head, taking in a deep breath.</p>
+<p>“Wait, wait,” Natalie whispered, both hands raised.&nbsp; She’d sat up a bit.&nbsp; “Wait.”</p>
+<p>Ripley was breathing hard.&nbsp; The bandaged stump of her arm throbbed like its own heartbeat.</p>
+<p>“And then, when this is over,” Natalie said.&nbsp; “You can decide what you want to do.&nbsp; Where you want to go.&nbsp; To Sean, maybe?&nbsp; Or-”</p>
+<p>“To my mom and dad?”</p>
+<p>Natalie closed her eyes.</p>
+<p>“You need to stop fighting <em>me </em>about them<em>. &nbsp;</em>She was a good mom.&nbsp; He as a good stepdad, to Tyr too.&nbsp; They love me.”</p>
+<p>“I think, um…”</p>
+<p>“That’s the deal.”</p>
+<p>“I want you alive more than anything.”</p>
+<p>“So that’s a deal?”</p>
+<p>“I-” Natalie was deliberately trying to control herself.</p>
+<p>Ripley was shaking.&nbsp; It wasn’t all because of this conversation.&nbsp; She was just feeling shaky in general.</p>
+<p>Natalie clenched her hand into a fist, then wrapped her other hand around it.&nbsp; She opened her eyes.&nbsp; “Ripley.&nbsp; I want you alive.&nbsp; I know you were talking about last wishes.&nbsp; If the choice comes up, where I think I could do something to give you a chance to get away… even if it means I get in trouble or get hurt, I want you to run.”</p>
+<p>“Okay,” Ripley replied.</p>
+<p>“And for <em>my</em> last wishes… be careful, about going back to them?&nbsp; Think hard?&nbsp; That’s all I ask.”</p>
+<p>“Okay,” Ripley said.&nbsp; She thought for a second, because it felt like answering too fast wasn’t enough.&nbsp; “I don’t care what happens to you, except like… I don’t want to see anyone die.&nbsp; You don’t mean anything to me, but you’re still a person.”</p>
+<p>Natalie closed her eyes again.</p>
+<p>“So I can run.&nbsp; And I’ll think about it.&nbsp; But you should think more about Sterling.&nbsp; If you die for me, he has no mom.”</p>
+<p>“I’m thinking about him.&nbsp; I promise you, I am.&nbsp; He’s with Ben, or he should be.&nbsp; Ben’s a good man.&nbsp; It’s not that I’m not thinking about him.&nbsp; It’s… I think- I think we have to try very, very hard to have a good chance.”</p>
+<p>“Okay.&nbsp; How?”</p>
+<p>“I don’t know.”</p>
+<p>“I can pick locks.&nbsp; I know some self defense.&nbsp; Except…”</p>
+<p>She looked in the direction of the cooler.&nbsp; The pain throbbed, the feeling of having an arm, still, and terrible, impossible pressure being applied mounting.</p>
+<p>“Hey.&nbsp; Hey, don’t- don’t focus on that.”</p>
+<p>Ripley’s face scrunched up at the thought of the skills and possibilities taken from her.&nbsp; She felt like she could vomit.</p>
+<p>“Hey, focus on me.&nbsp; Hey.&nbsp; Lockpicking.&nbsp; That’s an- it’s an interesting skill to learn.”</p>
+<p>“I like mechanisms.&nbsp; Technology.&nbsp; Old stuff.&nbsp; Locks fit.&nbsp; I was going to be a mechanic or something.”</p>
+<p>“You still can.”</p>
+<p>Ripley shook her head slightly.</p>
+<p>“Lots of guys and gals who’ve done dumb stuff with industrial machinery, go back to the job.”</p>
+<p>That kind of made sense.</p>
+<p>“Lockpicking.&nbsp; Tell me about that.”</p>
+<p>“I wasn’t very good at it.&nbsp; I had some of the cheapest, easiest locks, and a basic kit.&nbsp; Carson showed me how, but I got stuck on some of the more complicated ones.&nbsp; And that was with two hands.”</p>
+<p>“What do we need, then?&nbsp; Because you can have my hand to help.”</p>
+<p>“It’s not- it doesn’t work like that, exactly.”</p>
+<p>“What do we need?”</p>
+<p>“Tension, and… I guess a rake.”</p>
+<p>“A rake?”</p>
+<p>“One piece of metal that can go in, that’s bumpy, or wavy, like the ridges on a key are wavy.&nbsp; But it’s noisy and random, and these shackles are big.”</p>
+<p>“Okay,” Natalie said.&nbsp; She checked the chair, feeling around the underside, then checked the hinge.&nbsp; She glanced over at the camera.&nbsp; “You do have a good head for these things.”</p>
+<p>“Do you have any hairpins?”</p>
+<p>“No.”</p>
+<p>“Makes me wish I cared about those things.&nbsp; Makes me wish I was wearing my overalls.&nbsp; I could use the connecty bits,” Ripley explained, touching the part of her chest where a strap would connect to the button.</p>
+<p>“It’s too bad,” Natalie said, stretching, before sitting on the other chair.&nbsp; She shifted position, hand still feeling, but not in a way that the camera would necessarily see.&nbsp; “I was hoping there would be a part I could break off.”</p>
+<p>“So it’s useless?”</p>
+<p>“No.&nbsp; I don’t know.&nbsp; Let’s… let’s try to stay positive.”</p>
+<p>“It’s hard,” Ripley said, her words barely more than a breath, eyes downcast, the pain <em>constantly</em> there.&nbsp; She felt uneasy, started to ask, stopped, and then told herself that this time, with Natalie saying she wasn’t going to fight to keep her after, it wouldn’t be as much of a betrayal to ask for help, to work with Natalie on something.&nbsp; “Can we do the reflection thing?”</p>
+<p>“We can do the reflection thing,” Natalie said, shifting position.</p>
+<p>A part of Ripley hoped that as their hands touched, Natalie would pass her something.</p>
+<p>It didn’t happen.&nbsp; Natalie’s hands were empty.</p>
+<p>Ripley shifted position, hand pressed against Natalie’s the stump angled down, out of view, where she could pretend it was reaching under the chair, that the reflection was transparency.&nbsp; That her hand was still there.</p>
+<p>“Tell me more about your friends,” Natalie said.</p>
+<p style="text-align: center">⯁</p>
+<p>“I wonder if they have steampunk prosthetics.”</p>
+<p>“I still don’t fully understand what that means,” Natalie said.</p>
+<p>Ripley sighed.&nbsp; She <em>had</em> explained.&nbsp; “Airships, gears, <em>steam</em>, but it’s, like, free.&nbsp; Get it?”</p>
+<p>“Not really.&nbsp; You want a steam powered arm?&nbsp; I’d love it if that were possible, um…”</p>
+<p>Natalie floundered.</p>
+<p>“It’s an aesthetic.”</p>
+<p>“Being steam powered?”</p>
+<p>“<em>No.&nbsp; </em>Look, it’s <em>my</em> aesthetic.&nbsp; Please, please tell me you’ve been paying attention.”</p>
+<p>“I’m paying attention, but I’m not getting the full picture.&nbsp; Overalls, no dresses.&nbsp; I know that.&nbsp; Definitely got that message.”</p>
+<p>“Some dresses, and skirts, but obviously, <em>wind</em>, right?&nbsp; Airships, windmills, steam, you’re liable to have your skirt going inside-out and flashing your knickers.&nbsp; So… gotta be careful.”</p>
+<p>“‘Knickers’ are part of the aesthetic?”</p>
+<p>“Look, you <em>have</em> to have seen some of this.&nbsp; Some movies, some shows.&nbsp; Close your eyes.”</p>
+<p>Natalie listened.</p>
+<p>“Picture all of this in sepia tones, clouds, adventurous people in old timey clothing, kerchiefs, pleats, vests, white shirts with buttons undone, coveralls, overalls… pipes everywhere, steam… there’s lots of movies with that stuff.&nbsp; You have to have seen some.”</p>
+<p>“I don’t think I have.”</p>
+<p>“Oh my god.&nbsp; You’ve watched some with Sterling?&nbsp; Please tell me you have.”</p>
+<p>“I don’t think so.”</p>
+<p>“List some movies you’ve watched with him?”</p>
+<p>“I- the usual animated films.&nbsp; The classics.”</p>
+<p>“Pirates of the Amalthea?”</p>
+<p>“I- he’s too young for that.&nbsp; Like I said, the classics, and big movies that come out, so he knows some of what his peers are talking about.&nbsp; But he likes watching the same shows.”</p>
+<p>“Does he have favorites?”</p>
+<p>“The Knights of the Mystic Light.&nbsp; It’s from the 80s, I don’t know why he likes it so much.&nbsp; It’s clearly made to sell toys.&nbsp; Muscled men with hologram images on their chests.&nbsp; I don’t even know where he found the first episode.&nbsp; Woobtube, I guess?”</p>
+<p>“But he likes it.”</p>
+<p>“He has some tapes of old episodes, but they’re scattered.&nbsp; Ben found some and gave them to him for his last birthday.”</p>
+<p>“What did you get him?”</p>
+<p>“Toys, popular ones.&nbsp; A Puff gun he wanted back at his old school, because other boys were having Puff fights.&nbsp; Um, some clothes.”</p>
+<p>“No,” Ripley said.&nbsp; “You have to meet him.&nbsp; You have to figure out what he wants and give it to him.&nbsp; Can you find fanart of the Knights of Mystic Light online?&nbsp; And print it as a poster?&nbsp; With the artist’s permission?&nbsp; Or find the toys?”</p>
+<p>“They’re from the eighties.”</p>
+<p>“So they’ll be expensive.&nbsp; But if he loves this stuff then others do too, they’ll collect them.&nbsp; I bet if you’re like, my five year old loves this stuff, what could I do, there’s a bunch of nerdy people who’d <em>love</em> to help you.”</p>
+<p>“I- I’m not- I’m not good at this.&nbsp; I’ve been a single mom.&nbsp; One that works two jobs.&nbsp; My actual work, and looking for you.”</p>
+<p>“My mom was a single mom for a while.&nbsp; Until Tyr was around, which is around the time Carson showed up.&nbsp; And one year, I was seven, my friend from school changed to another school, and I was really bummed she wouldn’t be around for my birthday, and my teacher was horrible.&nbsp; My mom made a special effort to make my birthday special, so every day, there was something waiting on my bed, as an advance birthday present.&nbsp; Books I wanted.&nbsp; A poster.&nbsp; A block set based on Pirates of the Amalthea, which I’m <em>not</em> that big a fan of, and she knew that, but it had a lot of cool components for steampunk stuff.&nbsp; To make up for my friend not being there, she said.”</p>
+<p>“That’s a lot.”</p>
+<p>“And then she surprised me.&nbsp; At the end of the week she said I could skip school and she took me to Texas to see my friend.&nbsp; And we had a day.&nbsp; And then we came back and we had a day with my regular friends.&nbsp; I will <em>always</em> remember that.”</p>
+<p>“Ripley, I’m worried you have a romanticized view of things, but I can’t- I couldn’t compete with someone who’s doing something criminal, to have that extra money.”</p>
+<p>“It’s not the money.&nbsp; It’s- she gave me a proper goodbye with my friend.&nbsp; And when it came to Devon, you took my goodbye away, telling us we couldn’t hug, telling him to get off the bed.”</p>
+<p>“There’s more to it.&nbsp; I’ve… I had bad experiences, when I was your age.&nbsp; With boys.&nbsp; And then you being missing, I- I spent so long thinking about what might have happened, I couldn’t turn it off.&nbsp; I couldn’t get away from what had happened to me, or what I thought might have happened to you.”</p>
+<p>“You gotta try.”</p>
+<p>“I am.&nbsp; I will.”</p>
+<p>“You still took away my goodbye,” Ripley said.</p>
+<p>She pulled her hands away from Natalie’s.&nbsp; Her hand.</p>
+<p>The pain stirred awake, where it had gone away.&nbsp; Kind of.</p>
+<p>“And I will fight or sacrifice anything to get us through this.&nbsp; To make it so that <em>wasn’t</em> a goodbye.&nbsp; I promise.”</p>
+<p>“Have you done things for Sterling like that?&nbsp; A week of presents to help him through a bad time?&nbsp; Or do you have happy memories?”</p>
+<p>“Well, the talk about the toys- he has similar ones to the knights from his show.&nbsp; He hides them in Ben’s room.&nbsp; Even though he’s not supposed to go in there.&nbsp; Ben was pointing it out, the morning of that day we found you.”</p>
+<p>“Does he do that with you?”</p>
+<p>“Not a lot.&nbsp; Not since he was little.”</p>
+<p>“You need to change that.&nbsp; When this is over, it won’t be a second job to look for me anymore.&nbsp; So you have to show him you care.&nbsp; Remember my wish.”</p>
+<p>“That’s the plan.&nbsp; But I’m hoping, especially as we’ve talked, that you’ll want to stay in touch on some level.&nbsp; Even if you want to stay at Sean’s, and Sean agrees…”</p>
+<p>Ripley shook her head.</p>
+<p>“What are you shaking your head to?”</p>
+<p>“I don’t know Sean.&nbsp; I want to go back to Carson and Mia.”</p>
+<p>“Remember what I said, to think about things, before any decisions.”</p>
+<p>“I am, I will.&nbsp; But I don’t want to lie either.&nbsp; They’re my parents.&nbsp; Mia’s my mom, and Carson’s my stepdad.”</p>
+<p>Natalie opened her mouth, then closed it.&nbsp; She nodded, then looked away.</p>
+<p>It took Ripley a bit to realize Natalie was crying.</p>
+<p>Her emotions were all burned out.&nbsp; She was tired, and her head hurt.</p>
+<p>She closed her eyes, cheek on the metal seat.</p>
+<p>She wanted to sleep through this, but the fear, every tiny sound, made her worry.&nbsp; Natalie’s sniffing and the metal of the chair creaking as she shifted position.</p>
+<p>A brush against Ripley’s face made her flinch.</p>
+<p>“It’s okay.&nbsp; It’s my shirt.&nbsp; I put the sleeve over your eyes.&nbsp; To block out the light.&nbsp; It’s too bright to sleep.”</p>
+<p>Ripley relaxed a bit, but it was hard.</p>
+<p>“Are you feeling alright?”</p>
+<p>“Tired.&nbsp; I constantly feel a bit like I’m going to throw up.&nbsp; Headache.”</p>
+<p>“You feel sick?”</p>
+<p>“I… mostly it’s thinking about it.&nbsp; The wrongness of it.&nbsp; It feels so wrong it turns my stomach.”</p>
+<p>“I’m worried that’s infection, or blood loss.”</p>
+<p>Ripley shrugged.</p>
+<p>It didn’t feel like she was <em>sick</em>.</p>
+<p>It felt like she was missing an arm and even telling herself she could get a cool prosthetic barely made that okay.</p>
+<p>“I hope we can find a way that all of us together can talk it out.&nbsp; A conference call with the Hursts.&nbsp; Lay it all out on the table.&nbsp; Ben’s been recording a film.&nbsp; Maybe… maybe you could watch it.&nbsp; And decide?”</p>
+<p>“Maybe,” Ripley said.&nbsp; “It’s a moot point.”</p>
+<p>“What do you mean?”</p>
+<p>“A moot is like… a viking argument.&nbsp; People think something being moot means it’s irrelevant, but that’s not right.”</p>
+<p>“I know that much.&nbsp; But what do you mean?”</p>
+<p>“I don’t think I’m getting out of here okay.&nbsp; Because he wants to hurt my mom and dad, and hurting me is how he’ll do it.&nbsp; So focus on Sterling.&nbsp; Don’t go after my parents for revenge.”</p>
+<p>“We’ll get out of here.”</p>
+<p>“Maybe.&nbsp; Maybe they’ll come and save us.”</p>
+<p>The throb of pain and the sound of Natalie’s distress kept her from sleeping for a long time.</p>
+<p style="text-align: center">⯁</p>
+<p>Ripley was shaken awake.</p>
+<p>“Shh.”</p>
+<p>It was weird to be shaken awake and then told to be quiet right after.</p>
+<p>Natalie took her shirt and pulled it on.</p>
+<p>There were male voices, muffled.</p>
+<p><em>“Play along,”</em> Natalie whispered.</p>
+<p>The door opened.</p>
+<p>“Hello,” the man greeted them.</p>
+<p>He’d been there at the surgery.</p>
+<p>He was followed by the man who’d called Natalie a whore.</p>
+<p>Ripley shrank back.&nbsp; Even now, having just woken up, the missing arm made her feel off-balance, and she kept wanting to use it to catch her balance or crawl, or push herself to her feet, and every time she couldn’t, it was like missing a stair… and waking up the pain that was like being crushed and burned at the same time.</p>
+<p>“You haven’t puked on yourselves or pissed.&nbsp; You don’t smell too bad,” the man said.&nbsp; He smiled.&nbsp; “That’s good.”</p>
+<p>Ripley remembered her dad teaching her that if she was taken by someone, she should and could try to puke, pee, or poop everywhere.&nbsp; Making a mess of herself was better than…</p>
+<p>Than being taken and losing an arm.</p>
+<p>Except it had been police at first.&nbsp; And she’d had a bathroom break right before being handed off.&nbsp; Before realizing how bad the situation really was.</p>
+<p>Then after, being brought down here, she’d decided it was better to use the bucket.&nbsp; Because something told her the men wouldn’t care that much.</p>
+<p>He looked like a really ordinary guy, with a long-sleeved black shirt, a bit of scruff on his chin, and medium-long hair.&nbsp; A bit of a slouch.</p>
+<p>“You’re Davie Cavalcanti?” Natalie asked.</p>
+<p>“I am.&nbsp; Arlo, there’s chains in the room with the others.&nbsp; Would you go through?”</p>
+<p>Arlo pushed his way past plastic sheeting, walking away.</p>
+<p>“You girls don’t know how lucky you have it,” Davie said.&nbsp; “Hey, little one.&nbsp; <em>Hey.”</em></p>
+<p>He put emphasis on that last word.&nbsp; More of a demand.</p>
+<p>Ripley met his eyes.&nbsp; He’d bent over, looming close.</p>
+<p>The last time he’d done that, Natalie had been screaming.&nbsp; Ripley had been taken away.</p>
+<p>Put on a metal table and strapped down.&nbsp; Natalie held and made to watch.</p>
+<p>Then her arm had gone into the cooler.</p>
+<p>She shuddered, whole-body.</p>
+<p>He flashed a smile.&nbsp; “Hey.&nbsp; There you are.&nbsp; You’re lucky.&nbsp; Most of the city is without power, and you’re here in my basement, enjoying having electricity and cooled air.”</p>
+<p>“Thank you,” Natalie said.</p>
+<p><em>Follow my lead</em>.&nbsp; “Thank you,” Ripley added, belatedly.</p>
+<p>The man straightened.&nbsp; “Good manners.&nbsp; Better than last time.&nbsp; That’s good, I like that.&nbsp; Now let’s get you standing, stand up.&nbsp; Such uncomfortable sleeping positions.&nbsp; Let’s make sure your legs aren’t asleep.”</p>
+<p>Ripley wasn’t sure if she should talk or respond.</p>
+<p>“Can I ask what’s happening?” Natalie asked.</p>
+<p>“Well, oh.&nbsp; Look at you, poor girl, you’re shaky.&nbsp; Unsteady on your feet.&nbsp; I know what should just fix you right up.&nbsp; Let’s see… Arlo.”</p>
+<p>“Here,” Arlo responded.</p>
+<p>He came back, carrying chains.</p>
+<p>“Around the waist.&nbsp; Then get them set up.&nbsp; Daughter to you, mom to daughter.”</p>
+<p>Arlo looped chain around his waist, then did a loop over one shoulder, the chain crossing his chest.&nbsp; With a second length, he extended it out, and approached Ripley.</p>
+<p>She shied away, heart hammering, brain- stammering, kind of.</p>
+<p>He didn’t care, and reached past.&nbsp; Wrist shackle, with chain running through.&nbsp; Then another wrist shackle for Natalie.</p>
+<p>“Let’s go upstairs.&nbsp; Let’s get some food in your bellies.”</p>
+<p>Davie stopped at the cooler, and he picked up the arm.&nbsp; He led the way, carrying it.&nbsp; It was white, bruised on the bottom half, waxy on the top.&nbsp; It wasn’t as floppy as it seemed like it should be.</p>
+<p>“Now, so you know, I’m going to expect you to be on good behavior.&nbsp; These are important people,” he said.&nbsp; He used the hand to gesture in their direction, as he cast a warning glance back.&nbsp; “So far it’s been business.&nbsp; Don’t make me upset, or you’ll learn the difference in treatment.”</p>
+<p>Arlo had Natalie lead the way, Ripley following.&nbsp; They walked into a dark stairwell, with only a single dim, flickering light, metal stairs bolted to the walls.</p>
+<p>There was one metal door at the base- the one Ripley had spent too much time looking at, and one at the top of the stairs.&nbsp; Arlo shut one before Davie Cavalcanti opened the other.</p>
+<p><em>Keypad</em>, Ripley mentally noted.&nbsp; She felt like she could throw up, shake until she fell apart, or lose her mind from terror.&nbsp; She focused on the details.&nbsp; Keypad.&nbsp; Okay.&nbsp; Five digit code?&nbsp; She didn’t have any idea what that code was.</p>
+<p>Even if they’d worked out a lockpick, it didn’t look like they could have gotten away.</p>
+<p>She thought again about what she’d been taught.&nbsp; What if she vomited <em>now</em>?&nbsp; What if she peed herself <em>now</em>?</p>
+<p>“I’m told there’s some confusion over parentage,” Davie said.&nbsp; “I know the story, but I’m curious.&nbsp; Where do things stand.”</p>
+<p>“We were fighting over it,” Natalie said.&nbsp; “But it’s been a hectic few days.&nbsp; I think, based on what she’s said, Camellia’s coming around?”</p>
+<p>Anger stirred in Ripley’s chest, combining with the fear.</p>
+<p>Mingling with the other feelings, she wished for a second that she could vomit her rage out.&nbsp; Like a dragon breathing fire, but disgust.</p>
+<p>Natalie glanced back.</p>
+<p>There wasn’t any hint, or widening of the eyes, or mouthed message.&nbsp; Because Arlo was behind her, footsteps banging on metal stairs.</p>
+<p>But Ripley remembered.&nbsp; “I dunno.”</p>
+<p>“You don’t know?” the man asked, incredulous.&nbsp; His way of talking made her think of some TV characters.&nbsp; The kind that appeared on Tyr’s shows, with an exaggerated way of speaking.</p>
+<p>Except it wasn’t <em>that</em> exaggerated.&nbsp; It felt that way.</p>
+<p>“It’s complicated.&nbsp; Yeah.&nbsp; I’m… mad.”</p>
+<p>She was mad.&nbsp; At Natalie, for making <em>this</em> the plan.&nbsp; For making her betray her mom.&nbsp; And maybe the fact she was mad made it easier to <em>sound</em> mad.</p>
+<p>“Mad.&nbsp; At who?”</p>
+<p>“Mia.&nbsp; Carson.&nbsp; Others who lied to me.”</p>
+<p>She hated this.</p>
+<p>They stepped out past the metal door, and into a nice hallway.&nbsp; The walls were red, and pictures with gold frames lined the way.&nbsp; The baseboards were ornate wood with some gold trim around stuff like air vents.&nbsp; Side tables and shelves sitting against the walls were a matching dark wood.</p>
+<p>“So what are you going to do about it?” Davie asked.</p>
+<p>“I don’t know.&nbsp; Do I really get to do anything?&nbsp; You decide.&nbsp; You’ll chop me up into pieces, right?”</p>
+<p>“That is the intention,” he said.&nbsp; As casually as if he was talking about the weather.&nbsp; He used the arm to gesture as he talked.&nbsp; A bit of a dip as he said ‘is’ and then a bigger one as he said ‘intention’.</p>
+<p>“I’m mad at her for that,” Ripley said, staring a hole into Natalie’s back.&nbsp; “I’m mad at you too.”</p>
+<p>Natalie glanced back, clearly worried.</p>
+<p>“That’s only fair.&nbsp; You’ll be more mad by the time this is done, but she <em>did</em> set this in motion, so she owns her own part of it.&nbsp; She took my daughter.&nbsp; This way.”</p>
+<p>Ripley was dizzied by the sudden saturation of detail, the artwork, which- Lincoln, her friend, might know better.&nbsp; It was dark, oily, with figures in spotlights, almost.&nbsp; A lot of them looked scared or awestruck, eyes turned toward the source of the light.&nbsp; Or they were in the middle of scenes that made Ripley think of violent mobs.</p>
+<p>She’d slowed down too much, looking, and Arlo suddenly shoved her, moving her forward, with a push as rough as being punched. It was aimed at the shoulder that was attached to her stump, and the pain made the dizziness so much worse.&nbsp; She saw stars, and felt a wave of blackness threaten to overtake her.</p>
+<p>“Keep moving,” Arlo said.</p>
+<p>Natalie’s backward glance was worried.</p>
+<p>“And eyes forward, whore.”</p>
+<p>“Manners, manners.&nbsp; We’re expecting polite company,” Davie said.</p>
+<p>The table had a tablecloth of the same sort of red.&nbsp; Plates had metal covers over them that steamed up or clouded from the heat within.&nbsp; There were no lights, except for the candles that were <em>everywhere, </em>burning low.</p>
+<p>And they were on a patio.&nbsp; There was a railing, and past that railing were trees.&nbsp; Past the trees, past rolling hills, there was the city.&nbsp; Barely any lights- just the shape of buildings against dark grey sky, and fires here and there.</p>
+<p>Davie touched two different chairs.&nbsp; “And stay with them, Arlo.&nbsp; Natalie Teale and… what should I call you?”</p>
+<p>“Cammy.”</p>
+<p>“Cammy Teale?”</p>
+<p>“Yes,” she said, and she hated herself for it.</p>
+<p>Sitting across and to the left of Natalie was a- a person.&nbsp; He was so beat up it was hard to tell what he looked like.</p>
+<p>“Cammy Teale.&nbsp; Meet my son.&nbsp; Camellia here is the little girl the Hursts kidnapped, would you believe it?&nbsp; And this is her mother.”</p>
+<p>“Was-?” the boy said, and he hung his head for a second, as if he expected a rebuke.</p>
+<p>“Finish your questions.”</p>
+<p>“Was Gio there?”</p>
+<p>“Who?” Ripley asked.</p>
+<p>“Valentina,” Natalie said, quiet.</p>
+<p>“Oh.&nbsp; She was there.”</p>
+<p>“Is she okay?”</p>
+<p>“Yeah.&nbsp; She was really nice.&nbsp; Nervous.&nbsp; But she was okay, the last I saw her.”</p>
+<p>“And if you see her again, I expect she won’t be,” Davie said.&nbsp; He turned to Arlo and Natalie.&nbsp; “Kids, right?”</p>
+<p>“They get away from you,” Natalie said.</p>
+<p>He laughed, and it was so loud and abrupt that both Ripley and the boy with the beat-up face flinched, ducking heads down.</p>
+<p>She flinched again when something slammed onto the table.</p>
+<p>Her arm.&nbsp; Right in front of her.&nbsp; He had almost knocked over her glass.</p>
+<p>“Well, technically, Camellia, Cammy, was taken from me,” Natalie said.</p>
+<p>“She was.&nbsp; I’ll tell you,” Davie said, and he pulled out the chair at the end of the table.&nbsp; “That was a curveball.&nbsp; I was trying to figure out who they were, where they lived, what they were doing and why, and up until a judge I own reached out to me, I had no idea.&nbsp; It offends my pride a bit.&nbsp; And you know, it makes sense.&nbsp; Because they took Gio.”</p>
+<p>“If you really wanted to hurt them,” Natalie said.&nbsp; “You’d let us go. I’d take Cammy, I’d leave, to somewhere they can’t find us.&nbsp; From what little I know of her, it would hurt her more than anything else.”</p>
+<p>“I think you might be right,” Davie said, sitting back.&nbsp; “Food for thought.”</p>
+<p>“I think Cammy would go with it.&nbsp; We’d get a therapist, deprogram her.&nbsp; She spent years living with them.&nbsp; It’s confusing, heartbreaking for both of us, all of us, in different ways.”</p>
+<p>Davie nodded.&nbsp; “And my Gio, in the same situation.”</p>
+<p>“I’d say I’m sorry, but… you chopped off my daughter’s arm.&nbsp; I’m mad too, in my own way.”</p>
+<p>“Of course.&nbsp; But it <em>was</em> just business.”</p>
+<p>“Not to me.&nbsp; Not to her.”</p>
+<p>“Huh,” Davie said.&nbsp; “Fair.”</p>
+<p>“But if you were to let us go, and give us the chance to put distance between ourselves and the Hursts, we wouldn’t say anything.”</p>
+<p>“Why the hell not?” Davie asked, leaning forward.&nbsp; “What’s wrong with you?”</p>
+<p>Natalie seemed taken aback.</p>
+<p>Ripley still felt a bit dizzy, and the entire tone and style of the conversation didn’t help her feel like she could find her balance again.&nbsp; She watched and listened with wide eyes, glanced periodically at the boy with eyes so swollen they were basically permanently shut.</p>
+<p>“Why not?” Davie asked.</p>
+<p>“Because it’s clear, you have money.&nbsp; I don’t.&nbsp; The police handed us to you.&nbsp; I’m not an idiot.&nbsp; What would it accomplish?”</p>
+<p>Davie smiled wide.&nbsp; “Not an idiot, no.&nbsp; But surely, somewhere down the line, if you had an opportunity, pass on word to a friend of your journalist… boyfriend?”</p>
+<p>“Friend.”</p>
+<p>“A friend of your journalist friend, then.&nbsp; Say there’s a chance.”</p>
+<p>“I made a promise to Camellia.&nbsp; That if she gave me a chance, I’d look after my son.&nbsp; I’d give my kids my all.&nbsp; I’ve been fighting for ten years.&nbsp; Looking.&nbsp; Trying to figure it all out.&nbsp; I’m tired.&nbsp; I know I’m… a mediocre mom. Or I have been.&nbsp; I work too much.&nbsp; I want to be better.&nbsp; I want Camellia to heal. I want to make it up to Sterling.&nbsp; I don’t have the energy to… fight you.&nbsp; To hurt you.”</p>
+<p>“So you’re just going to accept the fact I ordered my doctors to take your daughter’s arm?&nbsp; What kind of woman are you?”</p>
+<p>“One who’s putting her energy elsewhere.&nbsp; One who knows that the longer you’re alive, if you’re okay… then there’s a bigger chance you hurt her.&nbsp; And I hate her so much more than I hate you.”</p>
+<p>“And how do you feel about that, Camellia Teale?”</p>
+<p>“I’m still not used to that name,” she said.</p>
+<p>“Naturally not,” Davie said.</p>
+<p>Carson had taught her about lying in the same way Mia had taught her about swearing.&nbsp; How you used the truth as much as possible, and saved the lies for key moments.</p>
+<p>This felt very key.</p>
+<p>“I’d rather not know what happens to her.”</p>
+<p>“And you’ll go with your mom?”</p>
+<p>Ripley looked at Natalie.&nbsp; “I… I don’t know.&nbsp; Her, or my dad.&nbsp; I think his name was Sean.”</p>
+<p>“It was Sean, yeah.”</p>
+<p>“I don’t know, yet.”</p>
+<p>“But you want to leave.”</p>
+<p>“I want to leave here.&nbsp; I don’t want to go back to Mia and Carson,” Ripley said, her voice breaking.</p>
+<p>She wanted it more than anything.&nbsp; To be folded into a big strong hug, and cry.&nbsp; And to talk about designing prosthetic arms with someone who understood engineering.&nbsp; To have Carson say all the right things, and Tyr being cuddly, like he always was, when one of them was sick or hurt.&nbsp; And if they were sick, he’d get sick too, and he’d still want to cuddle.</p>
+<p>Tears escaped her eyes.&nbsp; “Please- not back to them.&nbsp; Not this.&nbsp; I want a new normal.”</p>
+<p>The lies made the lump in her throat swell.</p>
+<p>“Okay,” Davie said.</p>
+<p>She couldn’t see him clearly, because there were candles all across the table, and she had enough moisture in her eyelashes that the candlelight became overlapping, shimmering orange circles.</p>
+<p>But she could see Natalie, looking up and over.</p>
+<p>“Food for thought, in any event.&nbsp; Speaking of!&nbsp; Food.&nbsp; I think that every part of this discussion could be improved with some food.&nbsp; Shore you up a bit, before anything, whatever we decide.&nbsp; But, I’ll say it, very convincing argument.</p>
+<p>Excuse me.&nbsp; Other guests.&nbsp; Watch everything, Arlo?”</p>
+<p>“Yes.&nbsp; Of course.”</p>
+<p>“Good man.&nbsp; Excuse me.”</p>
+<p>Ripley blinked and wiped the tears away.</p>
+<p>Some women in maid outfits, with ankle-length skirts and simple white aprons, came through, putting more dishes on the table, all covered.&nbsp; Some more candles were brought through and lit, some deposited on the railings.</p>
+<p>Ripley clenched her hand in her lap.</p>
+<p>What if this was all being recorded, and Mia and Carson heard, and didn’t understand?&nbsp; If they thought she didn’t want to come home?</p>
+<p>She was so mad at Natalie.</p>
+<p>But he’d said okay?&nbsp; She had no idea if she should believe it.&nbsp; She felt like she shouldn’t.</p>
+<p>Others came to the table.&nbsp; A blonde woman, with a blonde little girl.&nbsp; Seven or so?&nbsp; About the same height as Tyr, but older looking.&nbsp; Seven made sense.</p>
+<p>“Did Gio eat at this table?” Natalie asked.</p>
+<p>“She did,” the blonde woman said.&nbsp; “More times than I have.&nbsp; She grew up in this house.&nbsp; Have you seen her?”</p>
+<p>“Camellia has.”</p>
+<p>“She was okay,” Ripley said.</p>
+<p>“Is that your arm?” the woman asked.</p>
+<p>Ripley nodded, eyes on the empty plate in front of her.</p>
+<p>“I think it’s best if you don’t talk unless you have to.&nbsp; Don’t draw attention to yourselves,” the woman said, as she got the little girl situated beside Natalie.</p>
+<p>Davie’s voice could be heard from further down the hall.</p>
+<p>It was a little bit before he arrived.&nbsp; He held the door open wider as a whole group of people came in.&nbsp; A few men with graying hair, some in dress shirts, some with blazers and t-shirts.&nbsp; Some younger men.&nbsp; One of the younger men had a wife and son with him.</p>
+<p>All of them looked at Ripley.&nbsp; All of them had that moment, where they seemed okay, and then the moment after, where they were slower, the smiles falling from their faces.&nbsp; Not just her- there was the son.&nbsp; But her… mostly her.&nbsp; And the arm sitting just past her place setting.</p>
+<p><em>The books that talk about soul-bonding and soul don’t talk about the little things</em>, Ripley thought.</p>
+<p>“Take your seats.&nbsp; You know my son.&nbsp; He’s a little worse for wear, but so many of us are, you know.&nbsp; Its been an interesting few nights.&nbsp; Excuse him.&nbsp; My lovely wife, Tessa.&nbsp; My daughter, Olive.&nbsp; And here we have Natalie Teale, her daughter was kidnapped years and years ago, and they were just reunited.&nbsp; They were just telling me about their plans.&nbsp; And it seems like they’re enemies of my enemy, so… that’s wonderful.”</p>
+<p>“Are you okay?” the young man asked her.</p>
+<p>She wasn’t.</p>
+<p>“No,” she said, to be honest.</p>
+<p>“She’s missing an arm, Matt.&nbsp; That much is clear.&nbsp; It’s right there,” Davie said.</p>
+<p>“I- I definitely see that.”</p>
+<p>“Please, sit.&nbsp; I insist,” Davie said.&nbsp; “I know you haven’t been in the city long, Natalie, but Matt Moseley is our mayor.&nbsp; That’s his lovely wife, and their son.”</p>
+<p>The son was a bit younger than Ripley.</p>
+<p>“<em>Sit,</em>” Davie said.&nbsp; “You’re putting my other guests on the spot, gawking like you are.”</p>
+<p>“What are you doing?”</p>
+<p>“I am telling you to sit.&nbsp; You’re not going to walk away, Matt, and there’s no point to taking a stand here.&nbsp; There is one move to make here, and it’s to be a good guest.&nbsp; Which would be to sit, as you were invited to.”</p>
+<p>Matt did.</p>
+<p>And Davie went from serious to beaming.&nbsp; “Thank you.&nbsp; Now, I think you go to different schools, Camellia.&nbsp; Which is too bad.&nbsp; We have the head of the state military, Pat Conway.&nbsp; Chief of our police force, which is about to lift a long, long strike and help bring things to order, Michael Fuentes.&nbsp;&nbsp; Rudy La Spata, council chairman of rules and order, and Andre Chico, who runs our power plants and serves our energy needs.”</p>
+<p>He made a slight scoffing sound, indicating the dark city that was off in the distance.</p>
+<p>“It’s embarrassing,” Andre said.</p>
+<p>“It is, but it’s understandable, you don’t have any control over what malefactors do.&nbsp; Mostly, when I planned tonight’s dinner, I thought, well, we have a generator, it’s not serving the full house, and we’re keeping some lights off, thus the candles, but it’s nice, and we have the food to spare, and you all, just… it’s a lot.&nbsp; It’s been a tough few nights.&nbsp; So I thought we should meet, touch base, reassure each other, and plan.”</p>
+<p>“Which I don’t object to,” Matt the Mayor said.</p>
+<p>“Excellent.”</p>
+<p>“But the two people sitting opposite me make me wonder.&nbsp; As does the state of your son.”</p>
+<p>“It’s fair to wonder,” Davie said.&nbsp; He moved his glass, and a servant standing in the corner stepped forward to get an already open bottle and pour.&nbsp; “I think we should do things in order.”</p>
+<p>“By which you mean what?”</p>
+<p>“By which I mean, first of all, I’ll stop short of saying a proper grace, but I think we should say a few words before dinner.&nbsp; But then we should eat.&nbsp; And then we should make plans.”</p>
+<p>“What’s being served?” one of the old men asked.</p>
+<p>“Didn’t I just say we should do things in order?&nbsp; And you jump straight to asking about something else?”</p>
+<p>“It lets us know how to read what you’re saying,” Mayor Matt said.</p>
+<p>“Uh huh,” Davie said, considering.&nbsp; “Fair.&nbsp; Fair enough.&nbsp; I think we have plenty of grilled vegetables, braised beef ribs, cooked over charcoal, to keep use of the kitchen to a minimum, and I think we have stuffed peppers, for the vegetarians at the table.&nbsp; No vegan options, I’m afraid.&nbsp; I’m not serving anything horrific.”</p>
+<p>“Okay,” the other man said.</p>
+<p>“You asked me to bring my family,” Mayor Matt said.&nbsp; “And this is weird, even for you, so far.&nbsp; I shouldn’t have listened.”</p>
+<p>“Well, first off, I don’t like these digressions.&nbsp; You’re <em>politicians.&nbsp; </em>Everything has its own order.&nbsp; Second off, I didn’t <em>ask</em> you.&nbsp; I told you.&nbsp; And thus you <em>should</em> have listened.&nbsp; And you did.&nbsp; It’s only now, after, that you’re making an unnecessary fuss.”</p>
+<p>Ripley looked across the table at the boy.&nbsp; He was handsome, as much as she paid attention to any of that, and dressed nice, but he looked scared and weirded out.</p>
+<p>Mostly by her.</p>
+<p>“What are you on about?” another of the older men asked.</p>
+<p>“Let me say my piece.&nbsp; You’re like my children when they were younger.&nbsp; I’d watch the nanny or my wife read to them, and they’d be asking questions that the book was sure to answer by the end, interrupting and slowing it all down,” Davie said.&nbsp; “You’re adults. Let’s act like it.”</p>
+<p>“Say your piece,” the man who might’ve been the general said.</p>
+<p>“Love.&nbsp; I spent a long time wondering what it was.&nbsp; I never got much of it from my parents.&nbsp; But I saw my older brother get it.&nbsp; And my younger brother, even.&nbsp; But I didn’t feel it.&nbsp; Coming from others, or from my own heart.&nbsp; I love people, I really do, but I had to figure it out from scratch.&nbsp; I think I clicked to it in early high school.&nbsp; I could never really stand the girls who did ballet.&nbsp; There was something pretentious about it, too uptight, the hair was dumb, the shoes, the self-harm.&nbsp; They’d gather in these flocks, girls who did ballet, devoted their lives to it, spent time with others who were dedicated to it.&nbsp; Starved themselves, hurt themselves.&nbsp; Then one girl in my classes was made to leave, to go return to family, halfway around the world.&nbsp; The state of America, would you believe it, had scared them off.&nbsp; So they fled the country.&nbsp; She had one last performance, and the class was asked to support her.</p>
+<p>“So we did.&nbsp; I went, ready to laugh secretly with my friends.&nbsp; And I was captivated.&nbsp; It turned me around, on those types of girls, on that hair, that destruction.&nbsp; I loved her sadness, I loved the display.&nbsp; I loved her.&nbsp; I was transformed.&nbsp; And I’ve carried that with me ever since.&nbsp; Love.&nbsp; It transforms.&nbsp; It defies.&nbsp; You can like anything, as your tastes demand, but… you love <em>despite</em>.&nbsp; Then, when it’s gone, you’ll miss it.&nbsp; Like a hole in your being.&nbsp; You know that hole, don’t you, Natalie Teale?”</p>
+<p>Natalie startled.&nbsp; “Yes.&nbsp; Very much.”</p>
+<p>“Very much.&nbsp; Good words.”&nbsp; He took a drink, then cleared his throat slightly.&nbsp; “Ahem.&nbsp; Sorry, dry mouth.&nbsp; It’s the trace smoke in the air.&nbsp; I think that’s what drives this.&nbsp; Love.&nbsp; You are men who we have given a <em>lot</em> to.&nbsp; A lot of money, a lot of trust, a lot of opportunity, a lot of help.&nbsp; You would not be where you are without me.&nbsp; And I think, especially with my brother in the hospital and my other brother gone, kidnapped, I presume, by my enemies, you weren’t expecting this shift.&nbsp; For it to, in a way, be <em>me</em>, instead of the Cavalcantis.&nbsp; But here you are.&nbsp; <em>Despite.”</em></p>
+<p>“Is this a threat?” Mayor Matt asked.</p>
+<p>“This is love, Matt.&nbsp; Maybe some of it will be performative, but some of it won’t.&nbsp; But I’ve heard you’ve cut back on your aspirations.&nbsp; You were hoping to be governor of the state, but <em>sources say</em> you’re wanting to focus on giving the city some equilibrium.&nbsp; Focusing on being mayor.”</p>
+<p>“That’s… I think it makes sense.&nbsp; Being governor right now, it’s a trap.”</p>
+<p>“Not being governor is a worse trap, because I bought a future governor, Mr. Moseley.&nbsp; Not a mayor focused on rebuilding and restoring status quo.&nbsp; When you leave tonight, you’re leaving your son in my custody.&nbsp; The city’s too dangerous, you have work to focus on.&nbsp; So he’ll go where I’m keeping <em>them</em>.”</p>
+<p>He indicated Ripley and Natalie.</p>
+<p>Ripley winced.</p>
+<p>“And you’ll be governor, you’ll rely on my help, you’ll succeed.&nbsp; Your son will really, really want you to succeed.&nbsp; Then you’ll thank me.&nbsp; You’ll remember this conversation, and, <em>despite</em>, you’ll thank me.&nbsp; We’ll work together so long, and so well, that we’ll be thoroughly entangled.&nbsp; And when we do finally extricate, when you retire, or I find someone more useful, you’ll feel the hole where I was and you’ll miss me, in a peculiar way.&nbsp; Despite.”</p>
+<p>“What if I say no?&nbsp; No, you can’t have him, to keep in your custody.&nbsp; That I’ll stop you.&nbsp; We all will.”</p>
+<p>“That’s a hell of a question, isn’t it?” Davie asked, looking startled.&nbsp; “What do you think, Camellia?”</p>
+<p>Ripley looked over.&nbsp; Every eye on the table was on her.</p>
+<p>“Come on, now.&nbsp; Your mother was just making a suggestion to me, and I would love to know you’re on the ball, here.”</p>
+<p>“I- I don’t-”</p>
+<p>He gave her a look that was <em>sympathetic</em>, or it would be, if his eyes weren’t boring holes into her.</p>
+<p>Others looked between her and Davie.</p>
+<p>“Can I-” Natalie started.</p>
+<p>“No,” Davie said, not taking his eyes off Ripley.</p>
+<p>There was a rustling as a maid shifted position.</p>
+<p>“I think it’s good to be obedient, to have good manners, um,” she thought back.&nbsp; “And to find common ground.”</p>
+<p>“Wonderful,” he said.&nbsp; He flashed a smile.&nbsp; “Well said, Camellia.&nbsp; That man who raised you, degenerate criminal as he might be, he definitely instilled some of that <em>zazz</em> in you.”</p>
+<p>Looking in his direction, she was also kind of looking at Natalie, sitting beside her.&nbsp; She remembered.</p>
+<p>“I’d rather think it’s because I read books.”</p>
+<p>It still felt like betrayal.</p>
+<p>“Whatever it is, you’re right on the money.&nbsp; Good manners and common ground, Mr. Moseley.&nbsp; Out of the mouths of babes.”</p>
+<p>The man looked deeply skeptical.</p>
+<p>“‘ll be blunt,” Davie said.&nbsp; “This is the moment we do away with pretense.&nbsp; I am not going to pretend to be the little guy, the card up your sleeves, a clandestine agreement with organized crime, to deal with certain enemies and troubling factions you couldn’t handle otherwise.&nbsp; I’m not even going to say this is the moment we’re <em>partners.”</em></p>
+<p>Everyone else was silent.</p>
+<p>“I own you all.&nbsp; I suspect a lot of you have been feeling like you lost ground, you made mistakes and I cleaned them up, or I found out things about you that you didn’t want broadcast.&nbsp; You thought, well, at least those other guys, those other men at the table, <em>they</em> have it handled.&nbsp; They could shut down that asshole Davie.”</p>
+<p>Ripley watched as men exchanged glances.</p>
+<p>“Not so,” Davie said.</p>
+<p>“Part of the deal was that you’d stop <em>this</em>,” one of the older men said, hand extended toward the city.&nbsp; “The protests, the riots.”</p>
+<p>“And I will.&nbsp; I chose this venue with a presentation in mind…”</p>
+<p>He motioned.</p>
+<p>One of his soldiers at the end of the room got out something that looked like a phone.</p>
+<p>A few moments later, a bunch of drones rose out of the trees.&nbsp; Many were small.&nbsp; Five were not.&nbsp; And those five had guns, which were aimed into the open patio with the dining room table extended across it, city bigwigs, Davie, his family, Natalie, and Ripley all sitting there.</p>
+<p>“I have a fleet of drones, five military gun drones with AI-targeting.&nbsp; Two were diverted by some smartass who wanted to resell them.&nbsp; I got those back for the full set.&nbsp; At this moment, I have drones with cameras focused on various loved ones.&nbsp; Anyone who doesn’t believe me, talk to me after.&nbsp; And, thanks to you all, I will have the police.&nbsp; I will have the military deployed on American soil to restore order.&nbsp; I will have this city as my starting point.&nbsp; Then the governorship-by-proxy, and the state, then we’ll see.&nbsp; Then, as a rising tide raises all ships, you will rise up with me.”</p>
+<p>Ripley’s head was pounding.&nbsp; The gun that was pointed in her vague direction didn’t help.&nbsp; She was aware of the shackle at her wrist.&nbsp; And of Arlo standing behind her.</p>
+<p>The arm in front of her.</p>
+<p>“And,” Davie said.&nbsp; “You will love me for it.&nbsp; It’ll be performative at first.&nbsp; You’ll play the part, act it out, and you’ll have moments you aren’t even sure if the act is real or if it’s an act.&nbsp; You’ll wonder… do you feel <em>lovesick</em>, like some schoolgirl, or is it the stomach-churning anxiety and constant obsession over the fact you’re under the thumb of someone who could destroy everything you care about the moment he decides you’re not useful anymore?&nbsp; You’ll wonder about the void, once you’ve served your purpose and satisfied me enough that I give you the go ahead to retire.&nbsp; The gap in your life I once filled, you’ll wonder if you miss it.&nbsp; That’s what I’m after, I think, more than the success or failure.&nbsp; The looks on your faces right now.&nbsp; That you’ll <em>thank me</em>, after I punish you in terrible ways.&nbsp; Despite it all.&nbsp; That’s love.&nbsp; That’s power.&nbsp; Right honey?&nbsp; You know what I’m talking about.”</p>
+<p>He turned to his wife, leaning over.&nbsp; She leaned over to meet him, smiling, and there was just a <em>hint</em> of strain to the smile, before she kissed him.</p>
+<p>Davie stepped back, standing in his chair, looking down the length of the table, smiling.</p>
+<p>“But that’s enough business.&nbsp; Let’s eat, before the food cools, and let’s avoid all talk of business or danger or the state of the city.&nbsp; Take the course of dinner to think about what I just said.”</p>
+<p>The drones remained where they were.</p>
+<p>Ripley raised a hand.</p>
+<p>“Ms. Teale, the younger.&nbsp; What is it?”</p>
+<p>“I’m not feeling very well.&nbsp; I don’t think I can eat much.&nbsp; I don’t want to get sick in the middle of your nice dinner.”</p>
+<p>“Of course.&nbsp; I’m sorry, that’s- absolutely.&nbsp; Um, Sofia, do you think you could run that by the chefs, and see if they have something?&nbsp; A rice pudding or broth?&nbsp; And perhaps a ginger tea or ginger ale, to settle the stomach?&nbsp; Thank you.&nbsp; Anyone else?”</p>
+<p>Some of the grizzled, grown men further down the table raised their hands.</p>
+<p style="text-align: center">⯁</p>
+<p>The mother of the boy wailed, fighting.&nbsp; But it was her husband who pulled her back.</p>
+<p>Parent and child were separated, and Ripley watched as he was brought over.&nbsp; Chains were used to attach him to Natalie, as part of the sequence.&nbsp; Arlo, Ripley, Natalie, boy.</p>
+<p>The boy sobbed, and it made Ripley want to cry too, because of what she’d lost.</p>
+<p>Police had been called, and were organized around the house.&nbsp; Davie had sent some of his men around to go check each of their credentials.</p>
+<p>“Go home now, Mr. and Mrs. Moseley.&nbsp; If you behave, you have nothing to worry about.&nbsp; If you’re <em>very</em> good, we can upgrade his accommodations.&nbsp; And if you don’t behave, well, what do we think, Ripley?”</p>
+<p>“I think good manners are very important,” she said.</p>
+<p>“Good manners are important, and you don’t want to cause trouble for someone going to all the trouble of looking after your son.&nbsp; Isn’t that right?” Davie asked.</p>
+<p>The woman sobbed.</p>
+<p>“That’s right,” Davie said.&nbsp; “Now, it’s late, and I have things to check on and take stock of.&nbsp; So I think our guests, the Teales and the youngest Moseley should perhaps go and rest in the basement.”</p>
+<p>“Have you given any more thought to my proposal?” Natalie asked.</p>
+<p>“I have,” he said.&nbsp; “I thought about it before we talked, I thought about it during. I thought about it after.&nbsp; You have a charm, and there’s some bias there, enemy of my enemy, but it was an interesting line of thought.&nbsp; I like it.”</p>
+<p>Natalie kept one hand at Ripley’s good shoulder.</p>
+<p>“But you’re lying, you’re lying to my face, and so is the girl.&nbsp; Which is… ugly.&nbsp; So… logical conclusion from that, is <em>punishment.</em>”</p>
+<p>Ripley tried to back away, but chains went taut.</p>
+<p>Natalie was rigid.</p>
+<p>“The arm on the table will be grilled, and you’ll eat it.&nbsp; And if you don’t get all the flesh from the bone, or if you make a mess of it, Natalie Teale, I’ll have them cut off and cook her other arm and we’ll see if that goes down any easier.”</p>
+<p>Natalie made a gagging sound, hands to her mouth.</p>
+<p>“Or that’s what I would say, if I wasn’t in a good mood, and if I wasn’t so distracted by other things that I couldn’t pay full attention to the display,” Davie said.</p>
+<p>Natalie staggered, putting a hand on the table to steady herself.&nbsp; A plate and silverware fell, a glass toppling.</p>
+<p>Arlo stepped past Ripley, and picked Natalie up.</p>
+<p>Then he punched her in the gut.</p>
+<p>The boy clung to Ripley’s arm, hand gripping the small of her back, which was soaked with sweat.</p>
+<p>“Carla,” Davie said.</p>
+<p>“Yes, Mr. Cavalcanti, sir?” one of the maids asked.</p>
+<p>“Set the table?&nbsp; Pick things up?”</p>
+<p>“Of course, Mr. Cavalcanti.”</p>
+<p>Davie watched Natalie, coughing and wincing at the pain in her middle, his expression unreadable, as the maid gathered fallen plates, righted the glass.&nbsp; The napkin was folded.&nbsp; Silverware put in place.&nbsp; She did both of the adjacent place settings as well, when Davie was focused elsewhere.</p>
+<p>“How is that, Mr. Cavalcanti, sir?”</p>
+<p>Everything back in place.</p>
+<p>“That will do.&nbsp; Take them downstairs.&nbsp; Get them water.&nbsp; Clean the bucket.&nbsp; Natalie?”</p>
+<p>Natalie looked up.</p>
+<p>Davie smiled.&nbsp; “Tonight went well, and lies aside, you served your roles as props.&nbsp; Go downstairs, <em>strive</em> to avoid drawing my attention.&nbsp; Look after the boy.”</p>
+<p>“Yes, sir,” she said.</p>
+<p>“Good.”</p>
+<p>She looked like the hit to her stomach had really done a number on her.</p>
+<p>They were taken back into the basement, the boy clinging to Ripley.&nbsp; Past the metal doors.&nbsp; Into the open space, that stretched for some unknown distance beneath the sprawling manor, the further reaches hidden from view by the sheet plastic.&nbsp; Walls, shelves, and other things placed well out of reach at the edges of the room, while they were chained at the middle.&nbsp; Leg shackles reattached.</p>
+<p>The arm was dropped into the cooler, now all water, with a <em>plop</em>.</p>
+<p>“Are you faking being hurt?” Ripley whispered.</p>
+<p>Natalie shook her head.</p>
+<p>“I’m sorry.”</p>
+<p>“Sit by me?” Natalie asked.&nbsp; “It would have been nice if he’d accepted the deal.&nbsp; I think his speech told us why he wouldn’t.”</p>
+<p>“Plus, um, bird in the hand, right?” Ripley asked, sitting.</p>
+<p>Natalie passed her a fork.</p>
+<p>“I thought-”</p>
+<p>“I think the maid helped us,” Natalie whispered.&nbsp; “Can you use it?”</p>
+<p>Ripley moved her leg, with the attached shackle.&nbsp; Maybe if she broke off the tines?&nbsp; Or bent one into a rake shape?&nbsp; Or should she bend the end of one, to tap the pins?&nbsp; To lockpick it properly?</p>
+<p>“No.&nbsp; Don’t, not yet,” Natalie said.&nbsp; “We can’t get past the doors.”</p>
+<p>“I could try to crack it, and if I know where the pins are, I can re-lock it and crack it fast later.”</p>
+<p>“Hold off.&nbsp; If they’re leaving us alone all night, I’d rather do more late at night, when people are asleep.”</p>
+<p>Waiting felt unbearable.&nbsp; Ripley did mess with the tines, bending one as far as she could one way, using her hand and the edge of her seat, then reversed it.&nbsp; Until the point of the bend began to tear.</p>
+<p>The boy hung close to her, mute, looking miserable.</p>
+<p>The door opened.&nbsp; Ripley flinched.</p>
+<p>It was Arlo, guiding the maid, Carla.&nbsp; A middle-aged woman who reminded Ripley of her least-favorite teacher ever, but with light brown skin and thick black hair.</p>
+<p>She brought water bottles.</p>
+<p>Arlo hung back, guarding the door.</p>
+<p>“He doesn’t like the bucket,” the maid murmured.</p>
+<p>“You helped us.”</p>
+<p>“They’re kids,” Carla said, quiet.&nbsp; “Please don’t get caught.”</p>
+<p>“We’ll try.&nbsp; Can you leave a door open?&nbsp; Or tape a latch?”</p>
+<p>“I don’t think so.&nbsp; But I can say there isn’t much power.&nbsp; He keeps the power on here with the generator because there are people on life support at the other end of the basement.&nbsp; They’re fragile.”</p>
+<p>“Enough talking!” Arlo hollered.</p>
+<p>“There’s no power on the cameras,” Carla whispered.&nbsp; “The woman who normally takes coffee to the security room said.&nbsp; The moment power comes back on for the city, the cameras are back on.&nbsp; And microphones.&nbsp; They’ll hear you in here.”</p>
+<p>“You’re an angel,” Natalie whispered.&nbsp; “A genuinely good person.”</p>
+<p>“Don’t get caught or I’ll be wishing I was dead.”</p>
+<p>“Carla, what are you talking to them about?” he asked.</p>
+<p>“Painkillers, a book,” Natalie hurried to say.</p>
+<p>“Painkillers and a book?” Carla asked.</p>
+<p>“We’re not giving them anything the boss isn’t telling us to,” Arlo said.</p>
+<p>He was midway through the approach when Carla picked up the bucket and turned one-eighty on the spot, almost walking into him.</p>
+<p>“If you splash me with that, I’ll cave your teeth in.”</p>
+<p>“Sorry,” Carla said, ducking her head.</p>
+<p>Arlo loomed over the three of them.</p>
+<p>“Be careful with that older one, boy, she’s a whore.”</p>
+<p>That said, he walked away.&nbsp; The door banged shut.</p>
+<p>“Get the shackles,” Natalie said.</p>
+<p>“But the doors?”</p>
+<p>“Get the shackles.&nbsp; Get us out.&nbsp; If the cameras are off then that’s our one chance.”</p>
+<p>“But the doors.&nbsp; And police.&nbsp; And drones outside.”</p>
+<p>“We’ll… we have to figure something out.&nbsp; We can get tools, then come back here.&nbsp; Hide it in the cooler.&nbsp; Or something.&nbsp; We’ll- let’s figure it out.”</p>
+<p>“This is crazy,” Ripley said.</p>
+<p>“Please just… trust me.&nbsp; Let’s trust her.&nbsp; Let’s trust ourselves.”</p>
+<p>“If you’re wrong, he’ll chop off my other arm.”</p>
+<p>“And that’s the scariest idea in the world to me,” Natalie said.&nbsp; “But I still think this is the better way.”</p>
+<p>Ripley nodded.</p>
+<p>She bent the end of the tine, then slid it into the lock, feeling her way through.&nbsp; “I need you to use this.&nbsp; Press against the side.”</p>
+<p>“I can,” the boy said.&nbsp; “How?”</p>
+<p>“What’s your name?”</p>
+<p>“Bryan.”</p>
+<p>“Ripley.&nbsp; That’s Natalie.”&nbsp; Ripley put the one tine down, then used the other, showing him.&nbsp; “And… your job is to keep pressing against the side.&nbsp; Kind of pulling.&nbsp; Like that.”</p>
+<p>She had to do it left handed.</p>
+<p>There were six pins.</p>
+<p>And they were heavy.&nbsp; Her hand felt slick.&nbsp; The improvised tool kept turning sideways in her fingers, losing its place.</p>
+<p>She imagined Carson with her, walking her through it.&nbsp; His voice gentle.&nbsp; Urging patience, as she figured it out.</p>
+<p>It was like being taught to make a wooden box in shop class, and then the real-world test was to make a full cabinet, with doors and drawers, with no time, with everything on the line.</p>
+<p>One hand tied behind her back.&nbsp; In a sense.</p>
+<p>The first pin clicked.</p>
+<p>Second wasn’t clear.</p>
+<p>Third clicked.</p>
+<p>Fourth and fifth weren’t feeling mobile.</p>
+<p>Sixth clicked.</p>
+<p>Back to the start.&nbsp; First was good.&nbsp; Second… there.</p>
+<p>And the rest came easy.</p>
+<p>The shackle came undone.</p>
+<p>“You’re amazing,” Natalie whispered.</p>
+<p>The others, she quickly realized, were the same.&nbsp; It was the same key for each.&nbsp; The only hitch was when the boy, fingers sore from grabbing a narrow piece of metal and pressing them against the pads of his finger, slipped, and reset everything.</p>
+<p>Natalie took over.</p>
+<p>Shackles undone.</p>
+<p>The door wasn’t a way out.</p>
+<p>So they ran.&nbsp; Natalie went to a table with tools on it.&nbsp; She got a crowbar and a box knife.</p>
+<p>Past the sheet plastic that formed curtains, sectioning off areas.&nbsp; Into others.</p>
+<p>Past the surgery area.</p>
+<p>And into another area, close by.&nbsp; A movie played, pornographic enough that Ripley yelped, looking away.</p>
+<p>And the audience…</p>
+<p>She hadn’t even realized they were people at first.&nbsp; People in chairs, tubes running into and out of them.&nbsp; Armless, legless, for the most part.&nbsp; The ones that did have limbs were strapped down.&nbsp; Only a few had eyes, and sat slouched, mouths open, with tubes running in past lips and teeth, or mouths were closed and tubes ran into noses.</p>
+<p>The bad smell she’d thought was coming from the bucket came from here.</p>
+<p>“Ripley, Brian… maybe you’d better…” Natalie started, before trailing off.</p>
+<p>The few that could see looked in Ripley’s direction.</p>
+<p><em>This is the house Valentina grew up in.</em></p>
+<p>The absolute, paralyzing terror she felt melted at that, and became… <em>sad</em>.</p>
+<p>Davie Cavalcanti talked like someone who was winning.&nbsp; He did something like this and he was <em>winning</em>.&nbsp; What even was the point of it?</p>
+<p>Did Carla know?</p>
+<p>“Don’t look, honey.”</p>
+<p>She didn’t even flinch or react to being called honey.</p>
+<p>But she looked.</p>
+<p>Davie had called himself her mother’s enemy, and seeing this made her hate him even more than ever, and love her mother, for being opposite this.&nbsp; Because this was too awful.&nbsp; Seeing and smelling this, hearing the sounds of the tubes and the sounds they made?&nbsp; It was worse than losing her arm.</p>
+<p>This could be her, later on, if they couldn’t get away.</p>
+<p>She didn’t know what to do, and gorge rose in her throat.</p>
+<p>“No, honey, walk away, move away.&nbsp; Don’t-”</p>
+<p>A noise made Natalie stop.</p>
+<p>As a door opened, a faint television could be heard.</p>
+<p>“Hide.”</p>
+<p>She might not have listened, but the boy was there.</p>
+<p>She had to look after him.&nbsp; She had to get him out of here.</p>
+<p>Behind the television and television stand.</p>
+<p>The noise was a doctor.</p>
+<p>And as that doctor pushed his way past the sheet plastic between him and the doorway the television was coming from, Natalie swung the crowbar.</p>
+<p>Maybe she’d been hoping to get him in the lower face, and had gone too low, or the head, and gone way too low, or he’d been bent over, and then straightened at the wrong moment.</p>
+<p>The crowbar caught him in the throat.</p>
+<p>He dropped, gasping, hands at his throat.</p>
+<p>“Is there a way out of here.”</p>
+<p>He gasped, straining, and reached into his pocket for a pen.</p>
+<p>Natalie caught his wrist with the hooked part of the crowbar.</p>
+<p>He pointed.</p>
+<p>“Besides the doors.”</p>
+<p>He shook his head.</p>
+<p>“Some signal?&nbsp; What if there’s a fire?”</p>
+<p>He shook his head.&nbsp; He motioned.&nbsp; He wanted a knife, based on the motion.</p>
+<p>“You have to give me something,” Natalie said.</p>
+<p>He shook his head.</p>
+<p>He was getting weaker fast.&nbsp; Wheezing.</p>
+<p>“Don’t watch,” she told Ripley and the boy.</p>
+<p>Ripley changed position.</p>
+<p>She could hear it though.</p>
+<p>Natalie went to the room the other television was in.&nbsp; The sound turned up.</p>
+<p>Then she returned.&nbsp; “Some air is getting in.&nbsp; So let’s have you take…”</p>
+<p>There was a metal sound.&nbsp; Crowbar on skull.</p>
+<p>“…a nap.&nbsp; You maimed my daughter.”</p>
+<p>The man lay there, unconscious, not wheezing anymore.</p>
+<p>“There’s no way out through there,” Natalie said.&nbsp; “Let’s keep looking around.”</p>
+<p>They did, doing a circuit of the space.</p>
+<p>“No,” Natalie murmured.&nbsp; “I thought there’d have to be tools.&nbsp; That we could use to go through a wall.&nbsp; Or a window.”</p>
+<p>“Then what do we do?” Ripley asked.</p>
+<p>“I don’t know.”</p>
+<p>The boy steadied Ripley before she even realized she was feeling unsteady.</p>
+<p>She’d only eaten broth.&nbsp; She’d been hurting too much, for too long, barely sleeping.</p>
+<p>She wished she was with her friends.&nbsp; To sob into Blair’s shoulder.&nbsp; To have Devon reassure her.</p>
+<p>“A magic trick,” she said, quiet.&nbsp; Thinking of Blair.</p>
+<p>“What do you mean?”</p>
+<p>“One you’re going to hate,” Ripley told Natalie.&nbsp; “If it’s even possible.&nbsp; We’re giving credit to my- to Mia.”</p>
+<p>It was manipulative, to change to ‘Mia’, to give Natalie something she wanted.&nbsp; But if Natalie balked, or if they took too long, this wouldn’t work at all.</p>
+<p>And it wasn’t even the worst thing they were about to do.</p>
+<hr>
+<p><a href="https://clawwebserial.blog/2024/07/12/the-quick-5-4/"><strong>Previous Chapter</strong></a></p>
+<p style="text-align: right"><a href="https://clawwebserial.blog/2024/07/26/the-quick-5-6/"><strong>Next Chapter</strong></a></p>
+<div id="jp-post-flair" class="sharedaddy sd-like-enabled sd-sharing-enabled"><div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul data-sharing-events-added="true"><li class="share-twitter"><a rel="nofollow noopener noreferrer" data-shared="sharing-twitter-1908" class="share-twitter sd-button share-icon" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?share=twitter&amp;nb=1" target="_blank" title="Click to share on Twitter"><span>Twitter</span></a></li><li class="share-facebook"><a rel="nofollow noopener noreferrer" data-shared="sharing-facebook-1908" class="share-facebook sd-button share-icon" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?share=facebook&amp;nb=1" target="_blank" title="Click to share on Facebook"><span>Facebook</span></a></li><li class="share-end"></li></ul></div></div></div><div class="sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-unloaded" id="like-post-wrapper-230145850-1908-6737eb116ddca" data-src="//widgets.wp.com/likes/index.html?ver=20241116#blog_id=230145850&amp;post_id=1908&amp;origin=clawwebserial.wordpress.com&amp;obj_id=230145850-1908-6737eb116ddca&amp;domain=clawwebserial.blog" data-name="like-post-frame-230145850-1908-6737eb116ddca" data-title="Like or Reblog"><div class="likes-widget-placeholder post-likes-widget-placeholder" style="height: 55px;"><span class="button"><span>Like</span></span> <span class="loading">Loading...</span></div><span class="sd-text-color"></span><a class="sd-link-color"></a></div>
+<div id="jp-relatedposts" class="jp-relatedposts" style="display: block;">
+	<h3 class="jp-relatedposts-headline"><em>Related</em></h3>
+<div class="jp-relatedposts-items jp-relatedposts-items-minimal jp-relatedposts-grid "><p class="jp-relatedposts-post jp-relatedposts-post0" data-post-id="2260" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://clawwebserial.blog/2024/08/21/bear-6-2/?relatedposts_hit=1&amp;relatedposts_origin=1908&amp;relatedposts_position=0" title="Bear &amp;#8211; 6.2" data-origin="1908" data-position="0">Bear – 6.2</a></span><time class="jp-relatedposts-post-date" datetime="August 21, 2024" style="display: block;">August 21, 2024</time><span class="jp-relatedposts-post-context">Liked by 15 people</span></p><p class="jp-relatedposts-post jp-relatedposts-post1" data-post-id="1428" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://clawwebserial.blog/2024/06/06/tip-4-5/?relatedposts_hit=1&amp;relatedposts_origin=1908&amp;relatedposts_position=1" title="Tip &amp;#8211; 4.5" data-origin="1908" data-position="1">Tip – 4.5</a></span><time class="jp-relatedposts-post-date" datetime="June 6, 2024" style="display: block;">June 6, 2024</time><span class="jp-relatedposts-post-context">Liked by 12 people</span></p><p class="jp-relatedposts-post jp-relatedposts-post2" data-post-id="2490" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://clawwebserial.blog/2024/09/16/bear-6-5/?relatedposts_hit=1&amp;relatedposts_origin=1908&amp;relatedposts_position=2" title="Bear &amp;#8211; 6.5" data-origin="1908" data-position="2">Bear – 6.5</a></span><time class="jp-relatedposts-post-date" datetime="September 16, 2024" style="display: block;">September 16, 2024</time><span class="jp-relatedposts-post-context">Liked by 9 people</span></p></div></div></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+		This entry was posted in <a href="https://clawwebserial.blog/category/uncategorized/" rel="category tag">Uncategorized</a> by <a href="https://clawwebserial.blog/author/wildbow/">wildbow</a>. Bookmark the <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/" title="Permalink to The Quick – 5.5" rel="bookmark">permalink</a>.
+		
+			</footer><!-- .entry-meta -->
+</article><!-- #post-1908 -->
+
+						<div id="comments">
+	
+	
+			<h2 id="comments-title">
+			12 thoughts on “<span>The Quick –&nbsp;5.5</span>”		</h2>
+
+		
+		<ol class="commentlist">
+					<li class="comment even thread-even depth-1" id="li-comment-1475">
+		<article id="comment-1475" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.5 _ Claw_files/36eb3ba1adc4762968a4d17c1d172cabc8bd3fd083720135e884f7cfedcf4a86" srcset="https://0.gravatar.com/avatar/36eb3ba1adc4762968a4d17c1d172cabc8bd3fd083720135e884f7cfedcf4a86?s=68&amp;d=identicon&amp;r=G 1x, https://0.gravatar.com/avatar/36eb3ba1adc4762968a4d17c1d172cabc8bd3fd083720135e884f7cfedcf4a86?s=102&amp;d=identicon&amp;r=G 1.5x, https://0.gravatar.com/avatar/36eb3ba1adc4762968a4d17c1d172cabc8bd3fd083720135e884f7cfedcf4a86?s=136&amp;d=identicon&amp;r=G 2x, https://0.gravatar.com/avatar/36eb3ba1adc4762968a4d17c1d172cabc8bd3fd083720135e884f7cfedcf4a86?s=204&amp;d=identicon&amp;r=G 3x, https://0.gravatar.com/avatar/36eb3ba1adc4762968a4d17c1d172cabc8bd3fd083720135e884f7cfedcf4a86?s=272&amp;d=identicon&amp;r=G 4x" class="avatar avatar-68 wp-hovercard-attachment grav-hashed grav-hijack" height="68" width="68" loading="lazy" decoding="async"><span class="fn">dork knight</span> on <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#comment-1475"><time datetime="2024-07-22T00:34:59-06:00">July 22, 2024 at 12:34 am</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>One) Poor Rip…</p>
+<p>two) Natalie&nbsp;while I don’t think you will be the best for Rip I congratulate you on trying to be better. Hopefully you can improve.</p>
+<p>3) Jesus Christ set on fire!!!!! I love how WB wrote David. He is so awful it’s amazing. It will be all the more satisfying if he comes to a horrific death.</p>
+<p>4) My reaction seeing the maiming and forced cannibalism and everything else in this chapter. “AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA”</p>
+<p>thanks for the chapter but hot damn that was horrifying</p>
+<p id="comment-like-1475" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?like_comment=1475&amp;_wpnonce=ab23b1f693" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1475" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#" class="view-likers" data-like-count="4">4 people</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?replytocom=1475#respond" data-commentid="1475" data-postid="1908" data-belowelement="comment-1475" data-respondelement="respond" data-replyto="Reply to dork knight" aria-label="Reply to dork knight">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-1477">
+		<article id="comment-1477" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.5 _ Claw_files/238f91138b823376d4f506140871e0d657d85afd0f53288ff7522b9f3b941d56" srcset="https://2.gravatar.com/avatar/238f91138b823376d4f506140871e0d657d85afd0f53288ff7522b9f3b941d56?s=68&amp;d=identicon&amp;r=G 1x, https://2.gravatar.com/avatar/238f91138b823376d4f506140871e0d657d85afd0f53288ff7522b9f3b941d56?s=102&amp;d=identicon&amp;r=G 1.5x, https://2.gravatar.com/avatar/238f91138b823376d4f506140871e0d657d85afd0f53288ff7522b9f3b941d56?s=136&amp;d=identicon&amp;r=G 2x, https://2.gravatar.com/avatar/238f91138b823376d4f506140871e0d657d85afd0f53288ff7522b9f3b941d56?s=204&amp;d=identicon&amp;r=G 3x, https://2.gravatar.com/avatar/238f91138b823376d4f506140871e0d657d85afd0f53288ff7522b9f3b941d56?s=272&amp;d=identicon&amp;r=G 4x" class="avatar avatar-68 wp-hovercard-attachment grav-hashed grav-hijack" height="68" width="68" loading="lazy" decoding="async"><span class="fn">OrdinaryNonEldrtchSort</span> on <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#comment-1477"><time datetime="2024-07-22T07:45:34-06:00">July 22, 2024 at 7:45 am</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>oh poor rip T_T. Such a funked chapter in all the best ways. Look I know kidnapping bad and Natalie is trying but i just want Ripley to get back to her loving parents and get a good prosthetic which she can make look steam punk. </p>
+<p>also very interesting that Carson and Davie both have “love” as there prime motivation though Carson is the healthier interpretation by far!!</p>
+<p id="comment-like-1477" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?like_comment=1477&amp;_wpnonce=1bee1f92f3" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1477" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#" class="view-likers" data-like-count="3">3 people</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?replytocom=1477#respond" data-commentid="1477" data-postid="1908" data-belowelement="comment-1477" data-respondelement="respond" data-replyto="Reply to OrdinaryNonEldrtchSort" aria-label="Reply to OrdinaryNonEldrtchSort">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-dbconfetti56 even thread-even depth-1" id="li-comment-1484">
+		<article id="comment-1484" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.5 _ Claw_files/a14ceb730f37bfc6c8e009e68a1e1fafe8848057a6eaa332615a306d91cbee5c" srcset="https://1.gravatar.com/avatar/a14ceb730f37bfc6c8e009e68a1e1fafe8848057a6eaa332615a306d91cbee5c?s=68&amp;d=identicon&amp;r=G 1x, https://1.gravatar.com/avatar/a14ceb730f37bfc6c8e009e68a1e1fafe8848057a6eaa332615a306d91cbee5c?s=102&amp;d=identicon&amp;r=G 1.5x, https://1.gravatar.com/avatar/a14ceb730f37bfc6c8e009e68a1e1fafe8848057a6eaa332615a306d91cbee5c?s=136&amp;d=identicon&amp;r=G 2x, https://1.gravatar.com/avatar/a14ceb730f37bfc6c8e009e68a1e1fafe8848057a6eaa332615a306d91cbee5c?s=204&amp;d=identicon&amp;r=G 3x, https://1.gravatar.com/avatar/a14ceb730f37bfc6c8e009e68a1e1fafe8848057a6eaa332615a306d91cbee5c?s=272&amp;d=identicon&amp;r=G 4x" class="avatar avatar-68 wp-hovercard-attachment grav-hashed grav-hijack" height="68" width="68" loading="lazy" decoding="async"><span class="fn">DeathByConfetti</span> on <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#comment-1484"><time datetime="2024-07-22T13:00:03-06:00">July 22, 2024 at 1:00 pm</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>This is torture. </p>
+<p>Reading these and waiting for the next is <em>also </em>torture. </p>
+<p>Curse you WB. </p>
+<p id="comment-like-1484" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?like_comment=1484&amp;_wpnonce=7c2a06dbf9" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1484" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#" class="view-likers" data-like-count="2">2 people</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?replytocom=1484#respond" data-commentid="1484" data-postid="1908" data-belowelement="comment-1484" data-respondelement="respond" data-replyto="Reply to DeathByConfetti" aria-label="Reply to DeathByConfetti">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-1485">
+		<article id="comment-1485" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.5 _ Claw_files/picture" srcset="https://graph.facebook.com/v6.0/6764307030298799/picture?type=large 1x, https://graph.facebook.com/v6.0/6764307030298799/picture?type=large 1.5x, https://graph.facebook.com/v6.0/6764307030298799/picture?type=large 2x, https://graph.facebook.com/v6.0/6764307030298799/picture?type=large 3x, https://graph.facebook.com/v6.0/6764307030298799/picture?type=large 4x" class="avatar avatar-68" height="68" width="68" loading="lazy" decoding="async"><span class="fn">Ryan Hoekman</span> on <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#comment-1485"><time datetime="2024-07-22T13:50:44-06:00">July 22, 2024 at 1:50 pm</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>There’s the delightfully screwed up Wildbow body horror! It’s been such a long time. No punches being pulled here. It bums me out quite a bit that the first time we get a chapter from Ripley’s point of view it was just after she was mutilated. I really hope the next chapter either stays with Ripley, goes to Natalie, or goes to someone else involved with the escape attempt. This is going to haunt me all week. </p>
+<p id="comment-like-1485" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?like_comment=1485&amp;_wpnonce=fd8125379a" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1485" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#" class="view-likers" data-like-count="3">3 people</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?replytocom=1485#respond" data-commentid="1485" data-postid="1908" data-belowelement="comment-1485" data-respondelement="respond" data-replyto="Reply to Ryan Hoekman" aria-label="Reply to Ryan Hoekman">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				<ul class="children">
+		<li class="comment even depth-2" id="li-comment-1489">
+		<article id="comment-1489" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.5 _ Claw_files/2a00430f264ecfd7dc10836d1b3e159b67bde316caf23d68022e2d42377d99fb" srcset="https://2.gravatar.com/avatar/2a00430f264ecfd7dc10836d1b3e159b67bde316caf23d68022e2d42377d99fb?s=39&amp;d=identicon&amp;r=G 1x, https://2.gravatar.com/avatar/2a00430f264ecfd7dc10836d1b3e159b67bde316caf23d68022e2d42377d99fb?s=59&amp;d=identicon&amp;r=G 1.5x, https://2.gravatar.com/avatar/2a00430f264ecfd7dc10836d1b3e159b67bde316caf23d68022e2d42377d99fb?s=78&amp;d=identicon&amp;r=G 2x, https://2.gravatar.com/avatar/2a00430f264ecfd7dc10836d1b3e159b67bde316caf23d68022e2d42377d99fb?s=117&amp;d=identicon&amp;r=G 3x, https://2.gravatar.com/avatar/2a00430f264ecfd7dc10836d1b3e159b67bde316caf23d68022e2d42377d99fb?s=156&amp;d=identicon&amp;r=G 4x" class="avatar avatar-39 wp-hovercard-attachment grav-hashed grav-hijack" height="39" width="39" loading="lazy" decoding="async"><span class="fn">Theo Kuzmich</span> on <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#comment-1489"><time datetime="2024-07-22T16:39:21-06:00">July 22, 2024 at 4:39 pm</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>Yeah I think it’s really great and effective that Wordboy held off on Ripley’s perspective until this point. (ROT13 for general discussion of past works) Yvxr, guvf cebonoyl vfa’g gur jbefg guvat ur’f rire qbar gb n ivrjcbvag punenpgre, ohg va cevbe pnfrf V srry yvxr gur ernyyl onq fghss unf trarenyyl pbzr nsgre gubhfnaqf bs jbeqf bs hf jngpuvat gur punenpgre snpr naq birepbzr yrffre nqirefvgvrf be whfg, yvxr, fbzr bgure guvat gung rfgnoyvfurf gurz nf univat ntrapl naq orvat noyr gb qrny va n frggvat jurer guvf xvaq bs guvat vf ng yrnfg n cbffvovyvgl. Urer jr qba’g unir gung xvaq bs phfuvbavat – jr’er whfg genccrq va gur urnq bs guvf xvq jub gubhtug fur unq n abezny yvsr naq abj gurl phg ure shpxvat nez bss naq yrsg vg sybngvat va n pbbyre va sebag bs ure. (end ROT13)</p>
+<p>It just feels horrifying and <em>wrong</em> in this very immediate and inescapable way that I don’t think I’ve experienced from literature before.</p>
+<p id="comment-like-1489" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?like_comment=1489&amp;_wpnonce=0e04ccfbca" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1489" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#" class="view-likers" data-like-count="2">2 people</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?replytocom=1489#respond" data-commentid="1489" data-postid="1908" data-belowelement="comment-1489" data-respondelement="respond" data-replyto="Reply to Theo Kuzmich" aria-label="Reply to Theo Kuzmich">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-sirenensang odd alt thread-even depth-1" id="li-comment-1487">
+		<article id="comment-1487" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.5 _ Claw_files/c7e9b207ae727ba6845e7f25759ad1233c3e21954b419ff7e4f85473e4fec2c1.png" srcset="https://0.gravatar.com/avatar/c7e9b207ae727ba6845e7f25759ad1233c3e21954b419ff7e4f85473e4fec2c1?s=68&amp;d=identicon&amp;r=G 1x, https://0.gravatar.com/avatar/c7e9b207ae727ba6845e7f25759ad1233c3e21954b419ff7e4f85473e4fec2c1?s=102&amp;d=identicon&amp;r=G 1.5x, https://0.gravatar.com/avatar/c7e9b207ae727ba6845e7f25759ad1233c3e21954b419ff7e4f85473e4fec2c1?s=136&amp;d=identicon&amp;r=G 2x, https://0.gravatar.com/avatar/c7e9b207ae727ba6845e7f25759ad1233c3e21954b419ff7e4f85473e4fec2c1?s=204&amp;d=identicon&amp;r=G 3x, https://0.gravatar.com/avatar/c7e9b207ae727ba6845e7f25759ad1233c3e21954b419ff7e4f85473e4fec2c1?s=272&amp;d=identicon&amp;r=G 4x" class="avatar avatar-68 wp-hovercard-attachment grav-hashed grav-hijack" height="68" width="68" loading="lazy" decoding="async"><span class="fn"><a href="http://sirenensang.wordpress.com/" class="url" rel="ugc external nofollow">sirenensang</a></span> on <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#comment-1487"><time datetime="2024-07-22T15:31:50-06:00">July 22, 2024 at 3:31 pm</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>Goth, Wildbow, you’re really dishing out the most horrifying stuff here. Guess it needs an outlet after years of the comparatively wholesome <em>Pale</em>…</p>
+<p>Cavalcanti needs to die. i crave blood.</p>
+<p id="comment-like-1487" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?like_comment=1487&amp;_wpnonce=9bde011370" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1487" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#" class="view-likers" data-like-count="2">2 people</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?replytocom=1487#respond" data-commentid="1487" data-postid="1908" data-belowelement="comment-1487" data-respondelement="respond" data-replyto="Reply to sirenensang" aria-label="Reply to sirenensang">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				</li><!-- #comment-## -->
+		<li class="comment even thread-odd thread-alt depth-1" id="li-comment-1488">
+		<article id="comment-1488" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.5 _ Claw_files/2a00430f264ecfd7dc10836d1b3e159b67bde316caf23d68022e2d42377d99fb(1)" srcset="https://2.gravatar.com/avatar/2a00430f264ecfd7dc10836d1b3e159b67bde316caf23d68022e2d42377d99fb?s=68&amp;d=identicon&amp;r=G 1x, https://2.gravatar.com/avatar/2a00430f264ecfd7dc10836d1b3e159b67bde316caf23d68022e2d42377d99fb?s=102&amp;d=identicon&amp;r=G 1.5x, https://2.gravatar.com/avatar/2a00430f264ecfd7dc10836d1b3e159b67bde316caf23d68022e2d42377d99fb?s=136&amp;d=identicon&amp;r=G 2x, https://2.gravatar.com/avatar/2a00430f264ecfd7dc10836d1b3e159b67bde316caf23d68022e2d42377d99fb?s=204&amp;d=identicon&amp;r=G 3x, https://2.gravatar.com/avatar/2a00430f264ecfd7dc10836d1b3e159b67bde316caf23d68022e2d42377d99fb?s=272&amp;d=identicon&amp;r=G 4x" class="avatar avatar-68 wp-hovercard-attachment grav-hashed grav-hijack" height="68" width="68" loading="lazy" decoding="async"><span class="fn">Theo Kuzmich</span> on <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#comment-1488"><time datetime="2024-07-22T15:58:05-06:00">July 22, 2024 at 3:58 pm</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>Wow that was a hell of a chapter. Every time there was one of those time jumps I found myself hoping that we would switch to a different perspective even though that’s never been how it works.</p>
+<p id="comment-like-1488" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?like_comment=1488&amp;_wpnonce=131f6ba75d" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1488" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#" class="view-likers" data-like-count="1">1 person</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?replytocom=1488#respond" data-commentid="1488" data-postid="1908" data-belowelement="comment-1488" data-respondelement="respond" data-replyto="Reply to Theo Kuzmich" aria-label="Reply to Theo Kuzmich">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-eneya odd alt thread-even depth-1" id="li-comment-1524">
+		<article id="comment-1524" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.5 _ Claw_files/3a995ef938fa37fd390ecf30daa71d2a854a1f9911be03e9f65d63c9f27827d6.jpeg" srcset="https://0.gravatar.com/avatar/3a995ef938fa37fd390ecf30daa71d2a854a1f9911be03e9f65d63c9f27827d6?s=68&amp;d=identicon&amp;r=G 1x, https://0.gravatar.com/avatar/3a995ef938fa37fd390ecf30daa71d2a854a1f9911be03e9f65d63c9f27827d6?s=102&amp;d=identicon&amp;r=G 1.5x, https://0.gravatar.com/avatar/3a995ef938fa37fd390ecf30daa71d2a854a1f9911be03e9f65d63c9f27827d6?s=136&amp;d=identicon&amp;r=G 2x, https://0.gravatar.com/avatar/3a995ef938fa37fd390ecf30daa71d2a854a1f9911be03e9f65d63c9f27827d6?s=204&amp;d=identicon&amp;r=G 3x, https://0.gravatar.com/avatar/3a995ef938fa37fd390ecf30daa71d2a854a1f9911be03e9f65d63c9f27827d6?s=272&amp;d=identicon&amp;r=G 4x" class="avatar avatar-68 wp-hovercard-attachment grav-hashed grav-hijack" height="68" width="68" loading="lazy" decoding="async"><span class="fn">HemlockAutumn</span> on <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#comment-1524"><time datetime="2024-07-24T14:39:51-06:00">July 24, 2024 at 2:39 pm</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>You see an evil asshole, you take him out. Don’t give them the chance to escalate. No second chances. </p>
+<p id="comment-like-1524" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?like_comment=1524&amp;_wpnonce=bc27618ede" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1524" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#" class="view-likers" data-like-count="1">1 person</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?replytocom=1524#respond" data-commentid="1524" data-postid="1908" data-belowelement="comment-1524" data-respondelement="respond" data-replyto="Reply to HemlockAutumn" aria-label="Reply to HemlockAutumn">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-pizzasgood even thread-odd thread-alt depth-1" id="li-comment-1545">
+		<article id="comment-1545" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.5 _ Claw_files/d087c51659ce307753f4493871aebe27b6dfa4e49813dd019ab7cec57a388fbb.png" srcset="https://1.gravatar.com/avatar/d087c51659ce307753f4493871aebe27b6dfa4e49813dd019ab7cec57a388fbb?s=68&amp;d=identicon&amp;r=G 1x, https://1.gravatar.com/avatar/d087c51659ce307753f4493871aebe27b6dfa4e49813dd019ab7cec57a388fbb?s=102&amp;d=identicon&amp;r=G 1.5x, https://1.gravatar.com/avatar/d087c51659ce307753f4493871aebe27b6dfa4e49813dd019ab7cec57a388fbb?s=136&amp;d=identicon&amp;r=G 2x, https://1.gravatar.com/avatar/d087c51659ce307753f4493871aebe27b6dfa4e49813dd019ab7cec57a388fbb?s=204&amp;d=identicon&amp;r=G 3x, https://1.gravatar.com/avatar/d087c51659ce307753f4493871aebe27b6dfa4e49813dd019ab7cec57a388fbb?s=272&amp;d=identicon&amp;r=G 4x" class="avatar avatar-68 wp-hovercard-attachment grav-hashed grav-hijack" height="68" width="68" loading="lazy" decoding="async"><span class="fn">Pizzasgood</span> on <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#comment-1545"><time datetime="2024-07-25T20:04:13-06:00">July 25, 2024 at 8:04 pm</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>I looked at first few paragraphs of this chapter just before bed on the night it was posted, out of curiosity about who the next POV was.</p>
+<p>That was a mistake.</p>
+<p>And then it took a few days before I had time to read the whole thing, so I had that sitting there festering the whole time.  Ugh.</p>
+<p>At least Davie didn’t bookend the chapter by taking her other arm, which was how I though things were going to go.  The partial escape and hint about a tricksy (if apparently unpleasant) plan mean we end on a relative high note instead.  I was dreading finally sitting down to read this one, but now I’m looking forward to the next one again.</p>
+<p>On what I assume is an unrelated and utterly irrelevant note, I wonder if we’ll ever find out why the N on Natalie’s Ion was chipped off.  Mia thought it looked deliberate.  Was Natalie trying to make a joke about the Saturn brand of cars by having hers reference moon of Jupiter?  Did somebody in her neighborhood need an N for an old-school ransom note they were making?  Did she have a rival with the same first initial who felt Natalie was unworthy of the letter N?</p>
+<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<p>“They get away from you,” Natalie said.</p>
+</blockquote>
+<p>Okay, that one was funny.  Kudos to Natalie for being able to joke about it, and at a time like this no less.</p>
+<p id="comment-like-1545" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?like_comment=1545&amp;_wpnonce=59a6236a9b" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1545" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#" class="view-likers" data-like-count="3">3 people</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?replytocom=1545#respond" data-commentid="1545" data-postid="1908" data-belowelement="comment-1545" data-respondelement="respond" data-replyto="Reply to Pizzasgood" aria-label="Reply to Pizzasgood">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-carroll12345 odd alt thread-even depth-1" id="li-comment-1565">
+		<article id="comment-1565" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.5 _ Claw_files/81d7aaff59c948225c3d512701b5bebb0a7aa68840b2b8758b65cef9790c8f0d.png" srcset="https://2.gravatar.com/avatar/81d7aaff59c948225c3d512701b5bebb0a7aa68840b2b8758b65cef9790c8f0d?s=68&amp;d=identicon&amp;r=G 1x, https://2.gravatar.com/avatar/81d7aaff59c948225c3d512701b5bebb0a7aa68840b2b8758b65cef9790c8f0d?s=102&amp;d=identicon&amp;r=G 1.5x, https://2.gravatar.com/avatar/81d7aaff59c948225c3d512701b5bebb0a7aa68840b2b8758b65cef9790c8f0d?s=136&amp;d=identicon&amp;r=G 2x, https://2.gravatar.com/avatar/81d7aaff59c948225c3d512701b5bebb0a7aa68840b2b8758b65cef9790c8f0d?s=204&amp;d=identicon&amp;r=G 3x, https://2.gravatar.com/avatar/81d7aaff59c948225c3d512701b5bebb0a7aa68840b2b8758b65cef9790c8f0d?s=272&amp;d=identicon&amp;r=G 4x" class="avatar avatar-68 wp-hovercard-attachment grav-hashed grav-hijack" height="68" width="68" loading="lazy" decoding="async"><span class="fn">carroll12345</span> on <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#comment-1565"><time datetime="2024-07-26T15:56:15-06:00">July 26, 2024 at 3:56 pm</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>Natalie started using her reserves yay! Good to have that. Despite all the horrors and Davie being his worst arrogant self.</p>
+<p id="comment-like-1565" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?like_comment=1565&amp;_wpnonce=f55a96354b" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1565" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#" class="view-likers" data-like-count="1">1 person</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?replytocom=1565#respond" data-commentid="1565" data-postid="1908" data-belowelement="comment-1565" data-respondelement="respond" data-replyto="Reply to carroll12345" aria-label="Reply to carroll12345">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-mrperson59 even thread-odd thread-alt depth-1" id="li-comment-1635">
+		<article id="comment-1635" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.5 _ Claw_files/19d50ab252e2b46637039aeab7f65df62959dbe81c2d41eae89c8810acf91fd1" srcset="https://1.gravatar.com/avatar/19d50ab252e2b46637039aeab7f65df62959dbe81c2d41eae89c8810acf91fd1?s=68&amp;d=identicon&amp;r=G 1x, https://1.gravatar.com/avatar/19d50ab252e2b46637039aeab7f65df62959dbe81c2d41eae89c8810acf91fd1?s=102&amp;d=identicon&amp;r=G 1.5x, https://1.gravatar.com/avatar/19d50ab252e2b46637039aeab7f65df62959dbe81c2d41eae89c8810acf91fd1?s=136&amp;d=identicon&amp;r=G 2x, https://1.gravatar.com/avatar/19d50ab252e2b46637039aeab7f65df62959dbe81c2d41eae89c8810acf91fd1?s=204&amp;d=identicon&amp;r=G 3x, https://1.gravatar.com/avatar/19d50ab252e2b46637039aeab7f65df62959dbe81c2d41eae89c8810acf91fd1?s=272&amp;d=identicon&amp;r=G 4x" class="avatar avatar-68 wp-hovercard-attachment grav-hashed grav-hijack" height="68" width="68" loading="lazy" decoding="async"><span class="fn">Plain Sight</span> on <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#comment-1635"><time datetime="2024-08-01T17:16:01-06:00">August 1, 2024 at 5:16 pm</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>God, I fucking hate Davie. I hate him more than any other Wildbow character and that says a lot (not that he’s a bad character, I just despise him as a person). Every time I think of him I think of the <a href="https://www.americanheritage.com/sites/default/files/inline-images/The_corpse_of_Mussolini.jpg" rel="nofollow ugc">famous image</a> of Mussolini’s corpse hung upside down in the town square, and hope he meets a similar fate, with everyone knowing just how much of a bastard he is and not to be like him lest they meet the same fate. Holy shit.</p>
+<p id="comment-like-1635" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?like_comment=1635&amp;_wpnonce=c9002a9a4b" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1635" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#" class="view-likers" data-like-count="2">2 people</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?replytocom=1635#respond" data-commentid="1635" data-postid="1908" data-belowelement="comment-1635" data-respondelement="respond" data-replyto="Reply to Plain Sight" aria-label="Reply to Plain Sight">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-nyakehbenya odd alt thread-even depth-1" id="li-comment-1746">
+		<article id="comment-1746" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./The Quick – 5.5 _ Claw_files/60e0d861e1b1e5772301b73dbc17bb88c43d486e3f8fb4ca3df7bbdb53620e1d.png" srcset="https://0.gravatar.com/avatar/60e0d861e1b1e5772301b73dbc17bb88c43d486e3f8fb4ca3df7bbdb53620e1d?s=68&amp;d=identicon&amp;r=G 1x, https://0.gravatar.com/avatar/60e0d861e1b1e5772301b73dbc17bb88c43d486e3f8fb4ca3df7bbdb53620e1d?s=102&amp;d=identicon&amp;r=G 1.5x, https://0.gravatar.com/avatar/60e0d861e1b1e5772301b73dbc17bb88c43d486e3f8fb4ca3df7bbdb53620e1d?s=136&amp;d=identicon&amp;r=G 2x, https://0.gravatar.com/avatar/60e0d861e1b1e5772301b73dbc17bb88c43d486e3f8fb4ca3df7bbdb53620e1d?s=204&amp;d=identicon&amp;r=G 3x, https://0.gravatar.com/avatar/60e0d861e1b1e5772301b73dbc17bb88c43d486e3f8fb4ca3df7bbdb53620e1d?s=272&amp;d=identicon&amp;r=G 4x" class="avatar avatar-68 wp-hovercard-attachment grav-hashed grav-hijack" height="68" width="68" loading="lazy" decoding="async"><span class="fn">In the crowd</span> on <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#comment-1746"><time datetime="2024-09-12T10:04:12-06:00">September 12, 2024 at 10:04 am</time></a> <span class="says">said:</span>
+										</div><!-- .comment-author .vcard -->
+
+					
+					
+				</footer>
+
+				<div class="comment-content"><p>Ripley is a great kid, and this chapter just has to really show that off. He’s so stupid, she’s wonderful, and it’s like it’s a crime; it’s a travesty that like any of this is happening to her. I know it’s a joke to say a female character is pure for this sinful world, but that is well legitimately true for Ripley. It is fucking depressing. Ripley won’t get her arm back, but I just hope she really gets the chance to grow up and be the best sort of person.&nbsp;</p>
+<p>Adding on to my praise of Ripley is Natalie in this chapter, who shows off that she really would have been a good parent—not great but good. It kind of throws off the simplistic narrative Mia uses to justify the kidnapping.                                 </p>
+<p>At the end of the day, Natalie never really had the chance to prove herself as a parent, and she’s still living with the scars of her life and the scars of having lost a child and spending the rest of that time looking for her. Of course, Natalie isn’t a great parent.                             </p>
+<p>She never got any closure; she was never properly able to move on. Of course, he’s an open wound; she was never given a chance to let it heal. Now, this doesn’t excuse a lot of her behavior; it just contextualizes why she is the way she is.                                    </p>
+<p>It also really shows off that Mia and Natalie aren’t that different; in fact, I’d say they are very similar, which is, I think fundamentally, why they won’t be able to get along at least now in this moment in another time in another place. The two of them might have even been friends. For me, Natalie is a tragic figure deserving of sympathy, however tough as it might be and has been for Natalie.                                      </p>
+<p>She can’t get back what she has lost; her daughter went missing 11 years ago, and the girl that she found was never hers. If Natalie is going to heal or at least try, she needs to accept what she lost. This in a way also extends to Mia, who is Ripley’s mother, whether anyone likes it or not. However, Ripley is in this situation directly because of Mia’s actions.   </p>
+<p>Natalie and Ben and Ryder might have pushed things along to get the ball started rolling with Mia; ultimately, there’s no clean way to end this. Mia put Ripley in this situation and started this whole confrontation.                </p>
+<p>Hell, you could argue this entire thing was started because Mia stole Ripley, yet I think if these two mothers wish to do what is best for their child, they ultimately have to allow Ripley to make a decision. It can’t be something forced; it has to be chosen. It’s highly likely to go in Mia’s favor, but the choice is more important than the inevitable outcome.</p>
+<p>Something I want to say that the whole fandom agrees with is that Davie is an evil human being, a mustache-twirling snide Whiplash villain, and I’m not talking about being goofy. Davie is just evil for evil’s sake. When you think of a villain, you should think of Davie.               </p>
+<p></p>
+<p>The worst part is that it’s entirely realistic for people in positions of power to shack up with a guy like Davie and then immediately be surprised when he does some villainous shit. You are fully aware of what this man is capable of, and you assumed he wouldn’t turn it on you.</p>
+<p id="comment-like-1746" data-liked="comment-not-liked" class="comment-likes comment-not-liked"><a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?like_comment=1746&amp;_wpnonce=c82d7cb06f" class="comment-like-link needs-login" rel="nofollow" data-blog="230145850"><span>Like</span></a><span id="comment-like-count-1746" class="comment-like-feedback">Liked by <a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#" class="view-likers" data-like-count="1">1 person</a></span></p>
+</div>
+
+				<div class="reply">
+					<a rel="nofollow" class="comment-reply-link" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/?replytocom=1746#respond" data-commentid="1746" data-postid="1908" data-belowelement="comment-1746" data-respondelement="respond" data-replyto="Reply to In the crowd" aria-label="Reply to In the crowd">Reply <span>↓</span></a>				</div><!-- .reply -->
+			</article><!-- #comment-## -->
+
+				</li><!-- #comment-## -->
+		</ol>
+
+		
+		
+	
+		<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Leave a comment <small><a rel="nofollow" id="cancel-comment-reply-link" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#respond" style="display:none;">Cancel reply</a></small></h3><form action="https://clawwebserial.blog/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+
+
+
+<div id="comment-form__verbum" class="transparent"></div><div class="verbum-form-meta"><input type="hidden" name="comment_post_ID" value="1908" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+
+			<input type="hidden" name="highlander_comment_nonce" id="highlander_comment_nonce" value="104d74dda8">
+			<input type="hidden" name="verbum_show_subscription_modal" value=""></div><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="2062055267"></p><p style="display: none !important;" class="akismet-fields-container" data-prefix="ak_"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="1731785699511"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p></form>	</div><!-- #respond -->
+	
+</div><!-- #comments -->
+
+				
+			</div><!-- #content -->
+		</div><!-- #primary -->
+
+
+	</div><!-- #main -->
+
+	<footer id="colophon">
+
+			
+
+			<div id="site-generator">
+				 								
+			</div>
+	</footer><!-- #colophon -->
+</div><!-- #page -->
+
+<!--  -->
+<script type="text/javascript" src="./The Quick – 5.5 _ Claw_files/hovercards.min.js.download" id="grofiles-cards-js"></script>
+<script type="text/javascript" id="wpgroho-js-extra">
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script crossorigin="anonymous" type="text/javascript" src="./The Quick – 5.5 _ Claw_files/wpgroho.js.download"></script>
+
+	<script>
+		// Initialize and attach hovercards to all gravatars
+		( function() {
+			function init() {
+				if ( typeof Gravatar === 'undefined' ) {
+					return;
+				}
+
+				if ( typeof Gravatar.init !== 'function' ) {
+					return;
+				}
+
+				Gravatar.profile_cb = function ( hash, id ) {
+					WPGroHo.syncProfileData( hash, id );
+				};
+
+				Gravatar.my_hash = WPGroHo.my_hash;
+				Gravatar.init(
+					'body',
+					'#wp-admin-bar-my-account',
+					{
+						i18n: {
+							'Edit your profile': 'Edit your profile',
+							'View profile': 'View profile',
+							'Sorry, we are unable to load this Gravatar profile.': 'Sorry, we are unable to load this Gravatar profile.',
+							'Profile not found.': 'Profile not found.',
+							'Too Many Requests.': 'Too Many Requests.',
+							'Internal Server Error.': 'Internal Server Error.',
+						},
+					}
+				);
+			}
+
+			if ( document.readyState !== 'loading' ) {
+				init();
+			} else {
+				document.addEventListener( 'DOMContentLoaded', init );
+			}
+		} )();
+	</script>
+
+		<div style="display:none">
+	<div class="grofile-hash-map-e1f672e61199239cf001c92cb9a1a10f">
+	</div>
+	<div class="grofile-hash-map-fd52638a2b6cc73040025ab45962dfc2">
+	</div>
+	<div class="grofile-hash-map-21fc65960bdc3cf06d0879522da11b26">
+	</div>
+	<div class="grofile-hash-map-5ba04c651100ac97e9ae2b6f2da1eb49">
+	</div>
+	<div class="grofile-hash-map-6b65b775b38e00452bccad89bd6658cd">
+	</div>
+	<div class="grofile-hash-map-89c58ab96f8c44c457f5761d88e7e6de">
+	</div>
+	<div class="grofile-hash-map-f1cc0bb5f9270fac44723ae9711e8ca6">
+	</div>
+	<div class="grofile-hash-map-d2f43ecb96f4c1d5d599cb4f15d95081">
+	</div>
+	<div class="grofile-hash-map-aea6410e6eb009a8656243336c2f1bc8">
+	</div>
+	<div class="grofile-hash-map-e942ae3f121385a6f64102dd72406759">
+	</div>
+	<div class="grofile-hash-map-4fe5029a43fd083ac2d5c4fd06739abc">
+	</div>
+	</div>
+	<div id="actionbar" class="actnbr-pub-twentyeleven actnbr-has-follow">
+		<ul>
+								<li class="actnbr-btn actnbr-hidden">
+						<a class="actnbr-action actnbr-actn-comment" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/#comments">
+							<svg class="gridicon gridicons-comment" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M12 16l-5 5v-5H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v9c0 1.1-.9 2-2 2h-7z"></path></g></svg>							<span>Comment						</span>
+						</a>
+					</li>
+									<li class="actnbr-btn actnbr-hidden">
+						<a class="actnbr-action actnbr-actn-reblog" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/">
+							<svg class="gridicon gridicons-reblog" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M22.086 9.914L20 7.828V18c0 1.105-.895 2-2 2h-7v-2h7V7.828l-2.086 2.086L14.5 8.5 19 4l4.5 4.5-1.414 1.414zM6 16.172V6h7V4H6c-1.105 0-2 .895-2 2v10.172l-2.086-2.086L.5 15.5 5 20l4.5-4.5-1.414-1.414L6 16.172z"></path></g></svg><span>Reblog</span>
+						</a>
+					</li>
+									<li class="actnbr-btn actnbr-hidden">
+								<a class="actnbr-action actnbr-actn-follow " href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path clip-rule="evenodd" d="m4 4.5h12v6.5h1.5v-6.5-1.5h-1.5-12-1.5v1.5 10.5c0 1.1046.89543 2 2 2h7v-1.5h-7c-.27614 0-.5-.2239-.5-.5zm10.5 2h-9v1.5h9zm-5 3h-4v1.5h4zm3.5 1.5h-1v1h1zm-1-1.5h-1.5v1.5 1 1.5h1.5 1 1.5v-1.5-1-1.5h-1.5zm-2.5 2.5h-4v1.5h4zm6.5 1.25h1.5v2.25h2.25v1.5h-2.25v2.25h-1.5v-2.25h-2.25v-1.5h2.25z" fill-rule="evenodd"></path></svg>
+			<span>Subscribe</span>
+		</a>
+		<a class="actnbr-action actnbr-actn-following  no-display" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 4.5H4V15C4 15.2761 4.22386 15.5 4.5 15.5H11.5V17H4.5C3.39543 17 2.5 16.1046 2.5 15V4.5V3H4H16H17.5V4.5V12.5H16V4.5ZM5.5 6.5H14.5V8H5.5V6.5ZM5.5 9.5H9.5V11H5.5V9.5ZM12 11H13V12H12V11ZM10.5 9.5H12H13H14.5V11V12V13.5H13H12H10.5V12V11V9.5ZM5.5 12H9.5V13.5H5.5V12Z" fill="#008A20"></path><path class="following-icon-tick" d="M13.5 16L15.5 18L19 14.5" stroke="#008A20" stroke-width="1.5"></path></svg>
+			<span>Subscribed</span>
+		</a>
+							<div class="actnbr-popover tip tip-top-left actnbr-notice" id="follow-bubble">
+							<div class="tip-arrow"></div>
+							<div class="tip-inner actnbr-follow-bubble">
+															<ul>
+											<li class="actnbr-sitename">
+			<a href="https://clawwebserial.blog/">
+				<img loading="lazy" alt="" src="./The Quick – 5.5 _ Claw_files/wpcom-gray-white.png" srcset="https://s0.wp.com/i/logo/wpcom-gray-white.png 1x" class="avatar avatar-50" height="50" width="50">				Claw			</a>
+		</li>
+										<div class="actnbr-message no-display"></div>
+									<form method="post" action="https://subscribe.wordpress.com/" accept-charset="utf-8" style="display: none;">
+																						<div class="actnbr-follow-count">Join 207 other subscribers</div>
+																					<div>
+										<input type="email" name="email" placeholder="Enter your email address" class="actnbr-email-field" aria-label="Enter your email address">
+										</div>
+										<input type="hidden" name="action" value="subscribe">
+										<input type="hidden" name="blog_id" value="230145850">
+										<input type="hidden" name="source" value="https://clawwebserial.blog/2024/07/20/the-quick-5-5/">
+										<input type="hidden" name="sub-type" value="actionbar-follow">
+										<input type="hidden" id="_wpnonce" name="_wpnonce" value="9527a311ca">										<div class="actnbr-button-wrap">
+											<button type="submit" value="Sign me up">
+												Sign me up											</button>
+										</div>
+									</form>
+									<li class="actnbr-login-nudge">
+										<div>
+											Already have a WordPress.com account? <a href="https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Fclawwebserial.blog%252F2024%252F07%252F20%252Fthe-quick-5-5%252F">Log in now.</a>										</div>
+									</li>
+								</ul>
+															</div>
+						</div>
+					</li>
+							<li class="actnbr-ellipsis actnbr-hidden">
+				<svg class="gridicon gridicons-ellipsis" height="24" width="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M7 12c0 1.104-.896 2-2 2s-2-.896-2-2 .896-2 2-2 2 .896 2 2zm12-2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm-7 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z"></path></g></svg>				<div class="actnbr-popover tip tip-top-left actnbr-more">
+					<div class="tip-arrow"></div>
+					<div class="tip-inner">
+						<ul>
+									<li class="actnbr-sitename">
+			<a href="https://clawwebserial.blog/">
+				<img loading="lazy" alt="" src="./The Quick – 5.5 _ Claw_files/wpcom-gray-white.png" srcset="https://s0.wp.com/i/logo/wpcom-gray-white.png 1x" class="avatar avatar-50" height="50" width="50">				Claw			</a>
+		</li>
+								<li class="actnbr-folded-customize">
+								<a href="https://clawwebserial.wordpress.com/wp-admin/customize.php?url=https%3A%2F%2Fclawwebserial.wordpress.com%2F2024%2F07%2F20%2Fthe-quick-5-5%2F">
+									<svg class="gridicon gridicons-customize" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M2 6c0-1.505.78-3.08 2-4 0 .845.69 2 2 2 1.657 0 3 1.343 3 3 0 .386-.08.752-.212 1.09.74.594 1.476 1.19 2.19 1.81L8.9 11.98c-.62-.716-1.214-1.454-1.807-2.192C6.753 9.92 6.387 10 6 10c-2.21 0-4-1.79-4-4zm12.152 6.848l1.34-1.34c.607.304 1.283.492 2.008.492 2.485 0 4.5-2.015 4.5-4.5 0-.725-.188-1.4-.493-2.007L18 9l-2-2 3.507-3.507C18.9 3.188 18.225 3 17.5 3 15.015 3 13 5.015 13 7.5c0 .725.188 1.4.493 2.007L3 20l2 2 6.848-6.848c1.885 1.928 3.874 3.753 5.977 5.45l1.425 1.148 1.5-1.5-1.15-1.425c-1.695-2.103-3.52-4.092-5.448-5.977z"></path></g></svg>									<span>Customize</span>
+								</a>
+							</li>
+																<li class="actnbr-folded-follow">
+												<a class="actnbr-action actnbr-actn-follow " href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path clip-rule="evenodd" d="m4 4.5h12v6.5h1.5v-6.5-1.5h-1.5-12-1.5v1.5 10.5c0 1.1046.89543 2 2 2h7v-1.5h-7c-.27614 0-.5-.2239-.5-.5zm10.5 2h-9v1.5h9zm-5 3h-4v1.5h4zm3.5 1.5h-1v1h1zm-1-1.5h-1.5v1.5 1 1.5h1.5 1 1.5v-1.5-1-1.5h-1.5zm-2.5 2.5h-4v1.5h4zm6.5 1.25h1.5v2.25h2.25v1.5h-2.25v2.25h-1.5v-2.25h-2.25v-1.5h2.25z" fill-rule="evenodd"></path></svg>
+			<span>Subscribe</span>
+		</a>
+		<a class="actnbr-action actnbr-actn-following  no-display" href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 4.5H4V15C4 15.2761 4.22386 15.5 4.5 15.5H11.5V17H4.5C3.39543 17 2.5 16.1046 2.5 15V4.5V3H4H16H17.5V4.5V12.5H16V4.5ZM5.5 6.5H14.5V8H5.5V6.5ZM5.5 9.5H9.5V11H5.5V9.5ZM12 11H13V12H12V11ZM10.5 9.5H12H13H14.5V11V12V13.5H13H12H10.5V12V11V9.5ZM5.5 12H9.5V13.5H5.5V12Z" fill="#008A20"></path><path class="following-icon-tick" d="M13.5 16L15.5 18L19 14.5" stroke="#008A20" stroke-width="1.5"></path></svg>
+			<span>Subscribed</span>
+		</a>
+										</li>
+																	<li class="actnbr-signup"><a href="https://wordpress.com/start/">Sign up</a></li>
+									<li class="actnbr-login"><a href="https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Fclawwebserial.blog%252F2024%252F07%252F20%252Fthe-quick-5-5%252F">Log in</a></li>
+																	<li class="actnbr-shortlink"><a href="https://wp.me/pfzFrQ-uM">Copy shortlink</a></li>
+																	<li class="flb-report">
+										<a href="https://wordpress.com/abuse/?report_url=https://clawwebserial.blog/2024/07/20/the-quick-5-5/" target="_blank" rel="noopener noreferrer">
+											Report this content										</a>
+									</li>
+																	<li class="actnbr-reader">
+										<a href="https://wordpress.com/read/blogs/230145850/posts/1908">
+											View post in Reader										</a>
+									</li>
+																	<li class="actnbr-subs">
+										<a href="https://subscribe.wordpress.com/">Manage subscriptions</a>
+									</li>
+																		<li class="actnbr-fold"><a href="https://clawwebserial.blog/2024/07/20/the-quick-5-5/">Collapse this bar</a></li>
+															</ul>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+	
+<script>
+window.addEventListener( "load", function( event ) {
+	var link = document.createElement( "link" );
+	link.href = "https://s0.wp.com/wp-content/mu-plugins/actionbar/actionbar.css?v=20241015";
+	link.type = "text/css";
+	link.rel = "stylesheet";
+	document.head.appendChild( link );
+
+	var script = document.createElement( "script" );
+	script.src = "https://s0.wp.com/wp-content/mu-plugins/actionbar/actionbar.js?v=20231122";
+	script.defer = true;
+	document.body.appendChild( script );
+} );
+</script>
+
+	
+	<script type="text/javascript">
+		window.WPCOM_sharing_counts = {"https:\/\/clawwebserial.blog\/2024\/07\/20\/the-quick-5-5\/":1908};
+	</script>
+				<script type="text/javascript" id="comment-like-js-extra">
+/* <![CDATA[ */
+var comment_like_text = {"loading":"Loading...","swipeUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/comment-likes\/js\/lib\/swipe.js?ver=20131008"};
+/* ]]> */
+</script>
+<script type="text/javascript" id="sharing-js-js-extra">
+/* <![CDATA[ */
+var sharing_js_options = {"lang":"en","counts":"1","is_stats_active":"1"};
+/* ]]> */
+</script>
+<script type="text/javascript" id="verbum-settings-js-before">
+/* <![CDATA[ */
+window.VerbumComments = {"Log in or provide your name and email to leave a reply.":"Log in or provide your name and email to leave a reply.","Log in or provide your name and email to leave a comment.":"Log in or provide your name and email to leave a comment.","Receive web and mobile notifications for posts on this site.":"Receive web and mobile notifications for posts on this site.","Name":"Name","Email (address never made public)":"Email (address never made public)","Website (optional)":"Website (optional)","Leave a reply. (log in optional)":"Leave a reply. (log in optional)","Leave a comment. (log in optional)":"Leave a comment. (log in optional)","Log in to leave a reply.":"Log in to leave a reply.","Log in to leave a comment.":"Log in to leave a comment.","Logged in via %s":"Logged in via %s","Log out":"Log out","Email":"Email","(Address never made public)":"(Address never made public)","Instantly":"Instantly","Daily":"Daily","Reply":"Reply","Comment":"Comment","WordPress":"WordPress","Weekly":"Weekly","Notify me of new posts":"Notify me of new posts","Email me new posts":"Email me new posts","Email me new comments":"Email me new comments","Cancel":"Cancel","Write a comment...":"Write a comment...","Write a reply...":"Write a reply...","Website":"Website","Optional":"Optional","We'll keep you in the loop!":"We'll keep you in the loop!","Loading your comment...":"Loading your comment...","Discover more from":"Discover more from Claw","Subscribe now to keep reading and get access to the full archive.":"Subscribe now to keep reading and get access to the full archive.","Continue reading":"Continue reading","Never miss a beat!":"Never miss a beat!","Interested in getting blog post updates? Simply click the button below to stay in the loop!":"Interested in getting blog post updates? Simply click the button below to stay in the loop!","Enter your email address":"Enter your email address","Subscribe":"Subscribe","Comment sent successfully":"Comment sent successfully","Save my name, email, and website in this browser for the next time I comment.":"Save my name, email, and website in this browser for the next time I comment.","siteId":230145850,"postId":1908,"mustLogIn":false,"requireNameEmail":true,"commentRegistration":false,"connectURL":"https:\/\/clawwebserial.wordpress.com\/public.api\/connect\/?action=request&domain=clawwebserial.blog","logoutURL":"https:\/\/clawwebserial.wordpress.com\/wp-login.php?action=logout&_wpnonce=d5ed3f8a04","homeURL":"https:\/\/clawwebserial.blog\/","subscribeToBlog":true,"subscribeToComment":true,"isJetpackCommentsLoggedIn":false,"jetpackUsername":"","jetpackUserId":0,"jetpackSignature":"","jetpackAvatar":"https:\/\/0.gravatar.com\/avatar\/?s=96&amp;d=identicon&amp;r=G","enableBlocks":true,"enableSubscriptionModal":true,"currentLocale":"en","isJetpackComments":false,"allowedBlocks":["core\/paragraph","core\/list","core\/code","core\/list-item","core\/quote","core\/image","core\/embed","core\/quote","core\/code"],"embedNonce":"36fc52efc3","verbumBundleUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/jetpack-mu-wpcom-plugin\/moon\/vendor\/automattic\/jetpack-mu-wpcom\/src\/features\/verbum-comments\/dist\/index.js","isRTL":false,"vbeCacheBuster":1721244820,"iframeUniqueId":0}
+/* ]]> */
+</script>
+<script crossorigin="anonymous" type="text/javascript" src="./The Quick – 5.5 _ Claw_files/saved_resource(8)"></script>
+<script type="text/javascript" id="sharing-js-js-after">
+/* <![CDATA[ */
+var windowOpen;
+			( function () {
+				function matches( el, sel ) {
+					return !! (
+						el.matches && el.matches( sel ) ||
+						el.msMatchesSelector && el.msMatchesSelector( sel )
+					);
+				}
+
+				document.body.addEventListener( 'click', function ( event ) {
+					if ( ! event.target ) {
+						return;
+					}
+
+					var el;
+					if ( matches( event.target, 'a.share-twitter' ) ) {
+						el = event.target;
+					} else if ( event.target.parentNode && matches( event.target.parentNode, 'a.share-twitter' ) ) {
+						el = event.target.parentNode;
+					}
+
+					if ( el ) {
+						event.preventDefault();
+
+						// If there's another sharing window open, close it.
+						if ( typeof windowOpen !== 'undefined' ) {
+							windowOpen.close();
+						}
+						windowOpen = window.open( el.getAttribute( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+						return false;
+					}
+				} );
+			} )();
+var windowOpen;
+			( function () {
+				function matches( el, sel ) {
+					return !! (
+						el.matches && el.matches( sel ) ||
+						el.msMatchesSelector && el.msMatchesSelector( sel )
+					);
+				}
+
+				document.body.addEventListener( 'click', function ( event ) {
+					if ( ! event.target ) {
+						return;
+					}
+
+					var el;
+					if ( matches( event.target, 'a.share-facebook' ) ) {
+						el = event.target;
+					} else if ( event.target.parentNode && matches( event.target.parentNode, 'a.share-facebook' ) ) {
+						el = event.target.parentNode;
+					}
+
+					if ( el ) {
+						event.preventDefault();
+
+						// If there's another sharing window open, close it.
+						if ( typeof windowOpen !== 'undefined' ) {
+							windowOpen.close();
+						}
+						windowOpen = window.open( el.getAttribute( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+						return false;
+					}
+				} );
+			} )();
+/* ]]> */
+</script>
+
+	<script type="text/javascript">
+		(function () {
+			var wpcom_reblog = {
+				source: 'toolbar',
+
+				toggle_reblog_box_flair: function (obj_id, post_id) {
+
+					// Go to site selector. This will redirect to their blog if they only have one.
+					const postEndpoint = `https://wordpress.com/post`;
+
+					// Ideally we would use the permalink here, but fortunately this will be replaced with the 
+					// post permalink in the editor.
+					const originalURL = `${ document.location.href }?page_id=${ post_id }`; 
+					
+					const url =
+						postEndpoint +
+						'?url=' +
+						encodeURIComponent( originalURL ) +
+						'&is_post_share=true' +
+						'&v=5';
+
+					const redirect = function () {
+						if (
+							! window.open( url, '_blank' )
+						) {
+							location.href = url;
+						}
+					};
+
+					if ( /Firefox/.test( navigator.userAgent ) ) {
+						setTimeout( redirect, 0 );
+					} else {
+						redirect();
+					}
+				},
+			};
+
+			window.wpcom_reblog = wpcom_reblog;
+		})();
+	</script>
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+try{
+  if ( window.external &&'msIsSiteMode' in window.external) {
+    if (window.external.msIsSiteMode()) {
+      var jl = document.createElement('script');
+      jl.type='text/javascript';
+      jl.async=true;
+      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(jl, s);
+    }
+  }
+}catch(e){}
+})();
+// ]]>
+</script>	<iframe src="./The Quick – 5.5 _ Claw_files/master.html" scrolling="no" id="likes-master" name="likes-master" style="display:none;"></iframe>
+	<div id="likes-other-gravatars" class="wpl-new-layout" role="dialog" aria-hidden="true" tabindex="-1" style="display: none;">
+		<div class="likes-text">
+			<span>%d</span>		</div>
+		<ul class="wpl-avatars sd-like-gravatars"></ul>
+	</div>
+
+		<script src="./The Quick – 5.5 _ Claw_files/w.js.download" defer=""></script> <script type="text/javascript">
+_tkq = window._tkq || [];
+_stq = window._stq || [];
+_tkq.push(['storeContext', {'blog_id':'230145850','blog_tz':'-6','user_lang':'en','blog_lang':'en','user_id':'0'}]);
+_stq.push(['view', {'blog':'230145850','v':'wpcom','tz':'-6','user_id':'0','post':'1908','subd':'clawwebserial'}]);
+_stq.push(['extra', {'crypt':'UE40eW5QN0p8M2Y/RE1hV3xrb2xUT3JBbjREZWgvK29XZW1dYVRPTVUvTiV4TEIuPThXTVVwT1A2Yz1IbnMlLTd1cmFvWUlEK0M2Yy1aV2Isfi1ZR24xNFBNRzldL2JRTkNhcWtLJTZaPW1yL0dQUndCTEdbazBIeF1GM2VYfG1ibzdxW0JRPVFWeGI1NzUzfmR5MkdbeUNBczRrbUl0bUdzUXpsQjklbTd3RTFPQi5jMVpKcF8rdjVTd0NBR2VHYkkwfHNCZlNrRn5jaGlla2NEdT05Sit0djkwL2ExcmNpWS1SfFtYSnNzbGR3NFpsbTktfHVTbTNxZDh6VDNqL2omRGEzL0ddOXlxS3E5Y1M/Qy9WSj96ZTRZNExTQ1g2dDhra1k2TzY='}]);
+_stq.push([ 'clickTrackerInit', '230145850', '1908' ]);
+</script>
+<noscript><img src="https://pixel.wp.com/b.gif?v=noscript" style="height:1px;width:1px;overflow:hidden;position:absolute;bottom:1px;" alt="" /></noscript>
+<script>
+( function() {
+	function getMobileUserAgentInfo() {
+		if ( typeof wpcom_mobile_user_agent_info === 'object' ) {
+			wpcom_mobile_user_agent_info.init();
+			var mobileStatsQueryString = '';
+
+			if ( wpcom_mobile_user_agent_info.matchedPlatformName !== false ) {
+				mobileStatsQueryString += '&x_' + 'mobile_platforms' + '=' + wpcom_mobile_user_agent_info.matchedPlatformName;
+			}
+
+			if ( wpcom_mobile_user_agent_info.matchedUserAgentName !== false ) {
+				mobileStatsQueryString += '&x_' + 'mobile_devices' + '=' + wpcom_mobile_user_agent_info.matchedUserAgentName;
+			}
+
+			if ( wpcom_mobile_user_agent_info.isIPad() ) {
+				mobileStatsQueryString += '&x_' + 'ipad_views' + '=' + 'views';
+			}
+
+			if ( mobileStatsQueryString != '' ) {
+				new Image().src = document.location.protocol + '//pixel.wp.com/g.gif?v=wpcom-no-pv' + mobileStatsQueryString + '&baba=' + Math.random();
+			}
+		}
+	}
+
+	document.addEventListener( 'DOMContentLoaded', getMobileUserAgentInfo );
+} )();
+</script>
+<script type="disabled" id="wp-enqueue-dynamic-script:wp-i18n:after:1">
+wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+</script>
+
+<script>
+(function() {
+	'use strict';
+
+	const fetches = {};
+	const promises = {};
+	const urls = {
+		'wp-hooks': 'https://s0.wp.com/wp-content/plugins/gutenberg-core/v19.6.2/build/hooks/index.min.js?m=1731665520i&ver=84e753e2b66eb7028d38',
+		'wp-i18n': 'https://s0.wp.com/wp-content/plugins/gutenberg-core/v19.6.2/build/i18n/index.min.js?m=1731665520i&ver=bd5a2533e717a1043151',
+		'verbum': 'https://s0.wp.com/wp-content/mu-plugins/jetpack-mu-wpcom-plugin/moon/vendor/automattic/jetpack-mu-wpcom/src/build/verbum-comments/verbum-comments.js?m=1731350462i&minify=false&ver=cd952c6ee1d27a42ddee'
+	};
+	const loaders = {
+		'verbum': () => {
+			fetchExternalScript('wp-hooks');
+			fetchExternalScript('wp-i18n');
+			fetchExternalScript('verbum');
+			promises['wp-hooks'] = promises['wp-hooks'] || loadWPScript('wp-hooks');
+			promises['wp-i18n'] = promises['wp-i18n'] || promises['wp-hooks'].then( () => loadWPScript('wp-i18n') );
+			promises['verbum'] = promises['verbum'] || promises['wp-i18n'].then( () => loadWPScript('verbum') );
+			return promises['verbum'];
+		},
+		
+	};
+	const scriptExtras = {
+		'wp-i18n': { translations: 0, before: 0, after: 1 },
+		
+	};
+
+	window.WP_Enqueue_Dynamic_Script = {
+		loadScript: (handle) => {
+			if (!loaders[handle]) {
+				console.error('WP_Enqueue_Dynamic_Script: unregistered script `' + handle + '`.');
+			}
+			return loaders[handle]();
+		}
+	};
+
+	function fetchExternalScript(handle) {
+		if (!urls[handle]) {
+			return Promise.resolve();
+		}
+
+		fetches[handle] = fetches[handle] || fetch(urls[handle], { mode: 'no-cors' });
+		return fetches[handle];
+	}
+
+	function runExtraScript(handle, type, index) {
+		const id = 'wp-enqueue-dynamic-script:' + handle + ':' + type + ':' + (index + 1);
+		const template = document.getElementById(id);
+		if (!template) {
+			return Promise.reject();
+		}
+
+		const script = document.createElement( 'script' );
+		script.innerHTML = template.innerHTML;
+		document.body.appendChild( script );
+		return Promise.resolve();
+	}
+
+	function loadExternalScript(handle) {
+		if (!urls[handle]) {
+			return Promise.resolve();
+		}
+
+		return fetches[handle].then(() => {
+			return new Promise((resolve, reject) => {
+				const script = document.createElement('script');
+				script.onload = () => resolve();
+				script.onerror = (e) => reject(e);
+				script.src = urls[handle];
+				document.body.appendChild(script);
+			});
+		});
+	}
+
+	function loadExtra(handle, pos) {
+		const count = (scriptExtras[handle] && scriptExtras[handle][pos]) || 0;
+		let promise = Promise.resolve();
+
+		for (let i = 0; i < count; i++) {
+			promise = promise.then(() => runExtraScript(handle, pos, i));
+		}
+
+		return promise;
+	}
+
+	function loadWPScript(handle) {
+		// Core loads scripts in this order. See: https://github.com/WordPress/WordPress/blob/a59eb9d39c4fcba834b70c9e8dfd64feeec10ba6/wp-includes/class-wp-scripts.php#L428.
+		return loadExtra(handle, 'translations')
+			.then(() => loadExtra(handle, 'before'))
+			.then(() => loadExternalScript(handle))
+			.then(() => loadExtra(handle, 'after'));
+	}
+} )();
+</script>
+
+
+
+
+<div class="comment-likes-overlay" style="display: none;"></div><iframe scrolling="no" id="wpcom_remote_login_key" src="./The Quick – 5.5 _ Claw_files/remote-login.html" style="display: none;"></iframe><div>
+  <div id="twoseven-ext-tab-media-modal" class="twoseven-ext-tab-media-modal" style="display: none;">
+    <!-- Modal content -->
+    <div class="twoseven-ext-tab-media-modal-content">
+      <div class="iframe-container">
+        <div class="close-container">
+          <span class="close">×</span>
+        </div>
+        <iframe id="twoseven-ext-tab-media-iframe" src="./The Quick – 5.5 _ Claw_files/index.html"></iframe>
+      </div>
+    </div>
+  </div><link rel="stylesheet" href="chrome-extension://cjdnfmjmdligcpfcekfmenlhiopehjkd/dist/contentScripts/views/modal/top-level.css"></div><script src="./The Quick – 5.5 _ Claw_files/actionbar.js.download" defer=""></script></body><div id="twoseven-scripts" data-info="Scripts added by TwoSeven extension" style="display: none !important; position: static !important; top: 0px !important; left: 0px !important; width: 0px !important; height: 0px !important;"></div></html>
